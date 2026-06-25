@@ -1,0 +1,66 @@
+﻿@{
+    ViewData["Title"] = "Register Database Connection";
+}
+<script src="~/script/work/registerdb.js"></script>
+<script src="/Script/wdhelp.js?v=1"></script>
+<script>
+    window.WD_HELP_TITLE = 'Đăng ký kết nối CSDL';
+    window.WD_HELP =
+        '<h4>Chức năng này dùng để làm gì?</h4>'
+        + '<p>Khai báo <b>kết nối tới máy chủ cơ sở dữ liệu</b> (SQL Server) mà hệ thống sử dụng. Đây là bước <b>cài đặt ban đầu</b> của quản trị viên.</p>'
+        + '<h4>Các bước</h4>'
+        + '<ol><li>Nhập <b>địa chỉ máy chủ</b>, <b>tên CSDL</b>, <b>tài khoản &amp; mật khẩu</b> SQL.</li>'
+        + '<li>Bấm <b>Kiểm tra kết nối</b> để xác nhận thông tin đúng.</li>'
+        + '<li>Bấm <b>Lưu</b>; hệ thống sẽ dùng kết nối này.</li></ol>'
+        + '<div class="warn">Màn hình <b>quản trị / cài đặt</b>. Sai thông tin sẽ làm toàn hệ thống không truy cập được dữ liệu — nhập cẩn thận.</div>';
+</script>
+<style>
+    #divSetupDB input {
+        width: 100%;
+        min-height: 29px;
+        border-radius: 3px;
+    }
+</style>
+<div style="width:100%; float:left; height:40px" id="divTieuDe" class="divTitle">
+    Kết nối dữ liệu
+</div>
+<div id="divSetupDB" style="margin:50px auto;border:1px solid var(--main-color);width:550px;padding:10px;display:flex;flex-direction:column">
+    <div class="mb-3">
+        <label for="serverName" class="form-label">Server Name:</label>
+        <input type="text" id="serverName" placeholder="Nhập IP hoặc tên máy chủ" d />
+    </div>
+    <div class="mb-3">
+        <label for="serverName" class="form-label">User Name:</label>
+        <input type="text" id="userName" placeholder="Nhập vào tên đăng nhập Sql" />
+    </div>
+    <div class="mb-3">
+        <label for="serverName" class="form-label">Password:</label>
+        <input type="password" id="passWord" placeholder="Nhập vào mật khẩu sql" />
+    </div>
+    <hr />
+    <div class="mb-3">
+        <div style="width:100%;float:left;padding:3px;">
+            <div style="margin-top:-2px;float:left;"><label for="serverName" class="form-label">Database:</label></div>
+            <i class="fa-solid fa-refresh" style="float:right;cursor:pointer" onclick="LoadDb()"></i>
+        </div>
+        <input id="databaseName" placeholder="Chọn database" />
+    </div>
+    <div class="mb-3">
+        <label for="newDb" class="form-label">Or create new database:</label>
+        <input type="text" id="newDb" placeholder="Nhập tên database mới" />
+    </div>
+    <hr />
+    <h4>Tài khoản Admin</h4>
+    <div class="mb-3">
+        <label for="username" class="form-label">Username:</label>
+        <input type="text" id="adminUser" placeholder="admin" />
+    </div>
+
+    <div class="mb-3">
+        <label for="password" class="form-label">Password:</label>
+        <input type="password" id="adminPassword" placeholder="•••••" />
+    </div>
+    <div style="float:left;width:100%;">
+        <div onclick="SaveDbConfig()" class="btn btn-primary" style="float:right;text-align:right"><i class="fa-solid fa-save"></i> Lưu</div>
+    </div>
+</div>

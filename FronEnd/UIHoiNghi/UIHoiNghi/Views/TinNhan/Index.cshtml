@@ -1,0 +1,23 @@
+@{ ViewBag.Active = "tinnhan"; ViewData["Title"] = "Tin nhắn SMS/Zalo"; }
+
+<div class="meet-page-head">
+    <h2><i class="fa-solid fa-comment-sms"></i> Tin nhắn SMS &amp; Zalo</h2>
+    <div class="sub">Soạn và gửi thông báo tới đại biểu qua SMS / Zalo OA. <b style="color:#c08a1e">Chế độ mô phỏng</b> — chưa gửi thật.</div>
+</div>
+
+<div class="meet-toolbar">
+    <button class="btn-meet" id="btnAddCD"><i class="fa-solid fa-pen-to-square"></i> Soạn chiến dịch</button>
+    <button class="btn-meet warn" id="btnEditCD"><i class="fa-solid fa-pen"></i> Sửa</button>
+    <button class="btn-meet" id="btnSend" style="background:#0a8f7e"><i class="fa-solid fa-paper-plane"></i> Gửi</button>
+    <button class="btn-meet danger" id="btnDelCD"><i class="fa-solid fa-trash"></i> Xóa</button>
+    <button class="btn-meet ghost" id="btnMau"><i class="fa-solid fa-file-lines"></i> Mẫu tin</button>
+</div>
+
+<div id="gridCD" style="height:280px"></div>
+
+<div class="meet-panel" id="panelLog" style="margin-top:16px;display:none">
+    <h3><i class="fa-solid fa-list-check"></i> Nhật ký gửi: <span id="cdTitle" style="color:var(--meet-primary)"></span></h3>
+    <div id="gridLog" style="height:260px"></div>
+</div>
+
+<script src="/Script/meet_tinnhan.js?v=1"></script>

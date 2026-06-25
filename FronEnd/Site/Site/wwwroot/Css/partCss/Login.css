@@ -1,0 +1,27 @@
+﻿.button {
+    padding: 5px;
+    border: 1px solid #d2d3d5;
+    background: white;
+}
+
+/*TabLogin*/
+#tabLogin td {
+    padding: 5px;
+}
+
+#tabLogin .col1 {
+    width: 60px;
+    font-size:18px;
+}
+
+#tabLogin .col2 {
+    width: 240px;
+}
+
+#tabLogin input[type="text"] {
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+
+#tabLogin input[type="password"] {
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+}

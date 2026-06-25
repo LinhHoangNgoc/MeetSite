@@ -1,0 +1,26 @@
+@{ ViewBag.Active = "khaosat"; ViewData["Title"] = "Khảo sát"; }
+
+<div class="meet-page-head">
+    <h2><i class="fa-solid fa-square-poll-vertical"></i> Khảo sát đánh giá</h2>
+    <div class="sub">Thiết kế phiếu khảo sát hài lòng để đại biểu trả lời qua điện thoại / kiosk.</div>
+</div>
+
+<div class="meet-toolbar">
+    <button class="btn-meet" id="btnAddKS"><i class="fa-solid fa-plus"></i> Thêm khảo sát</button>
+    <button class="btn-meet warn" id="btnEditKS"><i class="fa-solid fa-pen"></i> Sửa</button>
+    <button class="btn-meet sec" id="btnQRKS"><i class="fa-solid fa-qrcode"></i> QR khảo sát</button>
+    <button class="btn-meet danger" id="btnDelKS"><i class="fa-solid fa-trash"></i> Xóa</button>
+</div>
+
+<div id="gridKS" style="height:260px"></div>
+
+<div class="meet-panel" id="panelCH" style="margin-top:16px;display:none">
+    <h3><i class="fa-solid fa-list-ol"></i> Câu hỏi: <span id="ksTitle" style="color:var(--meet-primary)"></span>
+        <span class="meet-spacer"></span>
+        <button class="btn-meet sm" id="btnAddCH"><i class="fa-solid fa-plus"></i> Thêm câu hỏi</button>
+    </h3>
+    <div id="chList"></div>
+</div>
+
+<script src="/Script/qrCode/qrcode.min.js"></script>
+<script src="/Script/meet_khaosat.js?v=1"></script>

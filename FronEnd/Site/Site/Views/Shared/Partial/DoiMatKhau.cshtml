@@ -1,0 +1,49 @@
+﻿<script type="text/javascript">
+</script>
+<style type="text/css">
+    #divDoiMatKhau td {
+        padding: 5px;
+        vertical-align: middle
+    }
+
+    #divDoiMatKhau input {
+        width:100%;
+    }
+</style>
+<div id="dialogDoiMatKhau"></div>
+<div id="divDoiMatKhau" style="display: none">
+    <table style="width: 100%; float: left">
+        <tr>
+            <td>User Name:</td>
+            <td>
+                <input type="text" readonly="readonly" id="txtUserNameOld" />
+            </td>
+        </tr>
+        <tr>
+            <td>Mật khẩu cũ:</td>
+            <td>
+                <input type="password" id="txtPassWordOld" />
+            </td>
+        </tr>
+        <tr>
+            <td>Mật khẩu mới:</td>
+            <td>
+                <input type="password" id="txtPassWordNew" />
+            </td>
+        </tr>
+        <tr>
+            <td>Nhập lại MK:</td>
+            <td>
+                <input type="password" id="txtPassWordPre" />
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div class="button" style="width:70px;text-align:right;float:right" onclick="LuuDoiMatKhau()">
+                    <i class="fa-solid fa-save" style="float: left; margin-top: 3px"></i>
+                    Lưu
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>

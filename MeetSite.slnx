@@ -1,0 +1,16 @@
+<Solution>
+  <Folder Name="/DllSupport/" />
+  <Folder Name="/DllSupport/System/">
+    <Project Path="DllSupport/System/Support/Support.csproj" />
+  </Folder>
+  <Folder Name="/FronEnd/" />
+  <Folder Name="/FronEnd/Site/">
+    <Project Path="FronEnd/Site/Site/Site.csproj" />
+  </Folder>
+  <Folder Name="/FronEnd/UIHoiNghi/">
+    <Project Path="FronEnd/UIHoiNghi/UIHoiNghi/UIHoiNghi.csproj" />
+  </Folder>
+  <Folder Name="/FronEnd/UISystem/">
+    <Project Path="FronEnd/UISystem/UILogin/UILogin.csproj" />
+  </Folder>
+</Solution>

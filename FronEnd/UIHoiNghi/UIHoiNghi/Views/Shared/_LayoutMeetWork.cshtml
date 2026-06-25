@@ -1,0 +1,93 @@
+@inject Connection _cn
+@{
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+    string active = (ViewBag.Active as string) ?? "home";
+    var nav = MeetNav.Visible(Context, _cn);
+    var top = nav.FirstOrDefault(i => i.Cat == "");
+    var user = Context.Session.GetString("HoTen");
+    if (string.IsNullOrEmpty(user)) user = Context.Session.GetString("TenDangNhap");
+}
+<link href="/Css/meet.css?v=3" rel="stylesheet" />
+<script src="/Script/meet_ui.js?v=3"></script>
+
+<div class="meet-app">
+    <header class="mw-top">
+        <button class="mw-burger" id="mwBurger"><i class="fa-solid fa-bars"></i></button>
+        <a class="mw-brand" href="/HoiNghi"><i class="fa-solid fa-users-rectangle"></i><span>Quản lý Hội nghị</span></a>
+        <nav class="mw-menu" id="mwMenu">
+            @if (top != null)
+            {
+                <a class="mw-item @(active == top.Key ? "active" : "")" href="@top.Route"><i class="fa-solid @top.Icon"></i> @top.Title</a>
+            }
+            @foreach (var cat in MeetNav.Cats)
+            {
+                var items = nav.Where(i => i.Cat == cat).ToList();
+                if (items.Count == 0) { continue; }
+                var actInCat = items.Any(i => i.Key == active);
+                <div class="mw-grp">
+                    <button class="mw-item mw-toggle @(actInCat ? "active" : "")"><i class="fa-solid @(MeetNav.CatIcon.GetValueOrDefault(cat, "fa-folder"))"></i> @cat <i class="fa-solid fa-chevron-down mw-cv"></i></button>
+                    <div class="mw-drop">
+                        @foreach (var it in items)
+                        {
+                            <a class="mw-dropi @(active == it.Key ? "active" : "")" href="@it.Route"><i class="fa-solid @it.Icon"></i> @it.Title</a>
+                        }
+                    </div>
+                </div>
+            }
+        </nav>
+        <div class="mw-right">
+            <a class="mw-conf" href="/HoiNghi" title="Đổi hội nghị"><i class="fa-solid fa-calendar-check"></i> <span id="mwConfName">…</span></a>
+            <div class="mw-grp">
+                <button class="mw-icon mw-toggle" id="mwKioskBtn" title="Liên kết Kiosk &amp; mobile"><i class="fa-solid fa-link"></i></button>
+                <div class="mw-drop mw-drop-r" id="mwKioskPanel" style="min-width:300px;padding:12px"></div>
+            </div>
+            <div class="mw-grp">
+                <button class="mw-icon mw-toggle" id="mwThemeBtn" title="Cấu hình giao diện"><i class="fa-solid fa-palette"></i></button>
+                <div class="mw-drop mw-drop-r" id="mwThemePanel" style="min-width:240px;padding:14px"></div>
+            </div>
+            <div class="mw-grp">
+                <button class="mw-user mw-toggle"><i class="fa-solid fa-circle-user"></i> <span>@user</span> <i class="fa-solid fa-chevron-down mw-cv"></i></button>
+                <div class="mw-drop mw-drop-r" style="min-width:200px">
+                    <a class="mw-dropi" id="mwChgPwd"><i class="fa-solid fa-key"></i> Đổi mật khẩu</a>
+                    <a class="mw-dropi" id="mwLogout"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</a>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="mw-mask" id="mwMask"></div>
+    <main class="meet-content" id="meetContent">@RenderBody()</main>
+</div>
+
+<script>
+    window.MEET = window.MEET || {};
+    MEET.getHN = function () { return localStorage.getItem('meet.curHN') || ''; };
+    MEET.setHN = function (v) { localStorage.setItem('meet.curHN', v || ''); };
+    (function () {
+        // ===== Bối cảnh hội nghị: nếu chưa chọn -> về danh sách =====
+        jAjax('/HoiNghi/Combo', {}, function (o) {
+            var data = (o && o.code === 0 && o.data) ? o.data : [];
+            MEET.list = data; MEET.ready = true;
+            var cur = MEET.getHN();
+            var found = data.filter(function (r) { return '' + r.ID === '' + cur; })[0];
+            if (!found) { if (data.length) { location.href = '/HoiNghi'; return; } document.getElementById('mwConfName').textContent = '(chưa có hội nghị)'; }
+            else { document.getElementById('mwConfName').textContent = found.TenHoiNghi; }
+            document.dispatchEvent(new CustomEvent('meet:hn', { detail: MEET.getHN() }));
+            buildKiosk();
+        });
+        meetInitDropdowns();
+        meetInitThemePanel('mwThemeBtn', 'mwThemePanel');
+        meetInitUserMenu();
+
+        // ===== Link Kiosk & mobile =====
+        function buildKiosk() {
+            var hn = MEET.getHN(); var o = location.origin;
+            var kiosk = o + '/meetpublic/Kiosk' + (hn ? '?hn=' + hn : '');
+            var p = document.getElementById('mwKioskPanel');
+            p.innerHTML = '<div style="font-weight:700;margin-bottom:8px"><i class="fa-solid fa-display"></i> Màn hình Kiosk check-in</div>'
+                + '<div class="mw-linkbox"><input id="mwKioskUrl" readonly value="' + kiosk + '"><button class="btn-meet sm" id="mwCopyK"><i class="fa-solid fa-copy"></i></button></div>'
+                + '<div style="display:flex;gap:8px;margin-top:8px"><a class="btn-meet sm" href="' + kiosk + '" target="_blank"><i class="fa-solid fa-up-right-from-square"></i> Mở Kiosk</a></div>'
+                + '<div class="meet-hint" style="margin-top:10px">Đại biểu quét QR cá nhân để mở cổng riêng. QR sinh ở mục <b>Đại biểu</b>.</div>';
+            document.getElementById('mwCopyK').onclick = function () { var i = document.getElementById('mwKioskUrl'); i.select(); document.execCommand('copy'); if (window.meetToast) meetToast('Đã sao chép link Kiosk'); };
+        }
+    })();
+</script>

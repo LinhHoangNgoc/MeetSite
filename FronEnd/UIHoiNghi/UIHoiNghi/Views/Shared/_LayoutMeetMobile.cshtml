@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="light">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0a6c5e" />
+    <title>@ViewData["Title"] · Hội nghị ITKA</title>
+    <link rel="icon" type="image/png" href="/img/logo.png" />
+    <link href="/Css/bootStrap/Icon/css/all.min.css" rel="stylesheet" />
+    <link href="/Css/meet_mobile.css?v=1" rel="stylesheet" />
+</head>
+<body>
+    @RenderBody()
+    <div id="mToast" class="m-toast"></div>
+    <script src="/Script/meet_mobile_common.js?v=1"></script>
+    @await RenderSectionAsync("scripts", required: false)
+</body>
+</html>

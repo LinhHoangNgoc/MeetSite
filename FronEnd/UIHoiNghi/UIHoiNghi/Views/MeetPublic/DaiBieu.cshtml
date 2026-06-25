@@ -1,0 +1,53 @@
+@{ ViewData["Title"] = "Cổng đại biểu"; }
+
+<div class="mp-wrap">
+    <div class="mp-top">
+        <div class="brand"><i class="fa-solid fa-id-badge"></i> Cổng đại biểu</div>
+        <h1 id="pTen">Đang tải...</h1>
+        <div class="sub" id="pHN"></div>
+    </div>
+    <div class="mp-body" id="pBody">
+        <div class="mp-card"><div class="mp-ok"><div class="ic"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div>
+    </div>
+    <div class="mp-foot">© 2026 ITKA · Hệ thống Quản lý Hội nghị Thông minh</div>
+</div>
+
+@section scripts {
+<script>
+    var token = mqs('token');
+    function render(d) {
+        document.getElementById('pTen').innerHTML = d.hoTen + (d.laVIP ? ' <span class="badge-vip">VIP</span>' : '');
+        document.getElementById('pHN').textContent = d.tenHoiNghi || '';
+        var b = document.getElementById('pBody');
+        var html = '';
+        // Thẻ thông tin + ghế
+        html += '<div class="mp-card"><div class="mp-ok" style="padding:8px">'
+            + (d.maGhe ? '<div class="mp-seat"><i class="fa-solid fa-chair"></i> Ghế ' + d.maGhe + '</div>' : '<div class="meta">Chưa xếp ghế</div>')
+            + '<div class="meta" style="margin-top:10px">' + (d.chucDanh || '') + (d.donVi ? ' · ' + d.donVi : '') + '</div>'
+            + '<div style="margin-top:8px">' + (d.daCheckIn ? '<span class="badge-st st-1">✓ Đã điểm danh</span>' : '<span class="badge-st st-0">Chưa điểm danh</span>') + '</div>'
+            + '</div></div>';
+        // Tài liệu
+        html += '<div class="mp-card"><h3><i class="fa-solid fa-folder-open"></i> Tài liệu (' + d.taiLieu.length + ')</h3>';
+        html += d.taiLieu.length ? d.taiLieu.map(function (t) {
+            return '<a class="mp-list-item" href="/meetpublic/OpenTaiLieu?share=' + t.ShareToken + '&dbtoken=' + token + '" target="_blank" style="text-decoration:none;color:inherit">'
+                + '<i class="fa-solid fa-file-lines"></i><div class="t"><b>' + t.TenTaiLieu + '</b><small>' + (t.LoaiFile || '') + '</small></div><i class="fa-solid fa-chevron-right" style="color:#ccc"></i></a>';
+        }).join('') : '<div class="meta" style="color:#6a7882">Chưa có tài liệu.</div>';
+        html += '</div>';
+        // Khảo sát
+        if (d.khaoSat && d.khaoSat.length) {
+            html += '<div class="mp-card"><h3><i class="fa-solid fa-square-poll-vertical"></i> Khảo sát</h3>';
+            html += d.khaoSat.map(function (k) {
+                return '<a class="mp-list-item" href="/meetpublic/KhaoSat?id=' + k.ID + '&token=' + token + '" style="text-decoration:none;color:inherit">'
+                    + '<i class="fa-solid fa-pen-to-square"></i><div class="t"><b>' + k.TieuDe + '</b></div><i class="fa-solid fa-chevron-right" style="color:#ccc"></i></a>';
+            }).join('');
+            html += '</div>';
+        }
+        b.innerHTML = html;
+    }
+    if (!token) { document.getElementById('pBody').innerHTML = '<div class="mp-card"><div class="mp-ok"><div class="ic err"><i class="fa-solid fa-xmark"></i></div><div class="nm">Thiếu mã đại biểu</div></div></div>'; }
+    else mAjax('/meetpublic/MyInfo', { Token: token }, function (o) {
+        if (o.code === 0) render(o.data);
+        else document.getElementById('pBody').innerHTML = '<div class="mp-card"><div class="mp-ok"><div class="ic err"><i class="fa-solid fa-xmark"></i></div><div class="nm">' + o.message + '</div></div></div>';
+    });
+</script>
+}

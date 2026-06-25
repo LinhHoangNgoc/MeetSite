@@ -1,0 +1,15 @@
+﻿@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+<i class="fa-solid fa-home" style="width:25px;cursor:pointer;font-size: 14px;margin-top: 4px;" onclick="location.href='@Configuration["AppConfig:HomeSite"]'"></i>
+<div>@Configuration["AppConfig:Title"]</div>
+<div id="divTenDangNhap" style="width: 150px; float: right; white-space: nowrap; margin-right: 5px;text-align:right;cursor:pointer;margin-left:auto">
+    @Context.Session.GetString("UserName")
+    <div id="divTenDangNhapSave" style="display:none">@Context.Session.GetString("NameLogin")</div>
+    <div id="divThongTin">
+        <div class="btnMaster">
+            <a onclick="DangXuat()" style="text-decoration: none; color: #333;"><i style="margin-right:10px" class="fa-solid fa-arrow-right-from-bracket"></i>Đăng xuất</a>
+        </div>
+        <div class="btnMaster">
+            <a onclick="DoiMatKhau()" style="text-decoration: none; color: #333;"><i style="margin-right:10px" class="fa-solid fa-key"></i>Đổi mật khẩu</a>
+        </div>
+    </div>
+</div>

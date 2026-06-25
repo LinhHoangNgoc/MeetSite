@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>Tài liệu Hướng dẫn — Hệ thống Quản lý Hội nghị Thông minh ITKA</title>
+<style>
+  @page { size: A4; margin: 16mm 14mm; }
+  * { box-sizing: border-box; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; color: #1f2a30; font-size: 13px; line-height: 1.6; margin: 0; }
+  h1,h2,h3 { color: #0a6c5e; }
+  .cover { text-align: center; padding-top: 120px; page-break-after: always; }
+  .cover .logo { font-size: 60px; color: #0a6c5e; }
+  .cover h1 { font-size: 30px; margin: 18px 0 6px; }
+  .cover .sub { font-size: 16px; color: #5b6b73; }
+  .cover .meta { margin-top: 60px; color: #5b6b73; font-size: 13px; }
+  .cover .badge { display:inline-block; background:#0a6c5e; color:#fff; padding:6px 16px; border-radius:20px; font-weight:600; margin-top:18px;}
+  .toc { page-break-after: always; }
+  .toc h2 { border-bottom: 2px solid #0a6c5e; padding-bottom: 6px; }
+  .toc ol { line-height: 2; font-size: 14px; }
+  .toc a { color: #1f2a30; text-decoration: none; }
+  .sec { page-break-before: always; }
+  .sec h2 { border-bottom: 2px solid #0a6c5e; padding-bottom: 6px; font-size: 20px; }
+  .lead { color: #44515a; font-style: italic; margin: 6px 0 14px; }
+  .steps { background:#f3f7f8; border-left:4px solid #0a6c5e; border-radius:0 8px 8px 0; padding:10px 16px; margin:12px 0; }
+  .steps b { color:#0a6c5e; }
+  ul { margin: 8px 0; padding-left: 20px; }
+  li { margin: 4px 0; }
+  .shot { text-align:center; margin: 14px 0; }
+  .shot img { max-width: 100%; border:1px solid #cfd8dd; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,.08); }
+  .shot.mobile img { max-width: 300px; }
+  .cap { color:#7a8891; font-size:11.5px; margin-top:5px; }
+  table { border-collapse: collapse; width:100%; margin:12px 0; font-size:12.5px; }
+  th,td { border:1px solid #d3dde2; padding:7px 10px; text-align:left; }
+  th { background:#eaf3f1; color:#0a6c5e; }
+  .tag { display:inline-block; background:#eaf3f1; color:#0a6c5e; border-radius:5px; padding:1px 8px; font-size:11px; font-weight:600; }
+  .note { background:#fff7e6; border-left:4px solid #c08a1e; border-radius:0 8px 8px 0; padding:10px 14px; margin:12px 0; }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="logo">&#127942;</div>
+  <h1>HỆ THỐNG QUẢN LÝ HỘI NGHỊ THÔNG MINH</h1>
+  <div class="sub">Giải pháp phần mềm ITKA — Tài liệu hướng dẫn sử dụng</div>
+  <div class="badge">Phiên bản 2.0 · 2026</div>
+  <div class="meta">
+    Số hóa quy trình tổ chức · Tối ưu trải nghiệm khách mời · Nâng cao hiệu quả điều hành<br><br>
+    Nền tảng: ASP.NET Core 8 · Giao diện responsive desktop &amp; mobile
+  </div>
+</div>
+
+<div class="toc">
+  <h2>MỤC LỤC</h2>
+  <ol>
+    <li><a href="#s1">Giới thiệu &amp; Đăng nhập hệ thống</a></li>
+    <li><a href="#s2">Danh sách hội nghị (lọc &amp; mở không gian làm việc)</a></li>
+    <li><a href="#s3">Tổng quan hội nghị (Dashboard)</a></li>
+    <li><a href="#s4">Quản lý Hội nghị, Phiên họp &amp; Diễn giả</a></li>
+    <li><a href="#s5">Quản lý Đại biểu &amp; sinh mã QR</a></li>
+    <li><a href="#s6">Sơ đồ chỗ ngồi (kéo-thả &amp; chèn ghế tự do)</a></li>
+    <li><a href="#s7">Điểm danh &amp; điều hành thời gian thực</a></li>
+    <li><a href="#s8">Kiosk Check-in (mobile)</a></li>
+    <li><a href="#s9">Tin nhắn SMS &amp; Zalo</a></li>
+    <li><a href="#s10">Chia sẻ Tài liệu</a></li>
+    <li><a href="#s11">Khảo sát đánh giá (thiết kế)</a></li>
+    <li><a href="#s12">Khảo sát trên điện thoại (đại biểu trả lời)</a></li>
+    <li><a href="#s13">Cổng đại biểu (mobile)</a></li>
+    <li><a href="#s14">Báo cáo &amp; Chỉ số hiệu quả KPI</a></li>
+    <li><a href="#s15">Phân quyền chi tiết</a></li>
+    <li><a href="#s16">Cấu hình giao diện &amp; liên kết Kiosk</a></li>
+    <li><a href="#s17">Phụ lục: Kiến trúc &amp; vận hành</a></li>
+  </ol>
+</div>
+
+<div class="sec" id="s1">
+  <h2>1. Giới thiệu &amp; Đăng nhập hệ thống</h2>
+  <p class="lead">Hệ thống số hóa toàn bộ quy trình tổ chức hội nghị: tạo phiên, sơ đồ chỗ ngồi, điểm danh QR, tin nhắn, tài liệu, khảo sát và báo cáo KPI — trên một nền tảng duy nhất.</p>
+  <p>Truy cập hệ thống qua trình duyệt tại địa chỉ máy chủ (ví dụ <span class="tag">http://&lt;IP&gt;:5014</span>). Đăng nhập bằng tài khoản được cấp:</p>
+  <table>
+    <tr><th>Tài khoản</th><th>Mật khẩu</th><th>Vai trò</th><th>Phạm vi</th></tr>
+    <tr><td>admin</td><td>admin@123</td><td>Quản trị</td><td>Toàn quyền + Phân quyền</td></tr>
+    <tr><td>btc</td><td>btc@123</td><td>Ban tổ chức</td><td>Toàn quyền nghiệp vụ</td></tr>
+    <tr><td>kythuat</td><td>kt@123</td><td>Kỹ thuật viên</td><td>Sơ đồ, Điểm danh</td></tr>
+    <tr><td>letan</td><td>lt@123</td><td>Lễ tân</td><td>Điểm danh, tra cứu</td></tr>
+  </table>
+  <div class="note">Sau khi đăng nhập, hệ thống mở thẳng <b>Danh sách hội nghị</b>. Menu chức năng nằm ngang trên thanh tiêu đề; các nhóm có mũi tên ▾ sẽ xổ ra danh sách chức năng con.</div>
+</div>
+
+<div class="sec" id="s2">
+  <h2>2. Danh sách hội nghị</h2>
+  <p class="lead">Điểm vào hệ thống — chọn một hội nghị để làm việc hoặc tạo mới.</p>
+  <ul>
+    <li><b>Lọc</b> theo từ khóa (tên/mã/đơn vị), <b>trạng thái</b> (Nháp / Mở đăng ký / Đang diễn ra / Đã chốt), và khoảng <b>ngày bắt đầu</b> (Từ — Đến).</li>
+    <li>Mỗi hội nghị hiển thị dạng thẻ: tên, mã, trạng thái, thời gian, địa điểm, đơn vị tổ chức, số phiên &amp; số đại biểu.</li>
+    <li>Bấm <b>Mở</b> để vào không gian làm việc của hội nghị đó; biểu tượng bút/thùng rác để Sửa/Xóa.</li>
+    <li>Bấm <b>Thêm hội nghị</b> để tạo mới (tên, thời gian, địa điểm, mô tả...).</li>
+  </ul>
+  <div class="shot"><img src="img/d_list.png"><div class="cap">Hình 2 — Danh sách hội nghị với bộ lọc và nút Mở</div></div>
+</div>
+
+<div class="sec" id="s3">
+  <h2>3. Tổng quan hội nghị</h2>
+  <p class="lead">Bức tranh nhanh về hội nghị đang chọn.</p>
+  <ul>
+    <li>Thẻ chỉ số: số phiên, số đại biểu, đã điểm danh (kèm tỉ lệ %), đại biểu VIP, tài liệu, khảo sát.</li>
+    <li>Biểu đồ điểm danh theo từng phiên.</li>
+    <li>Khu vực <b>Lối tắt</b> tới các chức năng thường dùng.</li>
+  </ul>
+  <div class="shot"><img src="img/d_tongquan.png"><div class="cap">Hình 3 — Trang Tổng quan với thẻ KPI và biểu đồ</div></div>
+</div>
+
+<div class="sec" id="s4">
+  <h2>4. Quản lý Hội nghị, Phiên họp &amp; Diễn giả</h2>
+  <p class="lead">Khởi tạo, lên lịch trình và phân công diễn giả cho các phiên họp.</p>
+  <div class="steps"><b>Thao tác:</b> Menu <b>Tổ chức → Hội nghị &amp; Phiên</b>. Chọn 1 hội nghị trong lưới → mở 2 thẻ <b>Phiên họp</b> và <b>Diễn giả</b> để thêm/sửa/xóa.</div>
+  <ul>
+    <li><b>Phiên họp:</b> tên phiên, phòng họp, khung giờ bắt đầu/kết thúc, thứ tự, trạng thái, mô tả.</li>
+    <li><b>Diễn giả:</b> họ tên, chức danh, đơn vị, liên hệ, tiểu sử (soạn thảo định dạng).</li>
+  </ul>
+  <div class="shot"><img src="img/d_hoinghi.png"><div class="cap">Hình 4 — Quản lý hội nghị, phiên họp và diễn giả</div></div>
+</div>
+
+<div class="sec" id="s5">
+  <h2>5. Quản lý Đại biểu &amp; sinh mã QR</h2>
+  <p class="lead">Danh sách đại biểu, phân nhóm, gắn nhãn VIP và sinh mã QR cá nhân.</p>
+  <div class="steps"><b>Thao tác:</b> Menu <b>Tổ chức → Đại biểu</b>.</div>
+  <ul>
+    <li><b>Thêm/Sửa/Xóa</b> đại biểu; lọc theo nhóm; gắn nhãn <b>VIP</b>.</li>
+    <li><b>Nhập nhanh</b>: dán nhiều đại biểu (mỗi dòng: Họ tên | Chức danh | Đơn vị | Điện thoại | Email).</li>
+    <li><b>Quản lý nhóm</b>: tạo nhóm có màu sắc (VIP, Đối tác, Khách hàng, Báo chí...).</li>
+    <li><b>Xem / In QR</b>: mỗi đại biểu có mã QR cá nhân để check-in và mở cổng riêng; có thể in thẻ.</li>
+  </ul>
+  <div class="shot"><img src="img/d_daibieu.png"><div class="cap">Hình 5 — Danh sách đại biểu (cột Ghế, Điểm danh, nhãn VIP)</div></div>
+</div>
+
+<div class="sec" id="s6">
+  <h2>6. Sơ đồ chỗ ngồi</h2>
+  <p class="lead">Thiết kế sơ đồ hội trường trực quan và xếp chỗ cho đại biểu.</p>
+  <div class="steps"><b>Thao tác:</b> Menu <b>Tổ chức → Sơ đồ chỗ ngồi</b>.</div>
+  <ul>
+    <li><b>Sinh lưới ghế</b> nhanh theo số hàng × số ghế.</li>
+    <li><b>Chèn ghế tự do:</b> double-click vào vùng trống để đặt một ghế tại vị trí bất kỳ (không theo lưới).</li>
+    <li><b>Di chuyển ghế:</b> nhấn giữ &amp; kéo ghế tới vị trí mong muốn.</li>
+    <li><b>Xếp đại biểu:</b> kéo-thả đại biểu từ danh sách "Chưa xếp ghế" (bên phải) vào ghế. Ghế VIP có màu riêng.</li>
+    <li>Click vào ghế để: đổi mã, đánh dấu VIP, bỏ đại biểu, xóa ghế.</li>
+    <li><b>Chốt sơ đồ</b> để khóa chỉnh sửa trước giờ khai mạc.</li>
+  </ul>
+  <div class="shot"><img src="img/d_sodo.png"><div class="cap">Hình 6 — Sơ đồ chỗ ngồi: ghế đã xếp (xanh), VIP (cam), panel chưa xếp</div></div>
+</div>
+
+<div class="sec" id="s7">
+  <h2>7. Điểm danh &amp; điều hành thời gian thực</h2>
+  <p class="lead">Theo dõi số đại biểu có mặt theo thời gian thực.</p>
+  <div class="steps"><b>Thao tác:</b> Menu <b>Vận hành → Điểm danh</b>.</div>
+  <ul>
+    <li>Thẻ chỉ số tự cập nhật: đã có mặt, tổng đăng ký, tỉ lệ tham dự, VIP có mặt.</li>
+    <li>Nhật ký điểm danh cập nhật liên tục (phương thức QR / thủ công).</li>
+    <li><b>Điểm danh thủ công</b> cho đại biểu chưa quét; <b>Hủy điểm danh</b> khi cần.</li>
+    <li><b>Mở màn hình Kiosk</b> để dùng tại sảnh đón tiếp.</li>
+  </ul>
+  <div class="shot"><img src="img/d_checkin.png"><div class="cap">Hình 7 — Màn hình điều hành điểm danh (KPI realtime + nhật ký)</div></div>
+</div>
+
+<div class="sec" id="s8">
+  <h2>8. Kiosk Check-in (mobile)</h2>
+  <p class="lead">Màn hình self-service đặt tại sảnh — đại biểu quét QR để điểm danh siêu tốc.</p>
+  <ul>
+    <li>Quét mã QR bằng camera (hoặc nhập tay mã đại biểu).</li>
+    <li>Hiển thị tên, mã ghế ngay sau khi điểm danh; báo trùng nếu đã điểm danh.</li>
+    <li>Bộ đếm có mặt / đăng ký / tỉ lệ cập nhật liên tục.</li>
+  </ul>
+  <div class="shot mobile"><img src="img/m_kiosk.png"><div class="cap">Hình 8 — Kiosk check-in trên thiết bị di động</div></div>
+</div>
+
+<div class="sec" id="s9">
+  <h2>9. Tin nhắn SMS &amp; Zalo</h2>
+  <p class="lead">Gửi thông báo tới đại biểu qua SMS / Zalo OA (chế độ mô phỏng — sẵn sàng cắm nhà cung cấp thật).</p>
+  <div class="steps"><b>Thao tác:</b> Menu <b>Vận hành → Tin nhắn SMS/Zalo</b>.</div>
+  <ul>
+    <li><b>Soạn chiến dịch</b>: chọn kênh (SMS/Zalo), phạm vi (tất cả / theo nhóm / VIP), nội dung có biến cá nhân hóa <span class="tag">{HoTen}</span> <span class="tag">{MaGhe}</span> <span class="tag">{TenHoiNghi}</span>.</li>
+    <li><b>Mẫu tin</b> tái sử dụng nội dung.</li>
+    <li><b>Gửi</b> → hệ thống ghi log từng tin (thành công/thất bại, mã phản hồi) và cập nhật thống kê chiến dịch.</li>
+  </ul>
+  <div class="shot"><img src="img/d_tinnhan.png"><div class="cap">Hình 9 — Danh sách chiến dịch và nhật ký gửi</div></div>
+</div>
+
+<div class="sec" id="s10">
+  <h2>10. Chia sẻ Tài liệu</h2>
+  <p class="lead">Phân phối tài liệu số tới đại biểu, không cần in ấn.</p>
+  <div class="steps"><b>Thao tác:</b> Menu <b>Vận hành → Tài liệu</b>.</div>
+  <ul>
+    <li><b>Tải tài liệu lên</b> (PDF, Word, Excel, ảnh...), gắn vào phiên, đặt phạm vi <b>công khai</b> hoặc <b>theo nhóm</b>.</li>
+    <li><b>Phân quyền</b> chi tiết: chọn nhóm đại biểu được xem.</li>
+    <li><b>QR chia sẻ</b>: sinh mã QR để đại biểu quét tải tài liệu; hệ thống đếm <b>lượt xem</b>.</li>
+  </ul>
+  <div class="shot"><img src="img/d_tailieu.png"><div class="cap">Hình 10 — Quản lý tài liệu (phạm vi, lượt xem, QR)</div></div>
+</div>
+
+<div class="sec" id="s11">
+  <h2>11. Khảo sát đánh giá (thiết kế)</h2>
+  <p class="lead">Tạo phiếu khảo sát hài lòng cho đại biểu trả lời qua điện thoại/kiosk.</p>
+  <div class="steps"><b>Thao tác:</b> Menu <b>Đánh giá → Khảo sát</b>.</div>
+  <ul>
+    <li>Tạo khảo sát (tiêu đề, trạng thái Mở/Đóng).</li>
+    <li>Thêm câu hỏi với 4 loại: <b>thang điểm 1–5</b>, <b>một lựa chọn</b>, <b>nhiều lựa chọn</b>, <b>văn bản tự do</b>; đặt bắt buộc/không.</li>
+    <li><b>QR khảo sát</b> để phát cho đại biểu.</li>
+  </ul>
+  <div class="shot"><img src="img/d_khaosat.png"><div class="cap">Hình 11 — Thiết kế khảo sát &amp; câu hỏi</div></div>
+</div>
+
+<div class="sec" id="s12">
+  <h2>12. Khảo sát trên điện thoại</h2>
+  <p class="lead">Đại biểu quét QR khảo sát và trả lời nhanh ngay trên điện thoại.</p>
+  <ul>
+    <li>Câu thang điểm hiển thị dạng <b>sao</b>; lựa chọn dạng nút bấm lớn; có ô văn bản.</li>
+    <li>Kiểm tra câu bắt buộc trước khi gửi; chống trả lời trùng.</li>
+  </ul>
+  <div class="shot mobile"><img src="img/m_survey.png"><div class="cap">Hình 12 — Phiếu khảo sát trên di động</div></div>
+</div>
+
+<div class="sec" id="s13">
+  <h2>13. Cổng đại biểu (mobile)</h2>
+  <p class="lead">Mỗi đại biểu có một cổng riêng (mở bằng QR cá nhân).</p>
+  <ul>
+    <li>Hiển thị thông tin, <b>mã ghế</b>, trạng thái điểm danh.</li>
+    <li>Danh sách <b>tài liệu</b> được phép xem và <b>khảo sát</b> đang mở.</li>
+  </ul>
+  <div class="shot mobile"><img src="img/m_portal.png"><div class="cap">Hình 13 — Cổng thông tin đại biểu</div></div>
+</div>
+
+<div class="sec" id="s14">
+  <h2>14. Báo cáo &amp; Chỉ số hiệu quả (KPI)</h2>
+  <p class="lead">Tổng hợp tự động đo lường hiệu quả hội nghị.</p>
+  <div class="steps"><b>Thao tác:</b> Menu <b>Đánh giá → Báo cáo &amp; KPI</b>.</div>
+  <ul>
+    <li>Chỉ số: tham dự thực tế/đăng ký &amp; tỉ lệ, số phiên, lượt xem tài liệu, tin đã gửi, mức hài lòng trung bình.</li>
+    <li>Biểu đồ: điểm danh theo phiên, cơ cấu đại biểu theo nhóm, lượt xem tài liệu, điểm hài lòng theo tiêu chí.</li>
+  </ul>
+  <div class="shot"><img src="img/d_baocao.png"><div class="cap">Hình 14 — Báo cáo KPI với thẻ chỉ số và biểu đồ</div></div>
+</div>
+
+<div class="sec" id="s15">
+  <h2>15. Phân quyền chi tiết</h2>
+  <p class="lead">Quản trị vai trò và quyền theo từng chức năng (chỉ Quản trị viên).</p>
+  <div class="steps"><b>Thao tác:</b> Menu <b>Hệ thống → Phân quyền</b>.</div>
+  <ul>
+    <li><b>Vai trò &amp; quyền</b>: tạo vai trò; cấu hình <b>ma trận quyền</b> — mỗi chức năng × hành động (Xem / Thêm / Sửa / Xóa).</li>
+    <li><b>Người dùng</b>: tạo tài khoản, đặt quản trị/khóa, và <b>gán vai trò</b> cho người dùng.</li>
+    <li>Hệ thống chặn truy cập ở cả giao diện lẫn máy chủ theo quyền đã cấp.</li>
+  </ul>
+  <div class="shot"><img src="img/d_phanquyen.png"><div class="cap">Hình 15 — Ma trận phân quyền theo vai trò</div></div>
+</div>
+
+<div class="sec" id="s16">
+  <h2>16. Cấu hình giao diện &amp; liên kết Kiosk</h2>
+  <ul>
+    <li><b>Giao diện</b> (biểu tượng 🎨 trên thanh tiêu đề): chuyển chế độ <b>Sáng / Tối</b> và chọn <b>màu chủ đạo</b> (6 màu). Lựa chọn được ghi nhớ.</li>
+    <li><b>Liên kết Kiosk</b> (biểu tượng 🔗): hiển thị đường dẫn màn hình Kiosk của hội nghị, có nút <b>Sao chép</b> và <b>Mở</b>.</li>
+  </ul>
+  <div class="note">Giao diện đã được kiểm thử kỹ ở cả chế độ Sáng và Tối, tương thích màn hình desktop (ngang) và điện thoại (dọc/ngang).</div>
+</div>
+
+<div class="sec" id="s17">
+  <h2>17. Phụ lục — Kiến trúc &amp; vận hành</h2>
+  <ul>
+    <li><b>Nền tảng:</b> ASP.NET Core 8, kiến trúc module nạp DLL động; cơ sở dữ liệu SQL Server (MeetDB tự khởi tạo).</li>
+    <li><b>Bộ điều khiển giao diện (exControl):</b> Tabulator (lưới), Tom-Select (chọn), Flatpickr (ngày), Jodit (soạn thảo), Chart.js (biểu đồ), qrcode (mã QR).</li>
+    <li><b>Phân quyền (RBAC):</b> Vai trò → quyền theo nhóm chức năng × hành động; gác fail-open an toàn.</li>
+    <li><b>Mở cho mạng LAN:</b> chạy máy chủ bind <span class="tag">0.0.0.0:5014</span>, mở cổng 5014 trên tường lửa; máy khác truy cập <span class="tag">http://&lt;IP-máy-chủ&gt;:5014</span>.</li>
+    <li><b>SMS/Zalo:</b> hiện mô phỏng; cắm nhà cung cấp thật bằng cách hiện thực giao diện <span class="tag">IMeetSender</span>.</li>
+  </ul>
+  <p style="margin-top:30px;color:#7a8891;text-align:center">© 2026 ITKA — Hệ thống Quản lý Hội nghị Thông minh</p>
+</div>
+
+</body>
+</html>

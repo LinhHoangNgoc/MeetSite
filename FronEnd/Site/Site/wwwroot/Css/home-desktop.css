@@ -1,0 +1,822 @@
+/* ===== Web Desktop — quản lý cửa sổ + taskbar + ảnh nền (theme Win10 Tối/Sáng) ===== */
+
+/* ---- Biến theme: mặc định = Tối (dark) ---- */
+:root, html[data-theme='dark'] {
+    --accent-color: #0078d4;          /* xanh Win10 */
+    --accent-hover: #1a86d9;
+    --desk-fallback: #1b1b1f;         /* nền desktop khi không có ảnh */
+    --bar-bg: rgba(20,20,22,.96);     /* taskbar */
+    --bar-border: rgba(255,255,255,.14);
+    --bar-text: #f2f2f2;
+    --panel-bg: #2a2a2f;              /* start menu / panel nền */
+    --panel-bg2: #35353c;             /* vùng phụ */
+    --panel-border: rgba(255,255,255,.20);
+    --panel-text: #f5f5f6;
+    --panel-muted: #cbced4;
+    --panel-hover: rgba(255,255,255,.10);
+    --panel-active: rgba(255,255,255,.18);
+    --win-bg: #26262a;                /* thân cửa sổ */
+    --win-body: #ffffff;             /* iframe luôn nền trắng (nội dung app) */
+    --win-border: rgba(255,255,255,.18);
+    --title-bg: #313137;             /* titlebar */
+    --title-text: #f5f5f6;
+    --title-inactive: #26262a;
+    --tbtn-hover: rgba(255,255,255,.12);
+    --menu-bg: #313137;
+    --menu-text: #f3f3f4;
+    --menu-hover: rgba(255,255,255,.14);
+    --shadow: 0 12px 40px rgba(0,0,0,.65);
+    --field-bg: #34343a;
+    --field-border: rgba(255,255,255,.28);
+    --shortcut-text: #fff;
+    --shortcut-shadow: 0 1px 3px rgba(0,0,0,.7);
+}
+
+html[data-theme='light'] {
+    --accent-color: #0067c0;
+    --accent-hover: #1a7ad4;
+    --desk-fallback: #e7eaee;
+    --bar-bg: rgba(243,244,247,.92);
+    --bar-border: rgba(0,0,0,.10);
+    --bar-text: #1c1c1e;
+    --panel-bg: #f7f8fa;
+    --panel-bg2: #eceef2;
+    --panel-border: rgba(0,0,0,.10);
+    --panel-text: #1c1c1e;
+    --panel-muted: #5c636e;
+    --panel-hover: rgba(0,0,0,.06);
+    --panel-active: rgba(0,103,192,.14);
+    --win-bg: #f3f4f6;
+    --win-body: #ffffff;
+    --win-border: rgba(0,0,0,.16);
+    --title-bg: #f3f4f6;
+    --title-text: #1c1c1e;
+    --title-inactive: #e5e7eb;
+    --tbtn-hover: rgba(0,0,0,.08);
+    --menu-bg: #ffffff;
+    --menu-text: #1c1c1e;
+    --menu-hover: #eef3f9;
+    --shadow: 0 18px 50px rgba(0,0,0,.28);
+    --field-bg: #ffffff;
+    --field-border: rgba(0,0,0,.18);
+    --shortcut-text: #fff;
+    --shortcut-shadow: 0 1px 3px rgba(0,0,0,.7);
+}
+
+html, body { margin: 0; height: 100%; overflow: hidden; font-family: 'Segoe UI', Arial, sans-serif; }
+
+.wd-desktop {
+    position: fixed; inset: 0 0 48px 0; overflow: hidden;
+    background-color: var(--desk-fallback);
+    background-size: cover; background-position: center; transition: background-image .6s ease, background-color .25s ease;
+}
+
+/* Shortcut icons trên desktop */
+.wd-icons { position: absolute; inset: 0; padding: 12px; }
+.wd-shortcut {
+    position: absolute; width: 96px; height: 96px; border: 1px solid transparent; border-radius: 12px; background: transparent;
+    color: var(--shortcut-text); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 7px;
+    cursor: pointer; text-align: center; padding: 8px 5px; user-select: none; touch-action: none;
+}
+.wd-shortcut:hover { background: rgba(255,255,255,.14); border-color: rgba(255,255,255,.25); }
+.wd-shortcut.dragging { opacity: .8; z-index: 5; }
+.wd-shortcut i { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center;
+    font-size: 23px; color: #fff; background: var(--accent, #0f5e9c); box-shadow: 0 6px 16px rgba(0,0,0,.4); pointer-events: none; }
+.wd-shortcut span { font-size: 12px; line-height: 1.2; max-width: 92px; text-shadow: var(--shortcut-shadow); pointer-events: none;
+    /* Tên dài: tối đa 2 dòng rồi "…", không tràn ô */
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; word-break: break-word; }
+
+/* Cửa sổ */
+.wd-win {
+    position: absolute; min-width: 380px; min-height: 240px; background: var(--win-bg); border-radius: 9px; overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,.28); display: flex; flex-direction: column; border: 1px solid var(--win-border);
+    transition: box-shadow .15s;
+}
+.wd-win.active { box-shadow: var(--shadow); border-color: var(--accent-color); }
+.wd-win.maximized { border-radius: 0; border: 0; }
+
+/* Titlebar gọn kiểu Win10 */
+.wd-titlebar {
+    display: flex; align-items: center; gap: 9px; height: 36px; padding: 0 0 0 12px; flex: 0 0 auto;
+    color: var(--title-text); cursor: move; user-select: none; background: var(--title-bg);
+    border-bottom: 1px solid var(--panel-border);
+}
+.wd-win:not(.active) .wd-titlebar { background: var(--title-inactive); color: var(--panel-muted); }
+.wd-titlebar .wd-tico { font-size: 14px; color: var(--main-color, var(--accent-color)); }
+.wd-titlebar .wd-ttext { font-size: 13px; font-weight: 600; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: .2px; }
+.wd-titlebar .wd-tbtn { width: 44px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: inherit; font-size: 12px; transition: background .12s, color .12s; }
+.wd-titlebar .wd-tbtn:hover { background: var(--tbtn-hover); }
+.wd-titlebar .wd-tbtn.help { width: 40px; }
+.wd-titlebar .wd-tbtn.close:hover { background: #e81123; color: #fff; }
+.wd-win-body { flex: 1; position: relative; min-height: 0; background: var(--win-body); }
+.wd-win-body iframe { width: 100%; height: 100%; border: 0; display: block; background: #fff; }
+.wd-win.dragging .wd-win-body, .wd-win.resizing .wd-win-body { pointer-events: none; }
+.wd-resize { position: absolute; right: 0; bottom: 0; width: 20px; height: 20px; cursor: nwse-resize; z-index: 2; }
+.wd-resize::after { content: ''; position: absolute; right: 4px; bottom: 4px; width: 8px; height: 8px; border-right: 2px solid rgba(128,128,128,.5); border-bottom: 2px solid rgba(128,128,128,.5); }
+.wd-win.maximized .wd-resize { display: none; }
+
+/* Modal hướng dẫn cấp desktop */
+.wd-help-modal { display: none; position: fixed; inset: 0; z-index: 100002; background: rgba(0,0,0,.5); align-items: center; justify-content: center; }
+.wd-help-modal.open { display: flex; }
+.wd-help-box { width: 560px; max-width: 92vw; max-height: 84vh; background: var(--panel-bg); color: var(--panel-text); border-radius: 11px; box-shadow: var(--shadow); display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--panel-border); }
+.wd-help-h { padding: 13px 18px; background: var(--accent-color); color: #fff; font-weight: 600; display: flex; align-items: center; gap: 9px; }
+.wd-help-h .x { margin-left: auto; cursor: pointer; padding: 3px 9px; border-radius: 6px; }
+.wd-help-h .x:hover { background: rgba(255,255,255,.2); }
+.wd-help-b { padding: 18px 22px; overflow: auto; font-size: 13.5px; color: var(--panel-text); line-height: 1.65; }
+.wd-help-b h4 { color: var(--accent-color); margin: 12px 0 6px; }
+.wd-help-b ul { padding-left: 20px; margin: 4px 0; }
+.wd-help-b li { margin-bottom: 4px; }
+
+/* Taskbar */
+.wd-taskbar {
+    position: fixed; left: 0; right: 0; bottom: 0; height: 48px; z-index: 100000; display: flex; align-items: center;
+    gap: 8px; padding: 0 8px; background: var(--bar-bg); color: var(--bar-text); border-top: 1px solid var(--bar-border); backdrop-filter: blur(10px);
+}
+.wd-start { display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 16px; border: 0; border-radius: 6px;
+    background: var(--accent-color); color: #fff; font-weight: 600; cursor: pointer; font-size: 14px; flex: 0 0 auto; }
+.wd-start:hover { background: var(--accent-hover); }
+
+/* Taskbar pins (ghim app cố định) */
+.wd-taskpins { display: flex; gap: 4px; flex: 0 0 auto; align-items: center; height: 100%; }
+.wd-taskpin { min-width: 38px; max-width: 170px; height: 36px; display: flex; align-items: center; justify-content: flex-start; gap: 7px; padding: 0 10px; border-radius: 6px; cursor: pointer; color: var(--bar-text); border-bottom: 2px solid transparent; }
+.wd-taskpin i { color: var(--accent, var(--accent-color)); font-size: 15px; flex: 0 0 auto; }
+/* Nhãn text trên pin: hiện đầy đủ, dài quá thì cắt bằng "…". Ẩn hẳn ở màn hình hẹp (media query bên dưới). */
+.wd-taskpin span { font-size: 12.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wd-taskpin:hover { background: var(--panel-hover); }
+/* Pin đang CHẠY: chấm báo dưới đáy; đang active: nền + viền đậm. Nút "đang chạy" trùng route đã gim bị ẩn. */
+.wd-taskpin.wd-running { border-bottom-color: var(--accent, var(--accent-color)); }
+.wd-taskpin.wd-running::after { content: ''; position: absolute; bottom: 2px; width: 5px; height: 5px; border-radius: 50%; background: var(--accent, var(--accent-color)); }
+.wd-taskpin { position: relative; }
+.wd-taskpin.active { background: var(--panel-active); }
+.wd-task.wd-task-merged { display: none !important; }
+
+.wd-tasks { display: flex; gap: 6px; flex: 1; overflow-x: auto; overflow-y: hidden; height: 100%; align-items: center; }
+.wd-task { display: flex; align-items: center; gap: 8px; height: 36px; max-width: 200px; padding: 0 12px; border-radius: 6px;
+    background: var(--panel-hover); color: var(--bar-text); cursor: pointer; flex: 0 0 auto; border-bottom: 2px solid transparent; }
+.wd-task:hover { background: var(--panel-active); }
+.wd-task.active { background: var(--panel-active); border-bottom-color: var(--accent-color); }
+.wd-task i { color: var(--accent, var(--accent-color)); }
+.wd-task span { font-size: 12.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wd-tray { display: flex; align-items: center; gap: 6px; flex: 0 0 auto; color: var(--bar-text); }
+.wd-tray .wd-tray-btn { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: 6px; cursor: pointer; }
+.wd-tray .wd-tray-btn:hover { background: var(--panel-hover); }
+.wd-clock { font-size: 12px; text-align: right; line-height: 1.25; padding: 0 8px; white-space: nowrap; }
+
+/* User menu trên tray */
+.wd-user { position: relative; display: flex; align-items: center; gap: 7px; padding: 0 10px; height: 34px; border-radius: 6px; cursor: pointer; color: var(--bar-text); font-size: 12.5px; }
+.wd-user:hover { background: var(--panel-hover); }
+/* Menu chức năng ở tên user: trước đây dùng display none/block + khe hở 6px -> rê chuột qua khe là mất hover, rất khó chọn.
+   Nay: bỏ khe hở (margin-bottom:0, menu dính sát thanh), giữ menu khi hover chính nó, và trễ ẩn 0.3s cho dễ thao tác. */
+.wd-user-menu { visibility: hidden; opacity: 0; transition: opacity .12s ease, visibility 0s linear .3s; position: absolute; bottom: 100%; right: 0; margin-bottom: 0; min-width: 185px; background: var(--menu-bg); color: var(--menu-text); border-radius: 8px; box-shadow: var(--shadow); overflow: hidden; border: 1px solid var(--panel-border); z-index: 100002; }
+.wd-user:hover .wd-user-menu, .wd-user-menu:hover { visibility: visible; opacity: 1; transition: opacity .12s ease, visibility 0s; }
+.wd-user-menu a { display: flex; align-items: center; gap: 10px; padding: 11px 14px; color: var(--menu-text); text-decoration: none; font-size: 13px; cursor: pointer; }
+.wd-user-menu a:hover { background: var(--menu-hover); color: var(--accent-color); }
+.wd-user-menu a i { width: 16px; color: var(--accent-color); }
+
+/* ===== Launcher (Start menu kiểu Windows: search + category + apps) ===== */
+.wd-launcher { position: fixed; left: 8px; bottom: 56px; width: 640px; max-width: calc(100% - 16px); z-index: 100001;
+    background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 12px; box-shadow: var(--shadow);
+    color: var(--panel-text); display: none; overflow: hidden; }
+.wd-launcher.open { display: block; }
+.wd-launcher-search { display: flex; align-items: center; gap: 8px; padding: 12px 14px; border-bottom: 1px solid var(--panel-border); }
+.wd-launcher-search i { color: var(--panel-muted); font-size: 13px; }
+.wd-launcher-search input { flex: 1; background: var(--field-bg); border: 1px solid var(--field-border); border-radius: 7px; padding: 8px 12px; color: var(--panel-text); font-size: 13.5px; outline: none; }
+.wd-launcher-search input:focus { border-color: var(--accent-color); }
+.wd-launcher-main { display: flex; max-height: 58vh; }
+.wd-launcher-cats { width: 180px; flex: 0 0 auto; padding: 10px 8px; border-right: 1px solid var(--panel-border); background: var(--panel-bg2); overflow: auto; }
+.wd-cat { display: flex; align-items: center; gap: 10px; padding: 9px 11px; border-radius: 8px; cursor: pointer; font-size: 13px; color: var(--panel-text); margin-bottom: 3px; }
+.wd-cat i { width: 18px; text-align: center; color: var(--panel-muted); }
+.wd-cat:hover { background: var(--panel-hover); }
+.wd-cat.on { background: var(--panel-active); }
+.wd-cat.on i { color: var(--accent-color); }
+.wd-launcher-apps { flex: 1; padding: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; align-content: start; overflow: auto; }
+.wd-app { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 9px; cursor: pointer;
+    background: var(--panel-hover); border: 1px solid transparent; }
+.wd-app:hover { background: var(--panel-active); border-color: var(--accent-color); }
+.wd-app-ico { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 19px; color: #fff; background: var(--accent, #0f5e9c); flex: 0 0 auto; }
+.wd-app b { font-size: 13.5px; color: var(--panel-text); display: block; }
+.wd-app small { color: var(--panel-muted); font-size: 11.5px; }
+.wd-noapp { grid-column: 1 / -1; color: var(--panel-muted); font-size: 13px; padding: 20px; text-align: center; }
+
+/* Context menu (chuột phải app) */
+.wd-ctxmenu { position: fixed; z-index: 100003; min-width: 210px; background: var(--menu-bg); color: var(--menu-text);
+    border: 1px solid var(--panel-border); border-radius: 8px; box-shadow: var(--shadow); padding: 5px; display: none; }
+.wd-ctxmenu.open { display: block; }
+.wd-ctx-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; }
+.wd-ctx-item i { width: 16px; text-align: center; color: var(--accent-color); }
+.wd-ctx-item:hover { background: var(--menu-hover); }
+.wd-ctx-sep { height: 1px; background: var(--panel-border); margin: 4px 6px; }
+
+/* Bảng ảnh nền */
+.wd-wallpanel { position: fixed; right: 8px; bottom: 56px; z-index: 100001; width: 320px; background: var(--panel-bg);
+    border: 1px solid var(--panel-border); border-radius: 12px; box-shadow: var(--shadow); color: var(--panel-text); padding: 14px; display: none; }
+.wd-wallpanel.open { display: block; }
+.wd-wp-title { font-size: 14px; font-weight: 600; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.wd-walls { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; max-height: 180px; overflow: auto; }
+.wd-wall { height: 50px; border-radius: 8px; border: 2px solid transparent; cursor: pointer; background-size: cover; background-position: center; }
+.wd-wall.on { border-color: var(--accent-color); box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent-color) 40%, transparent); }
+.wd-wp-custom { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+.wd-wp-btn { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 9px 12px; border-radius: 8px; border: 0; cursor: pointer; font-size: 12.5px; background: var(--accent-color); color: #fff; }
+.wd-wp-btn:hover { background: var(--accent-hover); }
+.wd-wp-btn.ghost { background: var(--field-bg); color: var(--panel-text); border: 1px solid var(--field-border); }
+.wd-wp-btn.ghost:hover { background: var(--panel-hover); }
+.wd-wp-note { font-size: 11.5px; color: var(--panel-muted); min-height: 14px; line-height: 1.4; }
+.wd-wp-row { display: flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 12.5px; }
+.wd-wp-row label { color: var(--panel-text); }
+.wd-sw { position: relative; width: 40px; height: 22px; border-radius: 11px; background: var(--field-border); cursor: pointer; flex: 0 0 auto; transition: background .15s; }
+.wd-sw::after { content: ''; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; border-radius: 50%; background: #fff; transition: left .15s; box-shadow: 0 1px 3px rgba(0,0,0,.35); }
+.wd-sw.on { background: var(--accent-color); } .wd-sw.on::after { left: 20px; }
+.wd-wp-row select { background: var(--field-bg); color: var(--panel-text); border: 1px solid var(--field-border); border-radius: 6px; padding: 4px 8px; font-size: 12px; }
+
+/* ===== Start menu: trỏ PHÂN HỆ (trái) -> CHỨC NĂNG (phải), resize, yêu thích ===== */
+.wd-launcher { display: none; flex-direction: column; height: 520px; }
+.wd-launcher.open { display: flex; }
+.wd-launcher-main { flex: 1 1 auto; max-height: none; min-height: 0; }
+.wd-launcher-cats { width: 196px; }
+.wd-cat span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wd-cat.fav i { color: #f5b301; }
+.wd-cat-sep { height: 1px; background: var(--panel-border); margin: 5px 8px; }
+.wd-app { position: relative; }
+.wd-fav-star { position: absolute; top: 8px; right: 9px; font-size: 13px; color: var(--panel-muted); cursor: pointer; opacity: .55; }
+.wd-app:hover .wd-fav-star { opacity: 1; }
+.wd-fav-star.fa-solid { color: #f5b301; opacity: 1; }
+.wd-fav-star:hover { color: #f5b301; }
+.wd-launcher-resize { position: absolute; top: 0; right: 0; width: 18px; height: 18px; cursor: nesw-resize; z-index: 6; }
+.wd-launcher-resize::after { content: ''; position: absolute; top: 5px; right: 5px; width: 7px; height: 7px; border-top: 2px solid var(--panel-muted); border-right: 2px solid var(--panel-muted); }
+.wd-noapp { color: var(--panel-muted); padding: 18px; grid-column: 1 / -1; text-align: center; }
+
+/* Chức năng start menu: 1 cột, mỗi chức năng 1 dòng (icon -> text), gọn */
+.wd-launcher-apps { display: block; padding: 8px; }
+.wd-fgroup { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; color: var(--panel-muted); padding: 9px 8px 4px; display: flex; align-items: center; gap: 7px; }
+.wd-fgroup i { font-size: 11px; }
+.wd-fn { display: flex; align-items: center; gap: 10px; padding: 7px 9px; border-radius: 7px; cursor: pointer; position: relative; }
+.wd-fn:hover { background: var(--panel-active); }
+.wd-fn-ico { width: 20px; text-align: center; font-size: 14px; flex: 0 0 auto; }
+.wd-fn-t { flex: 1; font-size: 13px; color: var(--panel-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wd-fn .wd-fav-star { position: static; opacity: .4; font-size: 12px; }
+.wd-fn:hover .wd-fav-star { opacity: .9; }
+.wd-fn .wd-fav-star.fa-solid { color: #f5b301; opacity: 1; }
+
+/* ===== Menu phân hệ trên TITLEBAR cửa sổ (proxy từ iframe) ===== */
+.wd-titlebar .wd-ttext { flex: 0 0 auto; max-width: 200px; }
+.wd-tmenu-wrap { flex: 1 1 auto; min-width: 0; display: flex; align-items: stretch; position: relative; overflow: hidden; }
+.wd-tmenu { display: flex; align-items: stretch; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; flex: 1 1 auto; }
+.wd-tmenu::-webkit-scrollbar { height: 0; display: none; }
+.wd-tmnav { display: none; flex: 0 0 auto; width: 22px; border: 0; background: var(--tbtn-hover); color: var(--title-text); cursor: pointer; font-size: 11px; align-items: center; justify-content: center; }
+.wd-tmnav:hover { background: var(--tbtn-hover); filter: brightness(1.2); }
+.wd-tmenu-wrap.scrollable .wd-tmnav { display: flex; }
+.wd-mi { position: relative; flex: 0 0 auto; }
+.wd-mi-top { display: flex; align-items: center; gap: 5px; height: 36px; padding: 0 11px; color: var(--title-text); font-size: 12.5px; white-space: nowrap; cursor: pointer; }
+.wd-mi-top i { font-size: 9px; opacity: .8; }
+.wd-mi:hover > .wd-mi-top, .wd-mi.open > .wd-mi-top { background: var(--tbtn-hover); }
+.wd-win:not(.active) .wd-mi-top { color: var(--panel-muted); }
+.wd-mi-drop { display: none; position: fixed; min-width: 230px; max-height: 70vh; overflow: auto; z-index: 100050; background: #fff; border: 1px solid #e3e6e8; border-top: 2px solid var(--main-color); box-shadow: 0 12px 28px rgba(0,0,0,.22); border-radius: 0 0 8px 8px; padding: 5px; }
+.wd-mi.open > .wd-mi-drop { display: block; }
+.wd-mi-drop a { display: flex; align-items: center; gap: 9px; padding: 8px 11px; border-radius: 6px; color: #2a3942; text-decoration: none; font-size: 13px; white-space: nowrap; cursor: pointer; }
+.wd-mi-drop a:hover { background: #eef7f5; color: var(--main-color); }
+.wd-mi-drop a i { width: 16px; text-align: center; color: var(--main-color); }
+html[data-theme="dark"] .wd-mi-drop { background: #2a2a2d; border-color: #3c3c40; }
+html[data-theme="dark"] .wd-mi-drop a { color: #e4e4e6; }
+html[data-theme="dark"] .wd-mi-drop a:hover { background: #34343a; }
+
+/* Ảnh nền: danh sách ảnh custom (IndexedDB) + xóa */
+.wd-wp-subt { font-size: 12px; color: var(--panel-muted); margin: 10px 2px 5px; font-weight: 600; }
+.wd-customs { margin-top: 0; }
+.wd-cwall { position: relative; }
+.wd-cdel { position: absolute; top: -6px; right: -6px; width: 18px; height: 18px; line-height: 16px; text-align: center; border-radius: 50%; background: #e53935; color: #fff; font-size: 13px; cursor: pointer; display: none; box-shadow: 0 1px 4px rgba(0,0,0,.4); }
+.wd-cwall:hover .wd-cdel { display: block; }
+.wd-wp-btn { display: inline-flex; }
+
+/* ===== Responsive: mobile / màn hẹp ===== */
+@media (max-width: 760px) {
+    .wd-taskbar { height: 52px; gap: 4px; padding: 0 5px; }
+    .wd-start { padding: 0 12px; font-size: 13px; }
+    .wd-task span { display: none; }
+    .wd-task { max-width: 46px; padding: 0 11px; }
+    /* Màn hẹp: ẩn nhãn pin, quay về icon-only cho gọn */
+    .wd-taskpin span { display: none; }
+    .wd-taskpin { max-width: 46px; padding: 0 11px; justify-content: center; }
+    .wd-tray { gap: 3px; }
+    .wd-clock { font-size: 10.5px; padding: 0 4px; }
+    .wd-user span { display: none; }
+    /* Cửa sổ phủ toàn màn trên mobile */
+    .wd-win { left: 0 !important; top: 0 !important; width: 100% !important; height: 100% !important; border-radius: 0 !important; }
+    .wd-win .wd-resize { display: none; }
+    .wd-titlebar .wd-ttext { max-width: 84px; font-size: 12px; }
+    .wd-titlebar { height: 40px; }
+    .wd-mi-top { height: 40px; font-size: 12px; padding: 0 9px; }
+    /* Start menu + panel ảnh nền full-width */
+    .wd-launcher { left: 4px; right: 4px; bottom: 58px; width: auto; max-width: none; height: 72vh; }
+    .wd-launcher-cats { width: 132px; }
+    .wd-wallpanel { left: 4px; right: 4px; width: auto; max-width: none; }
+    .wd-walls { grid-template-columns: repeat(3, 1fr); }
+    /* Icon desktop nhỏ gọn */
+    .wd-icons { padding: 6px; }
+    .wd-shortcut { width: 76px; height: 82px; }
+    .wd-shortcut i { width: 40px; height: 40px; font-size: 19px; }
+    .wd-help-box, .wd-help-box { width: 94vw; }
+}
+@media (max-width: 460px) {
+    .wd-launcher-main { flex-direction: column; }
+    .wd-launcher-cats { width: auto; display: flex; overflow-x: auto; border-right: 0; border-bottom: 1px solid var(--panel-border); }
+    .wd-cat { flex: 0 0 auto; }
+    .wd-cat-sep { display: none; }
+}
+
+/* Bộ chọn biểu tượng (đổi icon shortcut/pin) */
+.wd-iconpick { position: fixed; z-index: 100060; display: none; background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 10px; box-shadow: var(--shadow); padding: 8px; width: 264px; }
+.wd-iconpick.open { display: block; }
+.wd-ip-h { font-size: 12px; font-weight: 600; color: var(--panel-muted); padding: 2px 4px 8px; }
+.wd-ip-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; max-height: 220px; overflow: auto; }
+.wd-ip-i { display: flex; align-items: center; justify-content: center; height: 34px; border: 1px solid transparent; border-radius: 7px; background: var(--field-bg); color: var(--panel-text); cursor: pointer; font-size: 15px; }
+.wd-ip-i:hover { background: var(--panel-active); border-color: var(--accent-color); }
+.wd-ip-i.on { background: var(--accent-color); color: #fff; }
+
+/* ============================================================
+   NGÔN NGỮ THIẾT KẾ WINDOWS 10: PHẲNG — VUÔNG GÓC (không bo tròn)
+   Áp cho start menu, cửa sổ, taskbar, panel, menu, tile...
+   ============================================================ */
+.wd-win, .wd-win.active, .wd-win.maximized,
+.wd-titlebar .wd-tbtn, .wd-titlebar .wd-tbtn.help, .wd-titlebar .wd-tbtn.close,
+.wd-start, .wd-taskpin, .wd-task, .wd-tray .wd-tray-btn, .wd-clock,
+.wd-user, .wd-user-menu, .wd-user-menu a,
+.wd-launcher, .wd-launcher-search input, .wd-launcher-apps,
+.wd-cat, .wd-cat-sep, .wd-app, .wd-app-ico,
+.wd-fn, .wd-fgroup,
+.wd-ctxmenu, .wd-ctx-item,
+.wd-wallpanel, .wd-wall, .wd-wp-btn, .wd-wp-btn.ghost, .wd-wp-row select,
+.wd-iconpick, .wd-ip-i,
+.wd-help-box, .wd-help-h, .wd-help-h .x,
+.wd-mi-drop, .wd-mi-drop a, .wd-mi-top,
+.wd-shortcut, .wd-shortcut i {
+    border-radius: 0 !important;
+}
+/* Bóng đổ phẳng + viền mảnh kiểu Win10 (bỏ cảm giác "nổi" Win11) */
+.wd-win { box-shadow: 0 4px 16px rgba(0,0,0,.40); }
+.wd-win.active { box-shadow: 0 8px 28px rgba(0,0,0,.55); border-color: var(--accent-color); }
+.wd-launcher, .wd-wallpanel, .wd-ctxmenu, .wd-user-menu, .wd-iconpick, .wd-help-box, .wd-mi-drop {
+    box-shadow: 0 6px 22px rgba(0,0,0,.45);
+}
+/* Tile shortcut vuông kiểu Win10; viền hover rõ hơn */
+.wd-shortcut:hover { background: var(--panel-active); border-color: var(--accent-color); }
+.wd-shortcut i { box-shadow: none; }
+/* Taskbar đặc, vạch accent dưới chân app đang mở (đặc trưng Win10) */
+.wd-task.active { border-bottom: 3px solid var(--accent-color); }
+.wd-taskpin:hover, .wd-task:hover { border-bottom: 3px solid var(--accent-hover); }
+/* Start: nút Start vuông, accent đặc */
+.wd-start { font-weight: 600; }
+
+/* ============================================================
+   WIDGET DESKTOP — Win10 phẳng, vuông góc
+   ============================================================ */
+.wd-widgets { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
+.wd-widget { position: absolute; pointer-events: auto; background: var(--panel-bg); color: var(--panel-text);
+    border: 1px solid var(--panel-border); box-shadow: 0 4px 16px rgba(0,0,0,.38); display: flex; flex-direction: column; }
+.wd-widget.dragging { opacity: .9; }
+.wd-wg-head { display: flex; align-items: center; gap: 8px; height: 30px; padding: 0 4px 0 10px; background: var(--panel-bg2);
+    border-bottom: 1px solid var(--panel-border); cursor: move; user-select: none; font-size: 12px; font-weight: 600; touch-action: none; }
+.wd-wg-head .t { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wd-wg-head i.ic { color: var(--accent-color); font-size: 12px; }
+.wd-wg-x { width: 26px; height: 24px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--panel-muted); font-size: 12px; }
+.wd-wg-x:hover { background: #e81123; color: #fff; }
+.wd-wg-body { padding: 10px 12px; }
+/* Đồng hồ */
+.wd-wg-clock .time { font-size: 40px; font-weight: 300; letter-spacing: 1px; line-height: 1.05; }
+.wd-wg-clock .date { font-size: 13px; color: var(--panel-muted); margin-top: 3px; }
+/* Lịch */
+.wd-wg-calendar table { width: 100%; border-collapse: collapse; font-size: 11.5px; }
+.wd-wg-calendar th { color: var(--panel-muted); font-weight: 600; padding: 3px 0; }
+.wd-wg-calendar td { text-align: center; padding: 4px 0; }
+.wd-wg-calendar td.today { background: var(--accent-color); color: #fff; font-weight: 700; }
+.wd-wg-calendar .mon { text-align: center; font-weight: 600; margin-bottom: 6px; font-size: 12.5px; }
+/* Ghi chú */
+.wd-wg-notes textarea { width: 100%; height: 130px; resize: none; background: var(--field-bg); color: var(--panel-text);
+    border: 1px solid var(--field-border); padding: 8px; font-size: 12.5px; outline: none; font-family: inherit; box-sizing: border-box; }
+.wd-wg-notes textarea:focus { border-color: var(--accent-color); }
+/* Thống kê */
+.wd-wg-stats .row { display: flex; justify-content: space-between; gap: 10px; font-size: 12.5px; padding: 5px 0; border-bottom: 1px solid var(--panel-border); }
+.wd-wg-stats .row:last-child { border-bottom: 0; }
+.wd-wg-stats .row b { color: var(--accent-color); white-space: nowrap; }
+/* Truy cập nhanh */
+.wd-wg-quick .wd-wg-body { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.wd-wg-q { display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 9px 4px; cursor: pointer; background: var(--panel-hover); }
+.wd-wg-q:hover { background: var(--panel-active); }
+.wd-wg-q i { font-size: 18px; color: var(--accent-color); }
+.wd-wg-q span { font-size: 10.5px; text-align: center; line-height: 1.15; width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+/* Panel bật/tắt widget */
+.wd-wgpanel { position: fixed; right: 8px; bottom: 56px; z-index: 100001; width: 256px; background: var(--panel-bg);
+    border: 1px solid var(--panel-border); box-shadow: var(--shadow); color: var(--panel-text); padding: 12px; display: none; }
+.wd-wgpanel.open { display: block; }
+.wd-wgpanel .h { font-size: 13px; font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+.wd-wgpanel .h i { color: var(--accent-color); }
+.wd-wg-toggle { display: flex; align-items: center; gap: 10px; padding: 8px 4px; font-size: 12.5px; cursor: pointer; }
+.wd-wg-toggle:hover { background: var(--panel-hover); }
+.wd-wg-toggle i { width: 18px; text-align: center; color: var(--accent-color); }
+.wd-wg-toggle .nm { flex: 1; }
+.wd-wgpanel { width: 272px; }
+.wd-wg-sub { font-size: 11.5px; line-height: 1.5; color: var(--panel-muted); margin-bottom: 8px; }
+.wd-wg-acts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--panel-border); }
+.wd-wg-act { flex: 1 1 auto; display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-size: 12px;
+    padding: 7px 8px; cursor: pointer; border: 1px solid var(--panel-border); background: var(--panel-hover); color: var(--panel-text); border-radius: 4px; }
+.wd-wg-act:hover { border-color: var(--accent-color); color: var(--accent-color); }
+.wd-wg-act i { color: var(--accent-color); }
+/* Widget co giãn được (resize) */
+.wd-wg-body { flex: 1 1 auto; overflow: auto; }
+.wd-wg-notes textarea { height: 100%; min-height: 110px; }
+.wd-wg-grip { position: absolute; right: 0; bottom: 0; width: 16px; height: 16px; cursor: nwse-resize; z-index: 3; }
+.wd-wg-grip::after { content: ''; position: absolute; right: 3px; bottom: 3px; width: 7px; height: 7px; border-right: 2px solid var(--panel-muted); border-bottom: 2px solid var(--panel-muted); }
+.wd-widget.resizing { opacity: .92; }
+/* Flyout lịch khi bấm đồng hồ taskbar (kiểu Win10) */
+.wd-calflyout { position: fixed; right: 6px; bottom: 54px; z-index: 100002; width: 290px; background: var(--panel-bg); color: var(--panel-text);
+    border: 1px solid var(--panel-border); box-shadow: var(--shadow); padding: 14px; display: none; }
+.wd-calflyout.open { display: block; }
+.wd-cf-now { text-align: center; margin-bottom: 10px; }
+.wd-cf-time { font-size: 32px; font-weight: 300; line-height: 1.1; }
+.wd-cf-date { font-size: 13px; color: var(--panel-muted); margin-top: 2px; }
+.wd-cf-nav { display: flex; align-items: center; justify-content: space-between; margin: 6px 0 4px; }
+.wd-cf-nav b { font-size: 13px; }
+.wd-cf-nav span { width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--panel-muted); }
+.wd-cf-nav span:hover { background: var(--panel-hover); color: var(--accent-color); }
+.wd-calflyout table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.wd-calflyout th { color: var(--panel-muted); font-weight: 600; padding: 4px 0; }
+.wd-calflyout td { text-align: center; padding: 5px 0; cursor: default; }
+.wd-calflyout td.today { background: var(--accent-color); color: #fff; font-weight: 700; }
+.wd-calflyout td.oth { color: var(--panel-muted); opacity: .45; }
+/* Widget API (gọi controller) */
+.wd-wg-api .row { display: flex; justify-content: space-between; gap: 10px; font-size: 12.5px; padding: 5px 0; border-bottom: 1px solid var(--panel-border); }
+.wd-wg-api .row:last-of-type { border-bottom: 0; }
+.wd-wg-api .row b { color: var(--accent-color); }
+.wd-wg-api .wg-api-ld { color: var(--panel-muted); font-size: 12.5px; padding: 6px 0; }
+.wd-wg-api .wg-api-msg { margin-top: 8px; font-size: 11.5px; color: #2faa5d; display: flex; align-items: center; gap: 6px; }
+
+/* ============================================================
+   #1 — Nút "Hiện màn hình nền" (Show Desktop) ở góc phải taskbar (kiểu Win)
+   ============================================================ */
+.wd-showdesk { flex: 0 0 auto; width: 8px; height: 48px; margin-left: 2px; cursor: pointer;
+    border-left: 1px solid var(--bar-border); transition: background .12s; }
+.wd-showdesk:hover { background: var(--panel-active); }
+@media (max-width: 760px) { .wd-showdesk { height: 52px; width: 10px; } }
+
+/* ============================================================
+   #3 — Trình thiết kế widget (catalog thêm/bớt + chế độ thiết kế)
+   ============================================================ */
+.wd-wgpanel { width: 300px; max-height: 76vh; overflow: auto; }
+.wd-wg-design-row { display: flex; align-items: center; gap: 10px; padding: 8px 4px; margin: 4px 0 2px; border-top: 1px solid var(--panel-border); border-bottom: 1px solid var(--panel-border); font-size: 12.5px; }
+.wd-wg-design-row .nm { flex: 1; display: flex; align-items: center; gap: 8px; }
+.wd-wg-design-row .nm i { color: var(--accent-color); }
+.wd-wg-catt { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; color: var(--panel-muted); padding: 10px 2px 6px; }
+.wd-wg-catalog { display: flex; flex-direction: column; gap: 6px; }
+.wd-wg-card { display: flex; align-items: center; gap: 10px; padding: 8px 9px; border: 1px solid var(--panel-border); background: var(--panel-hover); cursor: pointer; border-radius: 6px; }
+.wd-wg-card:hover { background: var(--panel-active); border-color: var(--accent-color); }
+.wd-wg-card.on { border-color: var(--accent-color); }
+.wd-wg-card .ci { width: 30px; height: 30px; flex: 0 0 auto; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #fff; background: var(--accent-color); border-radius: 6px; }
+.wd-wg-card .ct { flex: 1; min-width: 0; }
+.wd-wg-card .ct b { font-size: 12.5px; color: var(--panel-text); display: block; }
+.wd-wg-card .ct small { font-size: 11px; color: var(--panel-muted); display: block; line-height: 1.35; }
+.wd-wg-add { flex: 0 0 auto; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 6px; background: var(--field-bg); color: var(--panel-muted); border: 1px solid var(--field-border); font-size: 11px; }
+.wd-wg-add.on { background: var(--accent-color); color: #fff; border-color: var(--accent-color); }
+/* Chế độ thiết kế: viền nét đứt + tay cầm rõ để biết widget đang kéo-thả được */
+.wd-widget.wd-wg-design { outline: 2px dashed var(--accent-color); outline-offset: -2px; }
+.wd-widget.wd-wg-design .wd-wg-grip::after { border-color: var(--accent-color); }
+.wd-widgets.wd-designing { z-index: 3; }
+
+/* ============================================================
+   #4 — Widget "Người đang online" (chỉ Admin)
+   ============================================================ */
+.wd-wg-online .wd-wg-body { padding: 6px 8px; }
+.wd-online-ld { color: var(--panel-muted); font-size: 12.5px; padding: 8px 4px; }
+.wd-online-hd { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; color: var(--panel-muted); padding: 2px 4px 8px; }
+.wd-online-row { display: flex; align-items: center; gap: 9px; padding: 6px 4px; border-bottom: 1px solid var(--panel-border); }
+.wd-online-row:last-child { border-bottom: 0; }
+.wd-online-row .dot { width: 9px; height: 9px; border-radius: 50%; background: #28c76f; flex: 0 0 auto; box-shadow: 0 0 0 3px rgba(40,199,111,.18); }
+.wd-online-row .who { flex: 1; min-width: 0; }
+.wd-online-row .who b { font-size: 12.5px; color: var(--panel-text); }
+.wd-online-row .who small { display: block; font-size: 11px; color: var(--panel-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wd-online-row .who small.ip { color: var(--panel-muted); }
+.wd-online-row .ago { flex: 0 0 auto; font-size: 11px; color: var(--panel-muted); white-space: nowrap; }
+
+/* ============================================================
+   #5 — Dark theme DỄ NHÌN hơn: tăng tương phản chữ trên nền tối (WCAG-ish)
+   Chỉ áp cho shell desktop (data-theme=dark), không động vào nội dung iframe.
+   ============================================================ */
+html[data-theme='dark'] {
+    --bar-text: #f4f5f7;          /* taskbar: chữ sáng rõ hơn */
+    --panel-text: #f4f5f7;        /* panel/menu: chữ chính gần trắng */
+    --panel-muted: #c4c9d2;       /* chữ phụ: nâng từ #cbced4 nhưng đảm bảo đủ tương phản trên nền tối hơn */
+    --menu-text: #f4f5f7;
+    --title-text: #f6f7f9;
+    --field-border: rgba(255,255,255,.34);
+}
+/* Chữ phụ ở các vùng panel tối: tránh quá mờ */
+html[data-theme='dark'] .wd-app small,
+html[data-theme='dark'] .wd-fn-t,
+html[data-theme='dark'] .wd-wg-card .ct small,
+html[data-theme='dark'] .wd-online-row .who small,
+html[data-theme='dark'] .wd-online-ld,
+html[data-theme='dark'] .wd-wp-note { color: #c4c9d2; }
+/* Cửa sổ không active: tiêu đề/menu vẫn đọc được (trước đây dùng muted quá mờ) */
+html[data-theme='dark'] .wd-win:not(.active) .wd-titlebar,
+html[data-theme='dark'] .wd-win:not(.active) .wd-mi-top { color: #c8cdd6; }
+
+/* ============================================================
+   #6 — Aero Snap: lớp xem trước vùng chia đôi/max khi kéo cửa sổ tới mép
+   ============================================================ */
+.wd-snap-preview { position: absolute; z-index: 99990; pointer-events: none; opacity: 0;
+    background: color-mix(in srgb, var(--accent-color) 28%, transparent);
+    border: 2px solid var(--accent-color); box-sizing: border-box;
+    transition: opacity .12s ease, left .12s ease, top .12s ease, width .12s ease, height .12s ease; }
+.wd-snap-preview.show { opacity: 1; }
+/* Cửa sổ đã snap (nửa trái/phải, góc, cột, 3-vùng): bỏ bo góc cho gọn */
+.wd-win.wd-snap-l, .wd-win.wd-snap-r, .wd-win.wd-snapped { border-radius: 0 !important; }
+/* Đường ranh kéo combo giữa 2 cửa sổ chia đôi trái/phải (kiểu Windows) */
+.wd-splitdiv { position: absolute; width: 8px; margin-left: -4px; cursor: ew-resize;
+    display: none; background: transparent; }
+.wd-splitdiv.show { display: block; }
+.wd-splitdiv::after { content: ''; position: absolute; left: 3px; top: 0; bottom: 0; width: 2px;
+    background: transparent; transition: background .12s ease; }
+.wd-splitdiv:hover::after, .wd-splitdiv.dragging::after { background: var(--accent-color); }
+/* Chế độ "Di chuyển" (chuột phải titlebar -> Di chuyển): con trỏ dạng move trên toàn màn hình */
+body.wd-moving, body.wd-moving * { cursor: move !important; }
+
+/* ============================================================
+   #7 — LỊCH VẠN NIÊN: lưới ngày dương/âm + panel chi tiết (flyout đồng hồ)
+   ============================================================ */
+.wd-calflyout { width: 320px; max-height: 86vh; overflow: auto; }
+.wd-cf-vn td.vn { padding: 2px 0; cursor: pointer; vertical-align: top; }
+.wd-cf-vn td.vn .sol { display: block; font-size: 13px; line-height: 1.1; }
+.wd-cf-vn td.vn .lun { display: block; font-size: 9.5px; color: var(--panel-muted); line-height: 1.1; }
+.wd-cf-vn td.vn:hover { background: var(--panel-hover); }
+.wd-cf-vn td.vn.sel { outline: 1px solid var(--accent-color); outline-offset: -1px; }
+.wd-cf-vn td.today { background: var(--accent-color); }
+.wd-cf-vn td.today .sol, .wd-cf-vn td.today .lun { color: #fff; }
+.wd-cf-detail { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--panel-border); font-size: 12px; line-height: 1.5; }
+.wd-cf-dh { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 5px; }
+.wd-cf-dh .dl { font-weight: 600; font-size: 12.5px; }
+.wd-cf-dh .qa { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 10px; color: #fff; }
+.wd-cf-dh .qa.good { background: #2faa5d; } .wd-cf-dh .qa.bad { background: #e0564f; } .wd-cf-dh .qa.mid { background: #b08a2e; }
+.wd-cf-am { margin: 3px 0; }
+.wd-cf-am b, .wd-cf-cc b, .wd-cf-hd b { color: var(--accent-color); }
+.wd-cf-cc { display: flex; flex-wrap: wrap; gap: 4px 12px; margin: 3px 0; }
+.wd-cf-cc span { font-size: 11.5px; color: var(--panel-muted); }
+.wd-cf-hd { margin: 5px 0 3px; color: var(--panel-muted); }
+.wd-cf-hd i { color: #d9a441; margin-right: 4px; }
+.wd-cf-hd span { color: var(--panel-text); }
+.wd-cf-tx { margin-top: 4px; color: var(--panel-muted); font-size: 11.5px; }
+.wd-cf-tx i { margin-right: 4px; color: var(--accent-color); }
+
+/* Widget Lịch vạn niên */
+.wd-wg-lichvn .wd-wg-body { padding: 10px 12px; }
+.wd-lvn-top { display: flex; align-items: center; gap: 10px; }
+.wd-lvn-sol { font-size: 36px; font-weight: 300; line-height: 1; }
+.wd-lvn-meta { flex: 1; min-width: 0; }
+.wd-lvn-meta b { display: block; font-size: 13px; }
+.wd-lvn-meta span { display: block; font-size: 11.5px; color: var(--panel-muted); }
+.wd-lvn-qa { font-size: 11px; font-weight: 700; padding: 2px 9px; border-radius: 10px; color: #fff; }
+.wd-lvn-qa.good { background: #2faa5d; } .wd-lvn-qa.bad { background: #e0564f; } .wd-lvn-qa.mid { background: #b08a2e; }
+.wd-lvn-am, .wd-lvn-cc { font-size: 12px; margin-top: 7px; }
+.wd-lvn-am b, .wd-lvn-cc b { color: var(--accent-color); }
+.wd-lvn-hint { font-size: 10.5px; color: var(--panel-muted); margin-top: 8px; opacity: .85; }
+
+/* ============================================================
+   #8 — THANH CUỘN: mảnh, mờ, hợp theme cho mọi vùng cuộn desktop
+   (ghi chú nhanh, thân widget, launcher/start menu, thân cửa sổ, panel...)
+   ============================================================ */
+/* Biến màu thanh cuộn theo theme (dark mặc định) */
+:root {
+    --wd-sb-thumb: rgba(255,255,255,.22);
+    --wd-sb-thumb-hover: rgba(255,255,255,.38);
+}
+html[data-theme='light'] {
+    --wd-sb-thumb: rgba(0,0,0,.22);
+    --wd-sb-thumb-hover: rgba(0,0,0,.38);
+}
+/* Quy tắc CHUNG: áp cho mọi vùng cuộn bên trong desktop (.wd-*) */
+.wd-desktop *,
+.wd-win-body, .wd-help-b,
+.wd-launcher, .wd-launcher *, .wd-mi-drop,
+.wd-wg-body, .wd-wgpanel, .wd-calflyout, .wd-wg-notes textarea,
+.wd-walls, .wd-ip-grid {
+    scrollbar-width: thin;
+    scrollbar-color: var(--wd-sb-thumb) transparent;
+}
+.wd-desktop *::-webkit-scrollbar,
+.wd-win-body::-webkit-scrollbar, .wd-help-b::-webkit-scrollbar,
+.wd-launcher::-webkit-scrollbar, .wd-launcher *::-webkit-scrollbar, .wd-mi-drop::-webkit-scrollbar,
+.wd-wg-body::-webkit-scrollbar, .wd-wgpanel::-webkit-scrollbar, .wd-calflyout::-webkit-scrollbar,
+.wd-wg-notes textarea::-webkit-scrollbar,
+.wd-walls::-webkit-scrollbar, .wd-ip-grid::-webkit-scrollbar {
+    width: 8px; height: 8px;
+}
+.wd-desktop *::-webkit-scrollbar-track,
+.wd-win-body::-webkit-scrollbar-track, .wd-help-b::-webkit-scrollbar-track,
+.wd-launcher::-webkit-scrollbar-track, .wd-launcher *::-webkit-scrollbar-track, .wd-mi-drop::-webkit-scrollbar-track,
+.wd-wg-body::-webkit-scrollbar-track, .wd-wgpanel::-webkit-scrollbar-track, .wd-calflyout::-webkit-scrollbar-track,
+.wd-wg-notes textarea::-webkit-scrollbar-track,
+.wd-walls::-webkit-scrollbar-track, .wd-ip-grid::-webkit-scrollbar-track {
+    background: transparent;
+}
+.wd-desktop *::-webkit-scrollbar-thumb,
+.wd-win-body::-webkit-scrollbar-thumb, .wd-help-b::-webkit-scrollbar-thumb,
+.wd-launcher::-webkit-scrollbar-thumb, .wd-launcher *::-webkit-scrollbar-thumb, .wd-mi-drop::-webkit-scrollbar-thumb,
+.wd-wg-body::-webkit-scrollbar-thumb, .wd-wgpanel::-webkit-scrollbar-thumb, .wd-calflyout::-webkit-scrollbar-thumb,
+.wd-wg-notes textarea::-webkit-scrollbar-thumb,
+.wd-walls::-webkit-scrollbar-thumb, .wd-ip-grid::-webkit-scrollbar-thumb {
+    background: var(--wd-sb-thumb); border-radius: 4px;
+    border: 2px solid transparent; background-clip: padding-box;
+}
+.wd-desktop *::-webkit-scrollbar-thumb:hover,
+.wd-win-body::-webkit-scrollbar-thumb:hover, .wd-help-b::-webkit-scrollbar-thumb:hover,
+.wd-launcher *::-webkit-scrollbar-thumb:hover, .wd-mi-drop::-webkit-scrollbar-thumb:hover,
+.wd-wg-body::-webkit-scrollbar-thumb:hover, .wd-wgpanel::-webkit-scrollbar-thumb:hover, .wd-calflyout::-webkit-scrollbar-thumb:hover,
+.wd-wg-notes textarea::-webkit-scrollbar-thumb:hover,
+.wd-walls::-webkit-scrollbar-thumb:hover, .wd-ip-grid::-webkit-scrollbar-thumb:hover {
+    background: var(--wd-sb-thumb-hover); background-clip: padding-box;
+}
+/* corner giao 2 thanh: trong suốt, không lộ ô vuông xám */
+.wd-desktop *::-webkit-scrollbar-corner,
+.wd-wg-notes textarea::-webkit-scrollbar-corner { background: transparent; }
+/* Ghi chú nhanh: chỉ hiện thanh cuộn khi cần (auto) thay vì luôn hiện */
+.wd-wg-notes textarea { overflow: auto; }
+
+/* ============================================================
+   #9 — ÂM/DƯƠNG LỊCH: tinh chỉnh để dễ nhìn hơn (flyout + widget)
+   ============================================================ */
+/* --- Lưới ngày trong flyout (.wd-cf-vn) --- */
+.wd-cf-vn th { font-size: 11px; text-transform: uppercase; letter-spacing: .4px; padding: 5px 0 6px; }
+.wd-cf-vn td.vn {
+    padding: 3px 0; border-radius: 7px;
+    transition: background .12s ease, box-shadow .12s ease;
+}
+.wd-cf-vn td.vn .sol { font-size: 14px; font-weight: 600; letter-spacing: .2px; }
+/* Âm lịch nhỏ nhưng vẫn đọc được (không quá mờ) ở cả 2 theme */
+.wd-cf-vn td.vn .lun { font-size: 10px; margin-top: 1px; color: var(--panel-muted); opacity: .9; }
+.wd-cf-vn td.vn:hover { background: var(--panel-hover); }
+/* Cuối tuần: CN (cột 1) đỏ, T7 (cột 7) xanh accent — phân biệt nhẹ.
+   Markup không gắn class .sun/.sat nên dùng vị trí cột (:nth-child). */
+.wd-cf-vn td.vn:nth-child(1) .sol { color: #e0564f; }
+.wd-cf-vn td.vn:nth-child(7) .sol { color: var(--accent-color); }
+.wd-cf-vn thead th:first-child { color: #e0564f; }
+.wd-cf-vn thead th:last-child { color: var(--accent-color); }
+/* Hôm nay/đang chọn: giữ màu chữ chuẩn, không để màu cuối tuần lấn át */
+.wd-cf-vn td.today:nth-child(1) .sol,
+.wd-cf-vn td.today:nth-child(7) .sol { color: #fff; }
+.wd-cf-vn td.vn.sel:nth-child(1) .sol { color: #e0564f; }
+/* Ngày được chọn */
+.wd-cf-vn td.vn.sel { outline: 0; box-shadow: inset 0 0 0 1.5px var(--accent-color); }
+/* HÔM NAY nổi bật rõ */
+.wd-cf-vn td.today {
+    background: var(--accent-color);
+    box-shadow: 0 1px 4px color-mix(in srgb, var(--accent-color) 55%, transparent);
+}
+.wd-cf-vn td.today .sol { color: #fff; font-weight: 700; }
+.wd-cf-vn td.today .lun { color: rgba(255,255,255,.9); opacity: 1; }
+
+/* --- Panel chi tiết flyout (.wd-cf-detail) --- */
+.wd-cf-detail { margin-top: 12px; padding-top: 11px; }
+.wd-cf-dh { margin-bottom: 7px; }
+.wd-cf-dh .dl { font-size: 13px; }
+/* Badge tốt/xấu gọn gàng, có viền nhẹ cho rõ trên nền */
+.wd-cf-dh .qa, .wd-lvn-qa {
+    letter-spacing: .3px; text-transform: uppercase;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.18);
+}
+.wd-cf-dh .qa.good, .wd-lvn-qa.good { background: #21a558; }
+.wd-cf-dh .qa.bad,  .wd-lvn-qa.bad  { background: #de4a43; }
+.wd-cf-dh .qa.mid,  .wd-lvn-qa.mid  { background: #c08e2a; }
+.wd-cf-cc span { color: var(--panel-text); opacity: .92; }
+.wd-cf-tx { font-size: 11.5px; }
+
+/* --- Widget Lịch vạn niên (.wd-lvn-*) --- */
+.wd-lvn-top {
+    align-items: flex-start; gap: 12px;
+    padding-bottom: 10px; margin-bottom: 4px;
+    border-bottom: 1px solid var(--panel-border);
+}
+.wd-lvn-sol { font-size: 42px; font-weight: 200; letter-spacing: -1px; }
+.wd-lvn-meta b { font-size: 13.5px; font-weight: 600; }
+.wd-lvn-meta span { font-size: 11.5px; line-height: 1.5; color: var(--panel-muted); opacity: .95; }
+.wd-lvn-am b, .wd-lvn-cc b { font-weight: 600; }
+
+/* Tăng độ đọc của chữ âm-lịch/mờ trên nền sáng (light theme) */
+html[data-theme='light'] .wd-cf-vn td.vn .lun,
+html[data-theme='light'] .wd-lvn-meta span,
+html[data-theme='light'] .wd-cf-cc span,
+html[data-theme='light'] .wd-cf-tx { color: #44505e; opacity: 1; }
+html[data-theme='light'] .wd-cf-vn td.today .lun { color: rgba(255,255,255,.95); }
+
+/* ============================================================
+   THÔNG BÁO / NHẮC VIỆC — chuông taskbar + badge + panel trượt + toast.
+   Dùng biến theme sẵn có nên tự hợp light/dark.
+   ============================================================ */
+/* Nút chuông + badge đỏ */
+.wd-bell-btn { position: relative; }
+.wd-bell-btn.has-overdue i { color: #ff5b5b; animation: wdBellRing 2.2s ease-in-out infinite; transform-origin: 50% 0; }
+@keyframes wdBellRing { 0%,82%,100% { transform: rotate(0); } 86% { transform: rotate(11deg); } 90% { transform: rotate(-9deg); } 94% { transform: rotate(6deg); } }
+.wd-bell-badge { position: absolute; top: 1px; right: 1px; min-width: 16px; height: 16px; padding: 0 4px; border-radius: 9px;
+    background: #c23b3b; color: #fff; font-size: 10px; font-weight: 700; line-height: 16px; text-align: center;
+    box-shadow: 0 0 0 2px var(--bar-bg, #1f1f23); pointer-events: none; }
+.wd-bell-badge.overdue { background: #e23a3a; }
+
+/* Panel thông báo — trượt lên từ góc dưới-phải, neo trên thanh taskbar */
+.wd-notipanel { position: fixed; right: 6px; bottom: 54px; z-index: 100002; width: 360px; max-width: calc(100% - 12px);
+    max-height: 70vh; background: var(--panel-bg); color: var(--panel-text); border: 1px solid var(--panel-border);
+    box-shadow: var(--shadow); border-radius: 10px; overflow: hidden; display: none; flex-direction: column;
+    transform: translateY(14px); opacity: 0; transition: transform .16s ease, opacity .16s ease; }
+.wd-notipanel.open { display: flex; transform: translateY(0); opacity: 1; }
+.wd-noti-h { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 11px 14px;
+    border-bottom: 1px solid var(--panel-border); }
+.wd-noti-h .ti { font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+.wd-noti-h .ti i { color: var(--accent-color); }
+.wd-noti-actions { display: flex; align-items: center; gap: 6px; }
+.wd-noti-clear { display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; cursor: pointer;
+    padding: 5px 9px; border: 1px solid var(--panel-border); background: var(--panel-hover); color: var(--panel-text); border-radius: 6px; }
+.wd-noti-clear:hover { border-color: var(--accent-color); color: var(--accent-color); }
+.wd-noti-x { width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; border-radius: 6px; cursor: pointer; color: var(--panel-muted); }
+.wd-noti-x:hover { background: var(--panel-hover); color: var(--panel-text); }
+.wd-noti-sub { font-size: 11.5px; color: var(--panel-muted); padding: 8px 14px 4px; }
+.wd-noti-sub b.od { color: #e25656; }
+.wd-noti-list { overflow: auto; padding: 4px 8px 10px; }
+.wd-noti-grp { margin-top: 6px; }
+.wd-noti-grp-t { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; color: var(--panel-muted); padding: 6px 6px 4px; }
+.wd-noti-grp-t span { font-weight: 500; opacity: .8; }
+.wd-noti-item { display: flex; align-items: flex-start; gap: 10px; padding: 9px 10px; border-radius: 8px; cursor: pointer;
+    border: 1px solid transparent; }
+.wd-noti-item:hover { background: var(--panel-hover); border-color: var(--panel-border); }
+.wd-noti-item.read { opacity: .58; }
+.wd-noti-dot { flex: 0 0 auto; width: 8px; height: 8px; margin-top: 5px; border-radius: 50%; background: var(--accent-color); }
+.wd-noti-item.overdue .wd-noti-dot { background: #e23a3a; }
+.wd-noti-item.read .wd-noti-dot { background: var(--panel-muted); }
+.wd-noti-body { flex: 1 1 auto; min-width: 0; }
+.wd-noti-title { font-size: 13px; font-weight: 600; line-height: 1.35; }
+.wd-noti-detail { font-size: 12px; color: var(--panel-muted); line-height: 1.45; margin-top: 1px; word-break: break-word; }
+.wd-noti-meta { display: flex; align-items: center; gap: 8px; margin-top: 4px; flex-wrap: wrap; }
+.wd-noti-due { font-size: 11px; color: var(--panel-muted); display: inline-flex; align-items: center; gap: 4px; }
+.wd-noti-due.od { color: #e25656; font-weight: 600; }
+.wd-noti-tag { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .3px;
+    background: rgba(226,58,58,.16); color: #e25656; padding: 2px 7px; border-radius: 10px; }
+.wd-noti-item.overdue { background: rgba(226,58,58,.06); }
+.wd-noti-open { flex: 0 0 auto; color: var(--panel-muted); font-size: 12px; margin-top: 3px; }
+.wd-noti-item:hover .wd-noti-open { color: var(--accent-color); }
+.wd-noti-toggle { flex: 0 0 auto; width: 24px; height: 24px; padding: 0; margin-top: -1px; border: 1px solid transparent;
+    border-radius: 6px; background: transparent; color: var(--panel-muted); font-size: 11px; cursor: pointer; line-height: 1;
+    display: inline-flex; align-items: center; justify-content: center; opacity: 0; transition: opacity .12s, background .12s, color .12s; }
+.wd-noti-item:hover .wd-noti-toggle { opacity: 1; }
+.wd-noti-toggle:hover { background: var(--panel-hover); border-color: var(--panel-border); color: var(--accent-color); }
+.wd-noti-item.read .wd-noti-toggle { opacity: .85; color: var(--accent-color); }
+.wd-noti-empty { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 28px 10px; color: var(--panel-muted); font-size: 12.5px; }
+.wd-noti-empty i { font-size: 26px; opacity: .7; }
+
+/* Toast góc dưới-phải */
+.wd-toast-host { position: fixed; right: 12px; bottom: 60px; z-index: 100005; display: flex; flex-direction: column; gap: 10px; align-items: flex-end; pointer-events: none; }
+.wd-toast { pointer-events: auto; display: flex; align-items: flex-start; gap: 11px; width: 340px; max-width: calc(100vw - 24px);
+    background: var(--panel-bg); color: var(--panel-text); border: 1px solid var(--panel-border); border-left: 4px solid var(--accent-color);
+    box-shadow: var(--shadow); border-radius: 9px; padding: 12px 14px; cursor: pointer;
+    transform: translateX(30px); opacity: 0; transition: transform .26s ease, opacity .26s ease; }
+.wd-toast.show { transform: translateX(0); opacity: 1; }
+.wd-toast.overdue { border-left-color: #e23a3a; }
+.wd-toast-ic { font-size: 17px; margin-top: 1px; color: var(--accent-color); }
+.wd-toast.overdue .wd-toast-ic { color: #e23a3a; }
+.wd-toast-c { flex: 1 1 auto; min-width: 0; }
+.wd-toast-t { font-size: 13px; font-weight: 600; line-height: 1.35; }
+.wd-toast-d { font-size: 12px; color: var(--panel-muted); line-height: 1.45; margin-top: 2px; word-break: break-word; }
+.wd-toast-x { flex: 0 0 auto; color: var(--panel-muted); font-size: 13px; padding: 2px; }
+.wd-toast-x:hover { color: var(--panel-text); }
+
+/* Widget "Lịch nhắc" */
+.wd-ln-ld, .wd-ln-empty { font-size: 12px; color: var(--panel-muted); padding: 8px 2px; }
+.wd-ln-empty i { color: #3aa657; margin-right: 6px; }
+.wd-ln-sum { font-size: 12px; color: var(--panel-muted); margin-bottom: 6px; }
+.wd-ln-sum b { color: var(--panel-text); font-size: 14px; }
+.wd-ln-sum .od { color: #e25656; font-weight: 600; }
+.wd-ln-row { display: flex; align-items: flex-start; gap: 8px; padding: 6px 4px; border-top: 1px solid var(--panel-border); }
+.wd-ln-row .d { flex: 0 0 auto; width: 7px; height: 7px; margin-top: 5px; border-radius: 50%; background: var(--accent-color); }
+.wd-ln-row.od .d { background: #e23a3a; }
+.wd-ln-row .c { flex: 1 1 auto; min-width: 0; }
+.wd-ln-row .c b { display: block; font-size: 12px; font-weight: 600; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wd-ln-row .c small { display: block; font-size: 11px; color: var(--panel-muted); line-height: 1.35; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wd-ln-row .due { flex: 0 0 auto; font-size: 10.5px; color: var(--panel-muted); margin-top: 2px; }
+.wd-ln-row.od .due { color: #e25656; }
+.wd-ln-more { font-size: 11px; color: var(--accent-color); padding: 6px 4px 2px; }
+/* Light theme: badge viền theo nền taskbar sáng */
+html[data-theme='light'] .wd-bell-badge { box-shadow: 0 0 0 2px var(--bar-bg, #e8eaed); }
+
+/* ===== Lưới mờ canh khi kéo/resize icon & widget ===== */
+.wd-grid { position: absolute; inset: 0; pointer-events: none; z-index: 0; opacity: 0; transition: opacity .12s ease;
+    background-image: linear-gradient(to right, rgba(255,255,255,.16) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,.16) 1px, transparent 1px);
+    background-size: var(--wd-grid-cell, 104px) var(--wd-grid-cell, 104px); background-position: 14px 14px; }
+.wd-grid.on { opacity: 1; }
+html[data-theme='light'] .wd-grid { background-image: linear-gradient(to right, rgba(0,0,0,.12) 1px, transparent 1px), linear-gradient(to bottom, rgba(0,0,0,.12) 1px, transparent 1px); }
+.wd-icons { z-index: 2; }
+.wd-widgets { z-index: 1; }
+
+/* ===== Taskbar: ẩn thanh cuộn, mũi tên cuộn, tự ẩn chữ khi chật, kéo đổi vị trí pin ===== */
+.wd-taskpins { overflow-x: auto; scrollbar-width: none; flex: 0 1 auto; min-width: 0; scroll-behavior: smooth; }
+.wd-taskpins::-webkit-scrollbar { display: none; }
+.wd-tasks { scrollbar-width: none; }
+.wd-tasks::-webkit-scrollbar { display: none; }
+.wd-pin-nav { flex: 0 0 auto; width: 22px; height: 34px; border: none; background: transparent; color: var(--bar-text); cursor: pointer; border-radius: 6px; font-size: 13px; display: flex; align-items: center; justify-content: center; }
+.wd-pin-nav:hover { background: var(--panel-active); }
+.wd-taskbar.wd-compact .wd-taskpin span, .wd-taskbar.wd-compact .wd-task span { display: none; }
+.wd-taskbar.wd-compact .wd-taskpin, .wd-taskbar.wd-compact .wd-task { padding: 0 9px; min-width: 0; }
+.wd-taskpin.wd-pin-drag { opacity: .45; }
+.wd-taskpin.wd-pin-over { box-shadow: inset 3px 0 0 var(--accent, var(--accent-color)); }

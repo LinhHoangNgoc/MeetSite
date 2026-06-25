@@ -1,0 +1,57 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+	<PropertyGroup Label="Globals">
+		<SccProjectName>SAK</SccProjectName>
+		<SccProvider>SAK</SccProvider>
+		<SccAuxPath>SAK</SccAuxPath>
+		<SccLocalPath>SAK</SccLocalPath>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+		<BaseOutputPath>Compiler\Run</BaseOutputPath>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="wwwroot\**\*.*" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Struct\Schema\LoginSchema.sql" />
+	  <None Remove="UILogin.csproj.vspscc" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="Struct\Schema\LoginSchema.sql" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\DllSupport\System\Support\Support.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Controller\" />
+	  <Folder Include="Views\Login\" />
+	</ItemGroup>
+	<Target Name="PostBuild" AfterTargets="Build">
+    <PropertyGroup>
+      <ModuleDir>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)/../../Site/Site/bin/Debug/net8.0/Modules'))</ModuleDir>
+    </PropertyGroup>
+    <MakeDir Directories="$(ModuleDir)" />
+    <Copy
+        SourceFiles="$(TargetDir)UILogin.dll"
+        DestinationFolder="$(ModuleDir)"
+        SkipUnchangedFiles="true" />
+    <Copy
+        SourceFiles="$(TargetDir)UILogin.pdb"
+        DestinationFolder="$(ModuleDir)"
+        SkipUnchangedFiles="true" />
+  </Target>
+</Project>

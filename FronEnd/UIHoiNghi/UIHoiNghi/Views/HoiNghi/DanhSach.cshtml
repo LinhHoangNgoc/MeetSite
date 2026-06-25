@@ -1,0 +1,41 @@
+@{ ViewBag.Active = "hoinghi"; ViewData["Title"] = "Hội nghị & Phiên"; }
+
+<div class="meet-page-head">
+    <h2><i class="fa-solid fa-calendar-star"></i> Hội nghị &amp; Phiên họp</h2>
+    <div class="sub">Khởi tạo hội nghị, lên lịch các phiên họp và phân công diễn giả.</div>
+</div>
+
+<div class="meet-toolbar">
+    <button class="btn-meet" id="btnAddHN"><i class="fa-solid fa-plus"></i> Thêm hội nghị</button>
+    <button class="btn-meet warn" id="btnEditHN"><i class="fa-solid fa-pen"></i> Sửa</button>
+    <button class="btn-meet danger" id="btnDelHN"><i class="fa-solid fa-trash"></i> Xóa</button>
+    <span class="meet-spacer"></span>
+</div>
+
+<div id="gridHoiNghi" style="height:300px"></div>
+
+<div class="meet-panel" id="panelDetail" style="margin-top:16px;display:none">
+    <h3><i class="fa-solid fa-layer-group"></i> Chi tiết: <span id="hnName" style="color:var(--meet-primary)"></span></h3>
+    <div class="meet-tabs">
+        <button class="meet-tab active" data-tab="phien"><i class="fa-solid fa-list-check"></i> Phiên họp</button>
+        <button class="meet-tab" data-tab="diengia"><i class="fa-solid fa-microphone-lines"></i> Diễn giả</button>
+    </div>
+    <div class="meet-tabpane active" id="pane-phien">
+        <div class="meet-toolbar">
+            <button class="btn-meet sm" id="btnAddPhien"><i class="fa-solid fa-plus"></i> Thêm phiên</button>
+            <button class="btn-meet sm warn" id="btnEditPhien"><i class="fa-solid fa-pen"></i> Sửa</button>
+            <button class="btn-meet sm danger" id="btnDelPhien"><i class="fa-solid fa-trash"></i> Xóa</button>
+        </div>
+        <div id="gridPhien" style="height:260px"></div>
+    </div>
+    <div class="meet-tabpane" id="pane-diengia">
+        <div class="meet-toolbar">
+            <button class="btn-meet sm" id="btnAddDG"><i class="fa-solid fa-plus"></i> Thêm diễn giả</button>
+            <button class="btn-meet sm warn" id="btnEditDG"><i class="fa-solid fa-pen"></i> Sửa</button>
+            <button class="btn-meet sm danger" id="btnDelDG"><i class="fa-solid fa-trash"></i> Xóa</button>
+        </div>
+        <div id="gridDienGia" style="height:260px"></div>
+    </div>
+</div>
+
+<script src="/Script/meet_hoinghi.js?v=1"></script>

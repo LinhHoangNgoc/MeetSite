@@ -1,0 +1,88 @@
+﻿:root {
+    --main-color_dash: #27ae60; /* Xanh lục chủ đạo */
+    --main-color-light_dash: #e8f5e9; /* Xanh cực nhạt làm nền */
+    --contrast-color_dash: #2c3e50; /* Màu chữ tương phản */
+    --accent-color_dash: #16a085; /* Xanh ngọc nhấn nhá */
+    --shadow_dash: 0 4px 15px rgba(0, 0, 0, 0.08); /* Đổ bóng */
+}
+.parent_container {
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.divDashTongQuan_Call,
+.divDashTongQuan_Task {
+    width:calc(50% - 10px);
+    float:left;
+    height:calc(100% - 10px);
+    margin:5px;
+    box-shadow:0 0 5px 0 var(--main-color);
+    background: var(--bg-card);
+    padding: 20px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    border: 1px solid var(--main-color-light_dash);
+    transition: transform 0.2s ease;
+    cursor:pointer
+}
+
+    .divDashTongQuan_Call:hover,
+    .divDashTongQuan_Task:hover {
+        transform: translateY(-1px);
+    }
+
+.divDashTongQuan_Call_-1,
+.divDashTongQuan_Task_-1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 800;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+    font-size: 1.6rem;
+    color: var(--main-color_dash);
+    border-bottom: 2px solid var(--main-color-light_dash);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.divDashTongQuan_Call_0,
+.divDashTongQuan_Call_1,
+.divDashTongQuan_Call_2,
+.divDashTongQuan_Task_0,
+.divDashTongQuan_Task_1 {
+    display: flex;
+    justify-content: space-between; /* Đẩy chữ sang trái, số sang phải */
+    align-items: center;
+    padding: 1px 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.divDashTongQuan_Call_0,
+.divDashTongQuan_Task_0 {
+    color: var(--contrast-color_dash);
+}
+
+.divDashTongQuan_Call_1,
+.divDashTongQuan_Task_1 {
+    color: var(--main-color_dash);
+}
+
+.divDashTongQuan_Call_2 {
+    color: #e67e22;
+}
+
+    .divDashTongQuan_Call_0 span,
+    .divDashTongQuan_Call_1 span,
+    .divDashTongQuan_Call_2 span,
+    .divDashTongQuan_Task_0 span,
+    .divDashTongQuan_Task_1 span {
+        font-size: 1.4rem;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }

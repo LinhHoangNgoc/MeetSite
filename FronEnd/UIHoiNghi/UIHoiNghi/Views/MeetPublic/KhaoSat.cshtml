@@ -1,0 +1,91 @@
+@{ ViewData["Title"] = "Khảo sát"; }
+
+<div class="mp-wrap">
+    <div class="mp-top">
+        <div class="brand"><i class="fa-solid fa-square-poll-vertical"></i> Khảo sát đánh giá</div>
+        <h1 id="ksTen">Đang tải...</h1>
+        <div class="sub" id="ksMo"></div>
+    </div>
+    <div class="mp-body" id="ksBody">
+        <div class="mp-card"><div class="mp-ok"><div class="ic"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div>
+    </div>
+    <div class="mp-foot">© 2026 ITKA · Cảm ơn ý kiến đóng góp của bạn</div>
+</div>
+
+@section scripts {
+<script>
+    var id = mqs('id'), token = mqs('token'), questions = [], luaChon = {}, answers = {};
+    function render(d) {
+        document.getElementById('ksTen').textContent = d.khaoSat.TieuDe;
+        document.getElementById('ksMo').textContent = d.khaoSat.MoTa || '';
+        questions = d.cauHoi || []; luaChon = {};
+        (d.luaChon || []).forEach(function (l) { (luaChon[l.IDCauHoi] = luaChon[l.IDCauHoi] || []).push(l); });
+        var b = document.getElementById('ksBody'), html = '';
+        questions.forEach(function (q, i) {
+            html += '<div class="mp-card"><h3 style="font-size:15px"><span style="color:var(--mp)">' + (i + 1) + '.</span> ' + q.NoiDung + (q.BatBuoc == 1 ? ' <span style="color:#c0392b">*</span>' : '') + '</h3>';
+            if (q.LoaiCauHoi == 1) {
+                html += '<div class="mp-stars" data-q="' + q.ID + '">';
+                for (var s = 1; s <= 5; s++) html += '<i class="fa-solid fa-star" data-v="' + s + '"></i>';
+                html += '</div>';
+            } else if (q.LoaiCauHoi == 2) {
+                (luaChon[q.ID] || []).forEach(function (o) { html += '<div class="mp-radio" data-q="' + q.ID + '" data-v="' + o.ID + '" data-single="1">' + o.NoiDung + '</div>'; });
+            } else if (q.LoaiCauHoi == 3) {
+                (luaChon[q.ID] || []).forEach(function (o) { html += '<div class="mp-radio" data-q="' + q.ID + '" data-v="' + o.ID + '">' + o.NoiDung + '</div>'; });
+            } else {
+                html += '<textarea class="mp-input" style="text-align:left;letter-spacing:0" rows="3" data-q="' + q.ID + '" data-text="1" placeholder="Nhập ý kiến..."></textarea>';
+            }
+            html += '</div>';
+        });
+        html += '<button class="mp-btn" id="ksSubmit"><i class="fa-solid fa-paper-plane"></i> Gửi khảo sát</button>';
+        b.innerHTML = html;
+        // sao
+        b.querySelectorAll('.mp-stars').forEach(function (st) {
+            st.querySelectorAll('i').forEach(function (ic) {
+                ic.onclick = function () {
+                    var v = Number(ic.dataset.v); answers['s' + st.dataset.q] = { IDCauHoi: Number(st.dataset.q), Loai: 1, Diem: v };
+                    st.querySelectorAll('i').forEach(function (x) { x.classList.toggle('on', Number(x.dataset.v) <= v); });
+                };
+            });
+        });
+        // radio (single)
+        b.querySelectorAll('.mp-radio[data-single]').forEach(function (r) {
+            r.onclick = function () {
+                b.querySelectorAll('.mp-radio[data-q="' + r.dataset.q + '"]').forEach(function (x) { x.classList.remove('sel'); });
+                r.classList.add('sel'); answers['s' + r.dataset.q] = { IDCauHoi: Number(r.dataset.q), Loai: 2, LuaChon: Number(r.dataset.v) };
+            };
+        });
+        // checkbox (multi)
+        b.querySelectorAll('.mp-radio:not([data-single])').forEach(function (r) {
+            r.onclick = function () {
+                r.classList.toggle('sel');
+                var arr = []; b.querySelectorAll('.mp-radio[data-q="' + r.dataset.q + '"].sel').forEach(function (x) { arr.push(Number(x.dataset.v)); });
+                answers['m' + r.dataset.q] = { IDCauHoi: Number(r.dataset.q), Loai: 3, LuaChonList: arr };
+            };
+        });
+        document.getElementById('ksSubmit').onclick = submit;
+    }
+    function submit() {
+        var arr = [];
+        // gom text
+        document.querySelectorAll('[data-text]').forEach(function (t) { if (t.value.trim()) arr.push({ IDCauHoi: Number(t.dataset.q), Loai: 4, VanBan: t.value.trim() }); });
+        Object.keys(answers).forEach(function (k) { var a = answers[k]; if (a.Loai == 3 && (!a.LuaChonList || !a.LuaChonList.length)) return; arr.push(a); });
+        // kiểm bắt buộc
+        for (var i = 0; i < questions.length; i++) {
+            var q = questions[i]; if (q.BatBuoc != 1) continue;
+            var has = arr.some(function (a) { return a.IDCauHoi == q.ID; });
+            if (!has) { mToast('Vui lòng trả lời câu ' + (i + 1), true); return; }
+        }
+        if (!arr.length) { mToast('Chưa có câu trả lời', true); return; }
+        mAjax('/meetpublic/SubmitTraLoi', { IDKhaoSat: Number(id), Token: token, AnswersJson: JSON.stringify(arr) }, function (o) {
+            if (o.code === 0) {
+                document.getElementById('ksBody').innerHTML = '<div class="mp-card"><div class="mp-ok"><div class="ic"><i class="fa-solid fa-circle-check"></i></div><div class="nm">Cảm ơn bạn!</div><div class="meta">Đã ghi nhận phản hồi.</div></div></div>';
+            } else mToast(o.message, true);
+        });
+    }
+    if (!id) document.getElementById('ksBody').innerHTML = '<div class="mp-card"><div class="mp-ok"><div class="ic err"><i class="fa-solid fa-xmark"></i></div><div class="nm">Thiếu mã khảo sát</div></div></div>';
+    else mAjax('/meetpublic/GetKhaoSat', { ID: Number(id) }, function (o) {
+        if (o.code === 0) render(o.data);
+        else document.getElementById('ksBody').innerHTML = '<div class="mp-card"><div class="mp-ok"><div class="ic err"><i class="fa-solid fa-xmark"></i></div><div class="nm">' + o.message + '</div></div></div>';
+    });
+</script>
+}

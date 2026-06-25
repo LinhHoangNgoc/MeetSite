@@ -1,0 +1,147 @@
+﻿@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"]</title>
+    <link rel="icon" type="image/png" href="/img/logo.png" />
+    <link rel="shortcut icon" type="image/png" href="/img/logo.png" />
+    @* Bostrap Css *@
+    <link href="/Css/bootStrap/bootstrap-grid.css" rel="stylesheet" />
+    <link href="/Css/bootStrap/bootstrap-grid.min.css" rel="stylesheet" />
+    <link href="/Css/bootStrap/bootstrap-reboot.css" rel="stylesheet" />
+    <link href="/Css/bootStrap/bootstrap-reboot.min.css" rel="stylesheet" />
+    <link href="/Css/bootStrap/bootstrap.css" rel="stylesheet" />
+    <link href="/Css/bootStrap/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Css/partCss/bootStrapCustom.css?v=4" rel="stylesheet" />
+    <link href="/Css/bootStrap/Icon/css/all.min.css" rel="stylesheet" />
+    @* jQuery *@
+    <script src="/Script/Lib/jQuery/jquery-1.4.1.min.js"></script>
+    @* Bostrap Js *@
+    <script src="/Script/Lib/bootStrap/bootstrap.bundle.js"></script>
+    <script src="/Script/Lib/bootStrap/bootstrap.bundle.min.js"></script>
+    <script src="/Script/Lib/bootStrap/bootstrap.js"></script>
+    <script src="/Script/Lib/bootStrap/bootstrap.min.js"></script>
+    @* Component *@
+    <link href="/Script/Lib/exControl/dropDown/tom-select.bootstrap5.min.css" rel="stylesheet" />
+    <link href="/Script/Lib/exControl/pickControl/flatpickr.min.css" rel="stylesheet" />
+    <link href="/Script/Lib/exControl/tabControl/tabulator_bootstrap5.min.css" rel="stylesheet" />
+    <link href="/Script/Lib/exControl/richText/jodit.min.css" rel="stylesheet" />
+    @* CS Component *@
+    <script src="/Script/Lib/exControl/dropDown/tom-select.complete.min.js"></script>
+    <script src="/Script/Lib/exControl/pickControl/flatpickr.js"></script>
+    <script src="/Script/Lib/exControl/tabControl/tabulator.min.js"></script>
+    <script src="/Script/Lib/exControl/charControl/chart.js"></script>
+    <script src="/Script/Lib/exControl/richText/jodit.min.js"></script>
+    @* My CSS *@
+    <link href="/Css/partCss/master.css" rel="stylesheet" />
+    <link href="/Css/partCss/menu.css" rel="stylesheet" />
+    @* My JS *@
+    <script src="/Script/MySystem/jsTemp/genSupport.js?v=2"></script>
+    <script src="/Script/MySystem/jsTemp/chartSupport.js"></script>
+    <script src="/Script/MySystem/jsTemp/fSupport.js"></script>
+    @* make control *@
+    <script src="~/Script/MySystem/jsTemp/exComponent/01-common.js"></script>
+    <script src="~/Script/MySystem/jsTemp/exComponent/02-inputs.js"></script>
+    <script src="~/Script/MySystem/jsTemp/exComponent/03-dropdown.js"></script>
+    <script src="~/Script/MySystem/jsTemp/exComponent/04-grid.js?v=3"></script>
+    <script src="~/Script/MySystem/jsTemp/exComponent/05-dialog-button.js?v=1"></script>
+    @* end make control *@
+    <script src="/Script/MySystem/jsTemp/locationStorage.js"></script>
+    <script src="/Script/MySystem/jsTemp/jsMaster.js"></script>
+    <script src="/Script/MySystem/jsTemp/exFunction.js?v=20260619e"></script>
+    @* Main Script *@
+    <script>
+        window.siteconfig =
+        {
+            server: "@Configuration["Server:BaseUrl"]"
+        };
+    </script>
+    @* ===== Theme Sáng/Tối đồng bộ với desktop — áp cho MỌI phân hệ chạy trong iframe ===== *@
+    <script>
+        (function () {
+            function setTh(t) { document.documentElement.setAttribute('data-theme', (t === 'dark' ? 'dark' : 'light')); }
+            try {
+                var raw = (localStorage.getItem('wd.theme') || '').replace(/"/g, '');
+                var p = new URLSearchParams(location.search).get('_th');
+                setTh(p || raw || 'light');
+            } catch (e) { setTh('light'); }
+            window.addEventListener('message', function (ev) { if (ev.data && ev.data.__wdTheme) setTh(ev.data.__wdTheme); });
+        })();
+    </script>
+    <style>
+        /* Nền tảng full-height để view lấp đầy cửa sổ (tránh khoảng trống đáy) */
+        html, body { height: 100%; margin: 0; }
+        /* Dark theme cơ bản cho mọi phân hệ (light = giữ nguyên) */
+        html[data-theme="dark"] body { background: #1c1c1e; color: #e4e4e6; }
+        html[data-theme="dark"] input:not([type=checkbox]):not([type=radio]):not([type=button]),
+        html[data-theme="dark"] select, html[data-theme="dark"] textarea { background: #2a2a2d; color: #e4e4e6; border-color: #3c3c40; }
+        html[data-theme="dark"] .tabulator { background: #232326; color: #e4e4e6; border-color: #38383c; }
+        html[data-theme="dark"] .tabulator .tabulator-header, html[data-theme="dark"] .tabulator .tabulator-header .tabulator-col { background: #2c2c30; color: #e4e4e6; border-color: #3c3c40; }
+        html[data-theme="dark"] .tabulator-row { background: #232326; color: #e4e4e6; }
+        html[data-theme="dark"] .tabulator-row.tabulator-row-even { background: #28282b; }
+        html[data-theme="dark"] .tabulator-row:hover { background: #34343a !important; }
+        html[data-theme="dark"] .card, html[data-theme="dark"] .ct-form, html[data-theme="dark"] .ct-wrap,
+        html[data-theme="dark"] .ss-body, html[data-theme="dark"] .ss-filter, html[data-theme="dark"] .dm-detail,
+        html[data-theme="dark"] .dm-list, html[data-theme="dark"] .dm-page, html[data-theme="dark"] .qdt-pane,
+        html[data-theme="dark"] .ktd-card, html[data-theme="dark"] .divTitle { background: #242427 !important; color: #e4e4e6; border-color: #3a3a3e; }
+        html[data-theme="dark"] a { color: #6cb6ff; }
+        /* Alert / Question / Dialog: margin + padding CÂN ĐỐI (đều các cạnh), gọn gàng */
+        .modal-dialog { margin: 1.75rem auto; }
+        .modal-content { border: 0; border-radius: 12px; overflow: hidden; box-shadow: 0 18px 50px rgba(0,0,0,.28); }
+        .modal-header { padding: 16px 20px; align-items: center; }
+        .modal-title { font-size: 16px; font-weight: 600; }
+        .modal-body { padding: 20px; font-size: 14px; line-height: 1.6; }
+        .modal-footer { padding: 14px 20px; gap: 10px; display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; }
+        .modal-footer > * { margin: 0 !important; }
+        .modal-footer .btn { padding: 8px 20px; min-width: 92px; }
+        #globalBootstrapModal .modal-body { min-height: 56px; text-align: left; }
+        #globalBootstrapModal .modal-footer { justify-content: center; }
+        html[data-theme="dark"] .modal-content { background: #26262a; color: #e4e4e6; }
+        html[data-theme="dark"] .modal-header, html[data-theme="dark"] .modal-footer { border-color: #3a3a3e; }
+        html[data-theme="dark"] .modal-header .close { color: #e4e4e6; text-shadow: none; opacity: .8; }
+        /* ===== Dark theme DỄ NHÌN hơn: tăng tương phản chữ/viền/nền cho MỌI view ===== */
+        html[data-theme="dark"] body { background: #1e1e22; color: #f0f0f2; }
+        html[data-theme="dark"] h1, html[data-theme="dark"] h2, html[data-theme="dark"] h3,
+        html[data-theme="dark"] h4, html[data-theme="dark"] h5, html[data-theme="dark"] h6,
+        html[data-theme="dark"] label, html[data-theme="dark"] .form-label,
+        html[data-theme="dark"] b, html[data-theme="dark"] strong, html[data-theme="dark"] th { color: #f3f3f4; }
+        html[data-theme="dark"] .text-muted, html[data-theme="dark"] small, html[data-theme="dark"] .text-secondary { color: #c8ccd2 !important; }
+        html[data-theme="dark"] .form-control, html[data-theme="dark"] .form-select { background: #34343a; color: #f2f2f3; border-color: #50505a; }
+        html[data-theme="dark"] .form-control::placeholder { color: #9a9da3; }
+        html[data-theme="dark"] .form-control:focus, html[data-theme="dark"] .form-select:focus,
+        html[data-theme="dark"] input:focus, html[data-theme="dark"] select:focus, html[data-theme="dark"] textarea:focus {
+            border-color: #3a96dd; box-shadow: 0 0 0 .15rem rgba(58,150,221,.25); }
+        /* Bảng Tabulator: header rõ, viền hàng rõ, chữ sáng */
+        html[data-theme="dark"] .tabulator .tabulator-header .tabulator-col { background: #3a3a42; color: #f4f4f5; border-color: #50505a; font-weight: 600; }
+        html[data-theme="dark"] .tabulator-row { border-bottom: 1px solid #34343a; }
+        /* Hàng chẵn: nền tách biệt nhưng chữ vẫn sáng rõ (trước đây chữ trên nền xám nhạt #e9ecef của grid base rất khó đọc trên theme tối) */
+        html[data-theme="dark"] .tabulator-row.tabulator-row-even { background: #2b2b30; }
+        html[data-theme="dark"] .tabulator-row .tabulator-cell,
+        html[data-theme="dark"] .tabulator-row.tabulator-row-even .tabulator-cell { border-color: #34343a; color: #f1f1f3; }
+        html[data-theme="dark"] .tabulator-row.tabulator-selected { background: #2d4a63 !important; }
+        html[data-theme="dark"] .tabulator-row.tabulator-selected .tabulator-cell { color: #ffffff; }
+        /* Bảng HTML thường */
+        html[data-theme="dark"] table, html[data-theme="dark"] .table { color: #ececee; border-color: #3c3c42; }
+        html[data-theme="dark"] .table > :not(caption) > * > * { background: transparent; color: #ececee; border-color: #3c3c42; }
+        html[data-theme="dark"] .table thead th, html[data-theme="dark"] thead th { background: #313136; color: #f3f3f4; }
+        html[data-theme="dark"] .table-hover > tbody > tr:hover > * { background: #2a2a2f; }
+        /* Nút bấm: viền/nền rõ trên nền tối */
+        html[data-theme="dark"] .btn-outline-secondary, html[data-theme="dark"] .btn-light, html[data-theme="dark"] .btn-default {
+            color: #e8e8ea; border-color: #55555c; background: #2c2c31; }
+        html[data-theme="dark"] .btn-outline-secondary:hover, html[data-theme="dark"] .btn-light:hover { background: #3a3a40; }
+        html[data-theme="dark"] .dropdown-menu { background: #2a2a2e; color: #ececee; border-color: #46464c; }
+        html[data-theme="dark"] .dropdown-item { color: #ececee; }
+        html[data-theme="dark"] .dropdown-item:hover { background: #34343a; color: #fff; }
+        html[data-theme="dark"] hr { border-color: #3c3c42; opacity: 1; }
+        html[data-theme="dark"] .border, html[data-theme="dark"] .border-top, html[data-theme="dark"] .border-bottom,
+        html[data-theme="dark"] .border-start, html[data-theme="dark"] .border-end { border-color: #3c3c42 !important; }
+        html[data-theme="dark"] a { color: #6cb6ff; }
+        html[data-theme="dark"] a:hover { color: #93caff; }
+    </style>
+</head>
+
+<body>
+    @RenderBody()
+</body>
+</html>

@@ -1,0 +1,27 @@
+@{ ViewBag.Active = "checkin"; ViewData["Title"] = "Điểm danh"; }
+
+<div class="meet-page-head">
+    <h2><i class="fa-solid fa-qrcode"></i> Điểm danh &amp; điều hành</h2>
+    <div class="sub">Theo dõi số đại biểu có mặt theo thời gian thực và điểm danh thủ công.</div>
+</div>
+
+<div class="meet-toolbar">
+    <button class="btn-meet" id="btnKiosk"><i class="fa-solid fa-display"></i> Mở màn hình Kiosk</button>
+    <button class="btn-meet sec" id="btnManual"><i class="fa-solid fa-user-check"></i> Điểm danh thủ công</button>
+    <button class="btn-meet danger" id="btnUndo"><i class="fa-solid fa-rotate-left"></i> Hủy điểm danh</button>
+    <span class="meet-spacer"></span>
+    <span class="meet-chip"><i class="fa-solid fa-circle" style="color:#0a8f7e;font-size:9px"></i> Tự cập nhật</span>
+</div>
+
+<div class="meet-cards" style="grid-template-columns:repeat(auto-fill,minmax(180px,1fr));margin-bottom:14px">
+    <div class="meet-kpi"><div class="k-ic" style="background:#0a8f7e"><i class="fa-solid fa-user-check"></i></div><div class="k-val" id="kPresent">0</div><div class="k-lb">Đã có mặt</div></div>
+    <div class="meet-kpi"><div class="k-ic" style="background:#0f6e9c"><i class="fa-solid fa-users"></i></div><div class="k-val" id="kTotal">0</div><div class="k-lb">Tổng đăng ký</div></div>
+    <div class="meet-kpi"><div class="k-ic" style="background:#0a6c5e"><i class="fa-solid fa-percent"></i></div><div class="k-val" id="kPercent">0%</div><div class="k-lb">Tỉ lệ tham dự</div></div>
+    <div class="meet-kpi"><div class="k-ic" style="background:#c08a1e"><i class="fa-solid fa-star"></i></div><div class="k-val" id="kVip">0/0</div><div class="k-lb">VIP có mặt</div></div>
+</div>
+
+<div class="meet-panel"><h3><i class="fa-solid fa-list-ul"></i> Nhật ký điểm danh</h3>
+    <div id="gridCheckIn" style="height:calc(100vh - 430px);min-height:240px"></div>
+</div>
+
+<script src="/Script/meet_checkin.js?v=1"></script>

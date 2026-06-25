@@ -1,0 +1,23 @@
+# Build output
+[Bb]in/
+[Oo]bj/
+Compiler/
+Run/
+*.user
+*.suo
+.vs/
+
+# Module DLLs nạp động (sinh khi build)
+**/Modules/
+
+# Data Protection keys (nhạy cảm)
+dpkeys/
+
+# Cấu hình bí mật — KHÔNG đẩy lên Git (có ConnectionStrings/mật khẩu).
+# Tự tạo theo appsettings.sample.json cho từng môi trường.
+FronEnd/Site/Site/appsettings.json
+
+# Misc
+*.log
+.DS_Store
+Thumbs.db

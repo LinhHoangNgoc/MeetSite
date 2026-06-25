@@ -1,0 +1,37 @@
+@{ ViewData["Title"] = "Kiosk Check-in"; }
+
+<div class="mp-wrap">
+    <div class="mp-top">
+        <div class="brand"><i class="fa-solid fa-qrcode"></i> ITKA Check-in</div>
+        <h1 id="kTen">Điểm danh đại biểu</h1>
+        <div class="sub">Quét mã QR hoặc nhập mã đại biểu để điểm danh</div>
+    </div>
+    <div class="mp-body">
+        <div class="mp-stat" id="kStat" style="display:none">
+            <div class="s"><div class="v" id="kPresent">0</div><div class="l">Đã có mặt</div></div>
+            <div class="s"><div class="v" id="kTotal">0</div><div class="l">Đăng ký</div></div>
+            <div class="s"><div class="v" id="kPercent">0%</div><div class="l">Tỉ lệ</div></div>
+        </div>
+
+        <div class="mp-card" id="kResult" style="display:none"></div>
+
+        <div class="mp-card" id="kScanCard">
+            <h3><i class="fa-solid fa-camera"></i> Quét mã QR</h3>
+            <div id="mpReader"></div>
+            <button class="mp-btn" id="kStartCam"><i class="fa-solid fa-camera"></i> Bật camera quét</button>
+            <div class="mp-hint" style="text-align:center;color:#6a7882;font-size:13px;margin-top:8px" id="kCamHint"></div>
+        </div>
+
+        <div class="mp-card">
+            <h3><i class="fa-solid fa-keyboard"></i> Nhập thủ công</h3>
+            <label class="mp-label">Mã QR / Mã đại biểu</label>
+            <input class="mp-input" id="kToken" placeholder="Nhập mã..." autocomplete="off">
+            <button class="mp-btn acc" id="kManual"><i class="fa-solid fa-check"></i> Điểm danh</button>
+        </div>
+    </div>
+    <div class="mp-foot">© 2026 ITKA · Hệ thống Quản lý Hội nghị Thông minh</div>
+</div>
+
+@section scripts {
+    <script src="/Script/meet_kiosk.js?v=1"></script>
+}

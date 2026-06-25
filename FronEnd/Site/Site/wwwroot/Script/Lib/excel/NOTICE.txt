@@ -1,0 +1,9 @@
+Thư viện bên thứ 3 dùng cho xuất Excel (tải về dùng LOCAL, KHÔNG chạy qua CDN online):
+
+- xlsx-js-style 1.2.0  (file: xlsx.full.min.js)
+  Nguồn : https://github.com/gitbrent/xlsx-js-style  (fork của SheetJS)
+  License: Apache-2.0  — mã nguồn mở, ĐƯỢC dùng thương mại.
+  Vai trò: đọc/ghi Excel + hỗ trợ style ô (font/fill/border/merge/numFmt) cho wdXlsx.
+
+Ghi chú: file được tải về một lần và phục vụ tĩnh từ /Script/Lib/excel/xlsx.full.min.js.
+Bản gốc SheetJS (community) trước đây cũng Apache-2.0; bản sao lưu cũ: xlsx.full.min.js.sheetjs.bak (trên máy chủ).

@@ -1,0 +1,51 @@
+@{
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+    ViewData["Title"] = "Danh sách hội nghị";
+    var user = Context.Session.GetString("HoTen");
+    if (string.IsNullOrEmpty(user)) user = Context.Session.GetString("TenDangNhap");
+}
+<link href="/Css/meet.css?v=3" rel="stylesheet" />
+<script src="/Script/meet_ui.js?v=3"></script>
+
+<div class="meet-app">
+    <header class="mw-top">
+        <a class="mw-brand" href="/HoiNghi"><i class="fa-solid fa-users-rectangle"></i><span>Quản lý Hội nghị</span></a>
+        <div style="flex:1"></div>
+        <div class="mw-grp">
+            <button class="mw-icon mw-toggle" id="mlThemeBtn" title="Giao diện"><i class="fa-solid fa-palette"></i></button>
+            <div class="mw-drop mw-drop-r" id="mlThemePanel" style="min-width:240px;padding:14px"></div>
+        </div>
+        <div class="mw-grp">
+            <button class="mw-user mw-toggle"><i class="fa-solid fa-circle-user"></i> <span>@user</span> <i class="fa-solid fa-chevron-down mw-cv"></i></button>
+            <div class="mw-drop mw-drop-r" style="min-width:200px">
+                <a class="mw-dropi" id="mwChgPwd"><i class="fa-solid fa-key"></i> Đổi mật khẩu</a>
+                <a class="mw-dropi" id="mwLogout"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="meet-content">
+        <div class="meet-page-head">
+            <h2><i class="fa-solid fa-calendar-days"></i> Danh sách hội nghị</h2>
+            <div class="sub">Chọn một hội nghị và bấm <b>Mở</b> để vào không gian làm việc, hoặc tạo hội nghị mới.</div>
+        </div>
+
+        <div class="ml-filters">
+            <button class="btn-meet" id="btnAdd"><i class="fa-solid fa-plus"></i> Thêm hội nghị</button>
+            <span class="meet-spacer"></span>
+            <div class="ml-fld"><i class="fa-solid fa-magnifying-glass"></i><input id="fSearch" placeholder="Tìm tên / mã / đơn vị..."></div>
+            <select id="fStatus">
+                <option value="">— Mọi trạng thái —</option>
+                <option value="0">Nháp</option><option value="1">Mở đăng ký</option>
+                <option value="2">Đang diễn ra</option><option value="3">Đã chốt</option>
+            </select>
+            <div class="ml-fld"><span>Từ</span><input type="date" id="fFrom"></div>
+            <div class="ml-fld"><span>Đến</span><input type="date" id="fTo"></div>
+            <button class="btn-meet ghost sm" id="btnReset" title="Xóa lọc"><i class="fa-solid fa-rotate-left"></i></button>
+        </div>
+
+        <div id="hnCards" class="ml-cards"></div>
+    </main>
+</div>
+
+<script src="/Script/meet_list.js?v=2"></script>

@@ -1,0 +1,41 @@
+@{ ViewBag.Active = "phanquyen"; ViewData["Title"] = "Phân quyền"; }
+
+<div class="meet-page-head">
+    <h2><i class="fa-solid fa-user-shield"></i> Phân quyền chi tiết</h2>
+    <div class="sub">Cấu hình vai trò, ma trận quyền theo từng chức năng và gán vai trò cho người dùng.</div>
+</div>
+
+<div class="meet-tabs">
+    <button class="meet-tab active" data-tab="vaitro"><i class="fa-solid fa-users-gear"></i> Vai trò &amp; quyền</button>
+    <button class="meet-tab" data-tab="nguoidung"><i class="fa-solid fa-user"></i> Người dùng</button>
+</div>
+
+<div class="meet-tabpane active" id="pane-vaitro">
+    <div style="display:flex;gap:14px;flex-wrap:wrap">
+        <div style="flex:0 0 280px;min-width:240px">
+            <div class="meet-toolbar"><button class="btn-meet sm" id="btnAddVT"><i class="fa-solid fa-plus"></i> Vai trò</button></div>
+            <div id="vtList"></div>
+        </div>
+        <div style="flex:1;min-width:300px">
+            <div class="meet-panel">
+                <h3><i class="fa-solid fa-table-list"></i> Ma trận quyền: <span id="vtName" style="color:var(--meet-primary)">— Chọn vai trò —</span>
+                    <span class="meet-spacer"></span>
+                    <button class="btn-meet sm" id="btnSaveQuyen" style="display:none"><i class="fa-solid fa-floppy-disk"></i> Lưu quyền</button>
+                </h3>
+                <div id="matrixWrap"><div class="meet-hint">Chọn một vai trò để cấu hình quyền.</div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="meet-tabpane" id="pane-nguoidung">
+    <div class="meet-toolbar">
+        <button class="btn-meet" id="btnAddU"><i class="fa-solid fa-user-plus"></i> Thêm người dùng</button>
+        <button class="btn-meet warn" id="btnEditU"><i class="fa-solid fa-pen"></i> Sửa</button>
+        <button class="btn-meet sec" id="btnRoleU"><i class="fa-solid fa-user-tag"></i> Gán vai trò</button>
+        <button class="btn-meet danger" id="btnDelU"><i class="fa-solid fa-trash"></i> Xóa</button>
+    </div>
+    <div id="gridUser" style="height:calc(100vh - 330px);min-height:240px"></div>
+</div>
+
+<script src="/Script/meet_phanquyen.js?v=1"></script>

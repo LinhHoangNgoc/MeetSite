@@ -1,0 +1,47 @@
+/* ============================================================
+   Dark theme DÙNG CHUNG — Site inject file này vào mọi iframe module khi nền tối.
+   Mọi rule có tiền tố html[data-theme='dark'] nên VÔ HẠI ở chế độ sáng.
+   Tinh chỉnh: chỉ cần copy đè file này lên /var/www/ketoan/wwwroot/Css/ (KHÔNG cần build lại module).
+   ============================================================ */
+
+/* ===== Danh mục hệ thống (Site /DanhMuc) ===== */
+html[data-theme='dark'] .dmh-wrap { color: #d2d4da; }
+html[data-theme='dark'] .dmh-card { background: #1f1f26; border-color: #2c2d33; }
+html[data-theme='dark'] .dmh-card:hover { box-shadow: 0 8px 22px rgba(0,0,0,.5); border-color: #3b5b86; }
+html[data-theme='dark'] .dmh-cname { color: #e6e8ec; }
+html[data-theme='dark'] .dmh-card:hover { background: #23232b; }
+html[data-theme='dark'] .dmh-group-head .cnt { color: #8b909a; }
+html[data-theme='dark'] .dmh-empty { color: #8b909a; }
+
+/* ===== Lưới Tabulator dùng chung (nhiều module) ===== */
+html[data-theme='dark'] .tabulator { background: #1b1b21; color: #d2d4da; border-color: #2c2d33; }
+html[data-theme='dark'] .tabulator .tabulator-header,
+html[data-theme='dark'] .tabulator .tabulator-header .tabulator-col { background: #23232b; color: #cdd2da; border-color: #2c2d33; }
+html[data-theme='dark'] .tabulator .tabulator-row { background: #1b1b21; color: #d2d4da; border-color: #2a2b31; }
+html[data-theme='dark'] .tabulator .tabulator-row.tabulator-row-even { background: #1f1f26; }
+html[data-theme='dark'] .tabulator .tabulator-row:hover { background: #2a2b33; }
+html[data-theme='dark'] .tabulator .tabulator-row.tabulator-selected { background: #1e3a5f; }
+
+/* ===== Bảng / thẻ trắng chung (panel, card) ===== */
+html[data-theme='dark'] .card, html[data-theme='dark'] .panel,
+html[data-theme='dark'] .box, html[data-theme='dark'] .widget { background: #1f1f26; border-color: #2c2d33; color: #d2d4da; }
+
+/* ===== Ô nhập / select / textarea ===== */
+html[data-theme='dark'] input:not([type=checkbox]):not([type=radio]):not([type=button]):not([type=submit]):not([type=range]):not([type=color]),
+html[data-theme='dark'] select,
+html[data-theme='dark'] textarea { background: #26262e; border-color: #3a3a42; color: #e6e8ec; }
+html[data-theme='dark'] input::placeholder, html[data-theme='dark'] textarea::placeholder { color: #7c828c; }
+
+/* ===== Bảng thường ===== */
+html[data-theme='dark'] table { color: #d2d4da; border-color: #2c2d33; }
+html[data-theme='dark'] thead th, html[data-theme='dark'] table th { background: #23232b; color: #cdd2da; border-color: #2c2d33; }
+html[data-theme='dark'] table td { border-color: #2a2b31; }
+html[data-theme='dark'] tbody tr:hover { background: #23232b; }
+
+/* ===== DanhMucChung — trang chi tiết (lưới + form) ===== */
+html[data-theme='dark'] .dm-modal { background: #1c1c22; color: #e6e8ec; border-color: #0a8f7e; }
+html[data-theme='dark'] .dm-input { background: #26262e; border-color: #3a3a42; color: #e6e8ec; }
+
+/* ===== Dashboard / Báo cáo — thẻ & nền panel ===== */
+html[data-theme='dark'] .dash-card, html[data-theme='dark'] .rp-card,
+html[data-theme='dark'] .chart-box, html[data-theme='dark'] .wd-block { background: #1f1f26; border-color: #2c2d33; color: #d2d4da; }

@@ -1,0 +1,35 @@
+@{ ViewBag.Active = "sodo"; ViewData["Title"] = "Sơ đồ chỗ ngồi"; }
+
+<div class="meet-page-head">
+    <h2><i class="fa-solid fa-chair"></i> Sơ đồ chỗ ngồi</h2>
+    <div class="sub">Kéo-thả đại biểu vào ghế · nhấn giữ &amp; kéo để di chuyển ghế · <b>double-click vùng trống để chèn 1 ghế</b> tại vị trí bất kỳ.</div>
+</div>
+
+<div class="meet-toolbar">
+    <button class="btn-meet" id="btnGen"><i class="fa-solid fa-table-cells"></i> Sinh lưới ghế</button>
+    <button class="btn-meet sec" id="btnAddSeat"><i class="fa-solid fa-plus"></i> Thêm ghế</button>
+    <button class="btn-meet warn" id="btnLock"><i class="fa-solid fa-lock"></i> Chốt sơ đồ</button>
+    <span class="meet-spacer"></span>
+    <span id="lblLock" class="meet-chip" style="display:none"><i class="fa-solid fa-lock"></i> Đã chốt</span>
+    <span id="seatStat" class="meet-chip"></span>
+</div>
+
+<div class="sodo-legend">
+    <span><i style="background:#eef3f6;border:1px solid #b9c4cc"></i> Ghế trống</span>
+    <span><i style="background:#0a8f7e"></i> Đã xếp</span>
+    <span><i style="background:#c08a1e"></i> Ghế VIP</span>
+</div>
+
+<div class="sodo-wrap">
+    <div class="sodo-stage" id="sodoStage">
+        <div class="sodo-canvas" id="sodoCanvas">
+            <div class="sodo-stagebar">SÂN KHẤU</div>
+        </div>
+    </div>
+    <div class="sodo-side">
+        <h4><span><i class="fa-solid fa-user-clock"></i> Chưa xếp ghế</span> <span id="cntChuaXep" class="meet-chip">0</span></h4>
+        <div class="sodo-side-list" id="chuaXepList"></div>
+    </div>
+</div>
+
+<script src="/Script/meet_sodo.js?v=2"></script>

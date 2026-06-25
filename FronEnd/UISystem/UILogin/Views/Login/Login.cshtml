@@ -1,0 +1,277 @@
+﻿@{
+    ViewData["Title"] = "Đăng nhập hệ thống";
+}
+<style>
+    /* Reset & Cấu trúc chính */
+    #divHeader, #divMenu, #divFooter {
+        display: none !important;
+    }
+
+    #divBody {
+        width: 100% !important;
+        height: 100vh !important;
+        padding: 0 !important;
+    }
+
+    #divBodyLogin {
+        margin: 0;
+        padding: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Header hiện đại */
+    .header {
+        padding: 15px 40px;
+        display: flex;
+        align-items: center;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        z-index: 10;
+    }
+
+    .logo {
+        height: 60px;
+    }
+
+    .company-name {
+        font-weight: 800;
+        font-size: 32px;
+        color: #002D62;
+        margin: 0;
+        text-transform: uppercase;
+    }
+
+    .solution-name {
+        font-size: 20px;
+        color: #990000;
+        margin: 0;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+
+    /* Vùng chứa ảnh và Form */
+    .main-content {
+        flex-grow: 1;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+    }
+
+    .background-image {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 0;
+    }
+
+    /* Glassmorphism Form */
+    .glass-login-card {
+        position: relative;
+        z-index: 2;
+        width: 380px;
+        padding: 0px;
+        background: rgba(15, 23, 42, 0.72);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 20px;
+        /* đổ bóng mạnh hơn */
+        box-shadow: 0 10px 40px rgba(0,0,0,0.45), 0 0 20px rgba(0, 102, 255, 0.18);
+        color: white;
+    }
+
+        .glass-login-card h3 {
+            text-align: center;
+            margin-bottom: 10px;
+            font-weight: 800;
+            font-size: 25px;
+            letter-spacing: 1px;
+            color: #fff;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.6), 0 0 12px rgba(255,255,255,0.15);
+            padding:18px 30px;
+            border-bottom: 1px solid #777
+        }
+
+    /* Input Style */
+    .input-group {
+        margin-bottom: 10px;
+        padding:5px 30px;
+    }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.92);
+        }
+
+    .glass-input {
+        width: 100%;
+        padding: 10px 14px;
+        background: rgba(255,255,255,0.95);
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 10px;
+        box-sizing: border-box;
+        font-size: 15px;
+        font-weight: 500;
+        color: #111;
+        transition: 0.3s;
+    }
+
+        .glass-input::placeholder {
+            color: #777;
+        }
+
+        .glass-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 74, 153, 0.3);
+        }
+
+    /* Button & Checkbox */
+    .action-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 25px;
+        padding:15px 30px;
+        border-top:1px solid #777
+    }
+
+    .btn-login {
+        background: linear-gradient(135deg,#0066ff,#0047b3);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 10px;
+        font-weight: 700;
+        font-size: 15px;
+        cursor: pointer;
+        transition: 0.3s;
+        box-shadow: 0 6px 18px rgba(0,102,255,0.35);
+    }
+
+        .btn-login:hover {
+            background: linear-gradient(135deg,#1a75ff,#0052cc);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(0,102,255,0.45);
+        }
+
+        .btn-login:hover {
+            background: linear-gradient(135deg,#1a75ff,#0052cc);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(0,102,255,0.45);
+        }
+
+    /* Custom Checkbox white version for dark background */
+    .checkbox-wrapper label {
+        color: white !important;
+        font-size: 13px;
+    }
+
+        .checkbox-wrapper label::before {
+            border-color: rgba(255,255,255,0.5) !important;
+        }
+</style>
+<style>
+    /* Container bao ngoài */
+    .checkbox-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        user-select: none;
+        font-family: sans-serif;
+        color: #333;
+    }
+
+        /* Ẩn checkbox mặc định xấu xí */
+        .checkbox-wrapper input {
+            display: none;
+        }
+
+        /* Tạo ô checkbox mới bằng label */
+        .checkbox-wrapper label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color:var(--main-color)
+        }
+
+            /* Tạo cái ô vuông */
+            .checkbox-wrapper label::before {
+                content: "";
+                width: 18px;
+                height: 18px;
+                border: 2px solid #ccc;
+                border-radius: 4px; /* Bo góc nhẹ cho hiện đại */
+                margin-right: 10px;
+                transition: all 0.2s ease; /* Hiệu ứng mượt */
+            }
+
+        /* Khi hover vào label */
+        .checkbox-wrapper:hover label::before {
+            border-color: #007bff; /* Đổi màu viền khi di chuột vào */
+        }
+
+        /* Khi đã check */
+        .checkbox-wrapper input:checked + label::before {
+            background-color: #007bff;
+            border-color: #007bff;
+            /* Dấu tick (sử dụng unicode hoặc background image) */
+            content: "\2713";
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+</style>
+<script src="/Script/crypto-js.min.js"></script>
+<script src="/Script/login.js"></script>
+<div id="divBodyLogin">
+    <img src="img/background.png" alt="Background" class="background-image">
+    <div class="header">
+        <img src="img/logo.png" alt="Logo" class="logo">
+        <div style="margin-left: 20px;">
+            <h1 class="company-name">@ViewData["Company"]</h1>
+            <h2 class="solution-name">@ViewData["SolutionName"]</h2>
+        </div>
+    </div>
+
+    <div class="main-content">
+
+        <div class="glass-login-card">
+            <h3>ĐĂNG NHẬP HỆ THỐNG</h3>
+
+            <div class="input-group">
+                <label for="txtUserName">Tài khoản</label>
+                <input id="txtUserName" type="text" class="glass-input" placeholder="Nhập user..." />
+            </div>
+
+            <div class="input-group">
+                <label for="txtPassWord">Mật khẩu</label>
+                <input id="txtPassWord" type="password" class="glass-input" placeholder="********" />
+            </div>
+
+            <div class="action-row">
+                <div class="checkbox-wrapper">
+                    <input type="checkbox" id="chkRemember" onchange="DoiTrangThaiDem()" />
+                    <label for="chkRemember">Ghi nhớ</label>
+                </div>
+
+                <input type="button" id="btnDangNhap" value="Đăng nhập" class="btn-login" onclick="DangNhap()" />
+            </div>
+
+            <label id="lblRunScriptInit" style="display:none; cursor:pointer; font-size: 10px; margin-top: 10px;" onclick="CNCT()">Cnct</label>
+        </div>
+    </div>
+</div>
