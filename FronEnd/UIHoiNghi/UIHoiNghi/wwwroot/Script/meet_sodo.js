@@ -1,14 +1,27 @@
 // ===== TN2: Sơ đồ chỗ ngồi kéo-thả =====
 (function () {
-    var soDo = null, seats = [], chuaXep = [], canvas, stage, locked = false, dragDbId = 0;
+    var soDo = null, seats = [], chuaXep = [], canvas, stage, locked = false, dragDbId = 0, curPhong = 0, roomsLoaded = false;
+
+    function loadRooms(cb) {
+        jAjax('/SoDo/ComboPhong', {}, function (o) {
+            var rows = (o && o.code === 0) ? (o.data || []) : [];
+            var sel = document.getElementById('selPhong');
+            sel.innerHTML = '<option value="">— Sơ đồ chung (không theo phòng) —</option>'
+                + rows.map(function (r) { return '<option value="' + r.ID + '">' + r.TenPhong + (r.SucChua ? ' · ' + r.SucChua + ' chỗ' : '') + '</option>'; }).join('');
+            roomsLoaded = true; cb && cb();
+        });
+    }
 
     function load() {
         var hn = MEET.getHN();
         if (!hn) { if (canvas) clearCanvas(); return; }
-        jAjax('/SoDo/GetSoDo', { IDHoiNghi: hn }, function (o) {
+        jAjax('/SoDo/GetSoDo', { IDHoiNghi: hn, IDPhongHop: curPhong || 0 }, function (o) {
             if (o.code !== 0) { meetToast(o.message, true); return; }
             soDo = o.data.soDo; seats = o.data.ghe || []; chuaXep = o.data.chuaXep || [];
             locked = (soDo.DaChot == 1 || soDo.DaChot === true);
+            // Đồng bộ ô chọn phòng theo sơ đồ trả về
+            curPhong = soDo.IDPhongHop ? Number(soDo.IDPhongHop) : 0;
+            var sel = document.getElementById('selPhong'); if (sel) sel.value = curPhong ? '' + curPhong : '';
             render();
         });
     }
@@ -144,6 +157,20 @@
             var rect = canvas.getBoundingClientRect();
             addSeatAt(e.clientX - rect.left, e.clientY - rect.top);
         });
+        loadRooms();
+        document.getElementById('selPhong').onchange = function () { curPhong = Number(this.value) || 0; load(); };
+        document.getElementById('btnRandom').onclick = function () {
+            if (!soDo) return meetToast('Chọn hội nghị trước', true);
+            if (locked) return meetToast('Sơ đồ đã chốt', true);
+            var trong = seats.filter(function (s) { return !s.IDDaiBieu && s.LoaiGhe != 1; }).length;
+            if (!trong) return meetToast('Không còn ghế thường trống để phân', true);
+            meetConfirm('Tự phân ngẫu nhiên đại biểu (không VIP) vào ' + trong + ' ghế thường còn trống?', function () {
+                jAjax('/SoDo/RandomAssign', { IDSoDo: soDo.ID }, function (o) {
+                    if (o.code === 0) { meetToast('Đã phân ' + o.data.count + ' đại biểu' + (o.data.conLai ? ' · còn ' + o.data.conLai + ' đại biểu chưa có ghế' : '')); load(); }
+                    else meetToast(o.message, true);
+                });
+            });
+        };
         document.getElementById('btnGen').onclick = genSeats;
         document.getElementById('btnAddSeat').onclick = function () {
             if (!soDo) return meetToast('Chọn hội nghị trước', true);

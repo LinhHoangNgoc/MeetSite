@@ -4,7 +4,7 @@
     <div class="mp-top">
         <div class="brand"><i class="fa-solid fa-qrcode"></i> ITKA Check-in</div>
         <h1 id="kTen">Điểm danh đại biểu</h1>
-        <div class="sub">Quét mã QR hoặc nhập mã đại biểu để điểm danh</div>
+        <div class="sub">Chọn phương thức: QR · NFC · CCCD · Khuôn mặt</div>
     </div>
     <div class="mp-body">
         <div class="mp-stat" id="kStat" style="display:none">
@@ -15,23 +15,54 @@
 
         <div class="mp-card" id="kResult" style="display:none"></div>
 
-        <div class="mp-card" id="kScanCard">
+        <div class="k-tabs">
+            <button class="k-tab active" data-m="qr"><i class="fa-solid fa-qrcode"></i> QR</button>
+            <button class="k-tab" data-m="nfc"><i class="fa-solid fa-id-card-clip"></i> NFC</button>
+            <button class="k-tab" data-m="cccd"><i class="fa-solid fa-address-card"></i> CCCD</button>
+            <button class="k-tab" data-m="face"><i class="fa-solid fa-face-smile"></i> Khuôn mặt</button>
+        </div>
+
+        <!-- QR -->
+        <div class="mp-card k-pane" data-pane="qr">
             <h3><i class="fa-solid fa-camera"></i> Quét mã QR</h3>
             <div id="mpReader"></div>
             <button class="mp-btn" id="kStartCam"><i class="fa-solid fa-camera"></i> Bật camera quét</button>
-            <div class="mp-hint" style="text-align:center;color:#6a7882;font-size:13px;margin-top:8px" id="kCamHint"></div>
-        </div>
-
-        <div class="mp-card">
-            <h3><i class="fa-solid fa-keyboard"></i> Nhập thủ công</h3>
-            <label class="mp-label">Mã QR / Mã đại biểu</label>
+            <div style="text-align:center;color:#6a7882;font-size:13px;margin-top:8px" id="kCamHint"></div>
+            <label class="mp-label" style="margin-top:12px">Hoặc nhập mã QR / mã đại biểu</label>
             <input class="mp-input" id="kToken" placeholder="Nhập mã..." autocomplete="off">
             <button class="mp-btn acc" id="kManual"><i class="fa-solid fa-check"></i> Điểm danh</button>
+        </div>
+
+        <!-- NFC -->
+        <div class="mp-card k-pane" data-pane="nfc" style="display:none">
+            <h3><i class="fa-solid fa-id-card-clip"></i> Quẹt thẻ NFC</h3>
+            <div class="mp-hint" style="color:#6a7882;font-size:13px;margin-bottom:8px">Đặt thẻ NFC lên đầu đọc (đầu đọc gõ mã vào ô bên dưới), hoặc nhập mã thẻ rồi bấm điểm danh.</div>
+            <label class="mp-label">Mã thẻ NFC</label>
+            <input class="mp-input" id="kNfc" placeholder="VD: NFC-0192AB..." autocomplete="off">
+            <button class="mp-btn acc" id="kNfcBtn"><i class="fa-solid fa-check"></i> Điểm danh bằng NFC</button>
+        </div>
+
+        <!-- CCCD -->
+        <div class="mp-card k-pane" data-pane="cccd" style="display:none">
+            <h3><i class="fa-solid fa-address-card"></i> Căn cước công dân</h3>
+            <div class="mp-hint" style="color:#6a7882;font-size:13px;margin-bottom:8px">Quét QR trên thẻ CCCD hoặc nhập 12 số căn cước.</div>
+            <label class="mp-label">Số CCCD</label>
+            <input class="mp-input" id="kCccd" inputmode="numeric" placeholder="VD: 001099012345" autocomplete="off">
+            <button class="mp-btn acc" id="kCccdBtn"><i class="fa-solid fa-check"></i> Điểm danh bằng CCCD</button>
+        </div>
+
+        <!-- Khuôn mặt (mô phỏng) -->
+        <div class="mp-card k-pane" data-pane="face" style="display:none">
+            <h3><i class="fa-solid fa-face-smile"></i> Nhận diện khuôn mặt <span style="font-size:12px;color:#c08a1e">(mô phỏng)</span></h3>
+            <div class="mp-hint" style="color:#6a7882;font-size:13px;margin-bottom:8px">Bản demo: camera mô phỏng nhận diện — chạm vào đại biểu khớp để điểm danh. Cắm engine thật về sau qua endpoint cùng phương thức (PhuongThuc=3).</div>
+            <button class="mp-btn" id="kFaceScan"><i class="fa-solid fa-camera-retro"></i> Quét khuôn mặt (mô phỏng)</button>
+            <input class="mp-input" id="kFaceSearch" placeholder="Tìm theo tên..." autocomplete="off" style="margin-top:10px">
+            <div id="kFaceList" class="k-facelist"></div>
         </div>
     </div>
     <div class="mp-foot">© 2026 ITKA · Hệ thống Quản lý Hội nghị Thông minh</div>
 </div>
 
 @section scripts {
-    <script src="/Script/meet_kiosk.js?v=1"></script>
+    <script src="/Script/meet_kiosk.js?v=2"></script>
 }

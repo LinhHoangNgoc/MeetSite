@@ -1,12 +1,23 @@
 using System.Text.Json;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace UIHoiNghi.Controllers;
 
 // GroupKey = "PhanQuyen": quản trị RBAC — vai trò, ma trận quyền, người dùng.
+// CHỈ QUẢN TRỊ VIÊN: gác cứng ở server (vì nhóm PhanQuyen không nằm trong ma trận quyền nên
+// CheckLoginFilter fail-open — chốt admin tại đây để chặn truy cập trực tiếp bằng URL).
 public class PhanQuyenController : MeetBaseController
 {
     public PhanQuyenController(Connection cn, Sys sys) : base(cn, sys) { }
+
+    public override void OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext context)
+    {
+        var admin = HttpContext.Session.GetString("Admin");
+        bool isAdmin = !string.IsNullOrEmpty(admin) && (admin.Equals("True", StringComparison.OrdinalIgnoreCase) || admin == "1");
+        if (!isAdmin) { context.Result = new StatusCodeResult(403); return; }
+        base.OnActionExecuting(context);
+    }
 
     [HttpGet] public IActionResult Index() { ViewBag.Active = "phanquyen"; return View(); }
 

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>Hướng dẫn sử dụng chi tiết — MeetSite (ITKA)</title>
+<style>
+  @page { size: A4; margin: 16mm 14mm 18mm 14mm; }
+  * { box-sizing: border-box; }
+  body { font-family: "Segoe UI", Arial, sans-serif; color: #1f2a30; font-size: 12px; line-height: 1.55; margin: 0; }
+  h1,h2,h3,h4 { color: #0a6c5e; line-height: 1.25; }
+  h2 { font-size: 20px; border-bottom: 3px solid #0a6c5e; padding-bottom: 6px; margin: 0 0 12px; page-break-before: always; }
+  h2.no-break { page-break-before: avoid; }
+  h3 { font-size: 15.5px; margin: 18px 0 6px; }
+  h4 { font-size: 13px; margin: 12px 0 4px; color:#0d8a76; }
+  p { margin: 6px 0; }
+  ul,ol { margin: 6px 0 6px 18px; padding: 0; }
+  li { margin: 3px 0; }
+  code { background:#eef3f2; border:1px solid #d9e3e0; border-radius:4px; padding:1px 5px; font-family:Consolas,monospace; font-size:11px; color:#0a5c50; }
+  figure { margin: 12px 0 16px; page-break-inside: avoid; text-align:center; }
+  figure img { max-width: 100%; border:1px solid #cfd9d6; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,.08); }
+  figure.mobile img { max-width: 300px; }
+  figcaption { font-size:11px; color:#5b6b73; margin-top:6px; font-style:italic; }
+  .lead { font-size: 13px; color:#37474f; }
+  .tag { display:inline-block; background:#0a6c5e; color:#fff; border-radius:10px; padding:1px 9px; font-size:10.5px; font-weight:700; }
+  .tag.new { background:#c08a1e; }
+  table { width:100%; border-collapse: collapse; margin: 8px 0 14px; font-size:11px; page-break-inside: avoid; }
+  th,td { border:1px solid #cfd9d6; padding:5px 8px; text-align:left; vertical-align:top; }
+  th { background:#e7f1ee; color:#0a5c50; }
+  .callout { border-left:4px solid #0a8f7e; background:#eef7f4; border-radius:0 8px 8px 0; padding:9px 12px; margin:10px 0; font-size:11.5px; }
+  .callout.warn { border-left-color:#c08a1e; background:#fdf6e8; }
+  .callout.note { border-left-color:#0f6e9c; background:#eaf3f9; }
+  .step { background:#0a6c5e; color:#fff; border-radius:50%; width:24px; height:24px; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:13px; margin-right:7px; }
+  .steptitle { display:flex; align-items:center; margin:22px 0 4px; }
+  .steptitle h3 { margin:0; }
+  /* Cover */
+  .cover { height: 257mm; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;
+           background: linear-gradient(135deg,#0a6c5e,#0d8a76); color:#fff; border-radius:14px; padding:40px; page-break-after: always; }
+  .cover .logo { font-size:40px; font-weight:800; letter-spacing:1px; }
+  .cover .sub { font-size:18px; opacity:.95; margin-top:10px; }
+  .cover .title { font-size:30px; font-weight:800; margin-top:40px; line-height:1.25; }
+  .cover .meta { margin-top:40px; font-size:13px; opacity:.9; }
+  .toc { font-size:12.5px; }
+  .toc li { margin:4px 0; }
+  .muted { color:#5b6b73; }
+</style>
+</head>
+<body>
+
+<!-- ============ BÌA ============ -->
+<div class="cover">
+  <div class="logo">ITKA · MeetSite</div>
+  <div class="sub">Hệ thống Quản lý Hội nghị Thông minh</div>
+  <div class="title">HƯỚNG DẪN SỬ DỤNG CHI TIẾT<br>Quy trình tổ chức hội nghị từ A → Z</div>
+  <div class="meta">Phiên bản 2 · Tài liệu nội bộ · 2026<br>Bao gồm toàn bộ màn hình, chức năng và thao tác thực tế trên phần mềm</div>
+</div>
+
+<!-- ============ MỤC LỤC ============ -->
+<h2 class="no-break">Mục lục</h2>
+<div class="toc">
+<ol>
+  <li>Giới thiệu tổng quan &amp; Đăng nhập</li>
+  <li><b>Quy trình tổ chức một cuộc họp từ A → Z</b> (11 bước, có thao tác minh hoạ)
+    <ul>
+      <li>Bước 1 — Tạo hội nghị &amp; phiên họp</li>
+      <li>Bước 2 — Danh mục nhân viên &amp; phân công nhiệm vụ (Kanban)</li>
+      <li>Bước 3 — Nhập danh sách đại biểu (Năm sinh / CCCD / NFC / QR)</li>
+      <li>Bước 4 — Thiết kế sơ đồ chỗ ngồi</li>
+      <li>Bước 5 — Soạn &amp; gửi Thư mời hội nghị</li>
+      <li>Bước 6 — Gửi tin nhắn SMS / Zalo (chiến dịch)</li>
+      <li>Bước 7 — Chia sẻ tài liệu</li>
+      <li>Bước 8 — Thiết kế phiếu khảo sát</li>
+      <li>Bước 9 — Ngày diễn ra: Kiosk điểm danh đa phương thức</li>
+      <li>Bước 10 — Cổng đại biểu &amp; khảo sát trên điện thoại</li>
+      <li>Bước 11 — Báo cáo &amp; KPI sau hội nghị</li>
+    </ul>
+  </li>
+  <li>Tham chiếu chi tiết từng màn hình</li>
+  <li>Phân quyền &amp; vai trò</li>
+  <li>Triển khai &amp; vận hành (Publish, IIS, cổng 5014)</li>
+</ol>
+</div>
+
+<!-- ============ 1. GIỚI THIỆU ============ -->
+<h2>1. Giới thiệu tổng quan &amp; Đăng nhập</h2>
+<p class="lead">MeetSite (giải pháp ITKA) là nền tảng web số hoá toàn bộ quy trình tổ chức hội nghị: từ lập kế hoạch, phân công nhân sự, mời đại biểu, xếp chỗ ngồi, điểm danh đa phương thức, chia sẻ tài liệu, khảo sát đến báo cáo hiệu quả (KPI) — tất cả trên một nền tảng duy nhất.</p>
+
+<h3>1.1. Truy cập &amp; tài khoản</h3>
+<p>Mở trình duyệt và truy cập địa chỉ hệ thống (mặc định nội bộ: <code>http://localhost:5014</code>). Màn hình sẽ tự chuyển sang trang đăng nhập.</p>
+<table>
+  <tr><th>Tài khoản</th><th>Mật khẩu</th><th>Vai trò</th><th>Phạm vi</th></tr>
+  <tr><td><code>admin</code></td><td><code>admin@123</code></td><td>Quản trị</td><td>Toàn quyền + Phân quyền</td></tr>
+  <tr><td><code>btc</code></td><td><code>btc@123</code></td><td>Ban tổ chức</td><td>Toàn quyền nghiệp vụ hội nghị</td></tr>
+  <tr><td><code>kythuat</code></td><td><code>kt@123</code></td><td>Kỹ thuật viên</td><td>Sơ đồ, Điểm danh</td></tr>
+  <tr><td><code>letan</code></td><td><code>lt@123</code></td><td>Lễ tân</td><td>Điểm danh, tra cứu đại biểu</td></tr>
+</table>
+<figure><img src="imgv2/00_dangnhap.png" alt="Đăng nhập"><figcaption>Màn hình đăng nhập — nhập tài khoản &amp; mật khẩu, bấm Đăng nhập.</figcaption></figure>
+
+<h3>1.2. Bố cục giao diện làm việc</h3>
+<p>Sau khi đăng nhập, không gian làm việc gồm thanh điều hướng ngang phía trên, được gom theo nhóm:</p>
+<ul>
+  <li><b>Tổng quan</b> — bảng điều khiển nhanh của hội nghị đang chọn.</li>
+  <li><b>Tổ chức</b> — Hội nghị &amp; Phiên · Phân công nhiệm vụ · Đại biểu · Sơ đồ chỗ ngồi · Thư mời hội nghị.</li>
+  <li><b>Vận hành</b> — Điểm danh · Tin nhắn SMS/Zalo · Tài liệu.</li>
+  <li><b>Đánh giá</b> — Khảo sát · Báo cáo &amp; KPI.</li>
+  <li><b>Hệ thống</b> — Phân quyền (chỉ Quản trị).</li>
+</ul>
+<div class="callout note"><b>Chọn hội nghị làm việc:</b> Mọi màn hình nghiệp vụ đều gắn với <b>một hội nghị đang chọn</b> (hiển thị ở góc phải thanh tiêu đề). Nếu chưa chọn, hệ thống đưa bạn về danh sách hội nghị để mở một hội nghị trước.</div>
+
+<!-- ============ 2. QUY TRÌNH A->Z ============ -->
+<h2>2. Quy trình tổ chức một cuộc họp từ A → Z</h2>
+<p class="lead">Phần này hướng dẫn <b>tuần tự từng bước</b> để tạo và vận hành trọn vẹn một hội nghị. Mỗi bước nêu rõ thao tác bấm nút, điền thông tin và kết quả mong đợi.</p>
+
+<div class="steptitle"><span class="step">1</span><h3>Bước 1 — Tạo hội nghị &amp; phiên họp</h3></div>
+<p>Vào <b>Hội nghị &amp; Phiên</b> (nhóm Tổ chức). Trang đầu là <b>danh sách hội nghị</b>; bấm <b>Thêm hội nghị</b> để mở biểu mẫu.</p>
+<figure><img src="imgv2/10_danhsach_hoinghi.png"><figcaption>Danh sách hội nghị — lọc theo trạng thái, bấm “Thêm hội nghị” hoặc mở một hội nghị có sẵn.</figcaption></figure>
+<p>Điền các trường: <b>Tên hội nghị</b> (bắt buộc), Mã (tự sinh nếu trống), Mô tả, Ngày bắt đầu/kết thúc, Địa điểm, Đơn vị tổ chức, Trạng thái (Nháp → Mở đăng ký → Đang diễn ra → Đã chốt). Bấm <b>Lưu</b>.</p>
+<figure><img src="imgv2/30_form_taohoinghi.png"><figcaption>Biểu mẫu tạo/sửa hội nghị.</figcaption></figure>
+<p>Mở hội nghị vừa tạo, sang tab <b>Hội nghị &amp; Phiên</b> để thêm các <b>phiên họp</b> (tên phiên, phòng, thời gian bắt đầu/kết thúc, thứ tự) và gán <b>diễn giả</b> cho từng phiên (vai trò: chủ tọa / diễn giả / điều phối).</p>
+<figure><img src="imgv2/12_hoinghi_phien.png"><figcaption>Quản lý phiên họp &amp; diễn giả trong một hội nghị.</figcaption></figure>
+<div class="callout"><b>Kết quả:</b> Một hội nghị có khung chương trình (các phiên) và đội ngũ diễn giả. Đây là “xương sống” để các bước sau gắn dữ liệu vào.</div>
+
+<div class="steptitle"><span class="step">2</span><h3>Bước 2 — Danh mục nhân viên &amp; phân công nhiệm vụ <span class="tag new">Mới</span></h3></div>
+<p>Vào <b>Phân công nhiệm vụ</b> (nhóm Tổ chức). Màn hình gồm 2 phần: <b>Danh mục nhân viên tổ chức</b> và <b>Bảng nhiệm vụ (Kanban)</b>.</p>
+<h4>2.1. Thêm nhân viên tổ chức</h4>
+<p>Bấm <b>Thêm nhân viên</b>, điền Họ tên, <b>Vai trò tổ chức</b> (Ban tổ chức / Kỹ thuật / Lễ tân / Hậu cần / An ninh / Truyền thông), chức danh, liên hệ. Tích <b>Dùng chung mọi hội nghị</b> nếu là nhân sự cố định.</p>
+<figure><img src="imgv2/31_form_phancong.png"><figcaption>Biểu mẫu thêm nhân viên tổ chức.</figcaption></figure>
+<h4>2.2. Giao nhiệm vụ</h4>
+<p>Bấm <b>Giao nhiệm vụ</b>: chọn nhân viên, tên nhiệm vụ, phiên liên quan (tuỳ chọn), <b>độ ưu tiên</b> (Thường/Cao/Khẩn), <b>thời hạn</b> và trạng thái.</p>
+<figure><img src="imgv2/32_form_giaonhiemvu.png"><figcaption>Biểu mẫu giao nhiệm vụ cho nhân viên.</figcaption></figure>
+<h4>2.3. Theo dõi bằng bảng Kanban</h4>
+<p>Nhiệm vụ hiển thị thành 3 cột <b>Chưa làm · Đang làm · Hoàn thành</b>. <b>Kéo-thả</b> thẻ sang cột khác để đổi trạng thái tức thì. Thẻ quá hạn được tô đỏ; banner phía trên nhắc các việc quá hạn. Có thể chuyển nút <b>Kanban ⇄ Lưới</b>. Biểu đồ tiến độ theo nhân viên nằm dưới cùng.</p>
+<figure><img src="imgv2/13_phancong_kanban.png"><figcaption>Bảng Kanban phân công nhiệm vụ — kéo-thả thẻ để đổi trạng thái; badge ưu tiên &amp; thời hạn trên từng thẻ.</figcaption></figure>
+
+<div class="steptitle"><span class="step">3</span><h3>Bước 3 — Nhập danh sách đại biểu</h3></div>
+<p>Vào <b>Đại biểu</b> (nhóm Tổ chức). Tại đây quản lý người tham dự: thêm/sửa/xóa, phân <b>nhóm</b>, gắn nhãn <b>VIP</b>, và sinh <b>mã QR cá nhân</b>.</p>
+<figure><img src="imgv2/14_daibieu.png"><figcaption>Danh sách đại biểu — cột Năm sinh, nhóm, VIP, ghế, trạng thái điểm danh.</figcaption></figure>
+<p>Bấm <b>Thêm đại biểu</b> và điền: Họ tên, <b>Năm sinh</b>, chức danh, đơn vị, điện thoại, email, <b>Số CCCD</b> (để điểm danh bằng căn cước), <b>Mã thẻ NFC</b> (để điểm danh bằng thẻ), nhóm, VIP.</p>
+<figure><img src="imgv2/33_form_themdaibieu.png"><figcaption>Biểu mẫu thêm đại biểu — có Năm sinh, Số CCCD, Mã NFC phục vụ điểm danh đa phương thức.</figcaption></figure>
+<div class="callout note"><b>Mẹo nhập nhanh:</b> Dùng nút <b>Nhập nhanh</b> để dán danh sách nhiều đại biểu (mỗi dòng một người, các cột cách bằng dấu <code>|</code> hoặc Tab). Nút <b>Xem / In QR</b> tạo mã QR cá nhân để in thẻ đại biểu.</div>
+
+<div class="steptitle"><span class="step">4</span><h3>Bước 4 — Thiết kế sơ đồ chỗ ngồi <span class="tag new">Cập nhật</span></h3></div>
+<p>Vào <b>Sơ đồ chỗ ngồi</b> (nhóm Tổ chức). Sơ đồ ghế được lập <b>theo từng phòng họp</b>: chọn phòng ở ô <b>Phòng họp</b> trên thanh công cụ — mỗi phòng có một sơ đồ riêng (đổi phòng sẽ chuyển sang sơ đồ tương ứng).</p>
+<h4>4.1. Tạo ghế</h4>
+<p>Bấm <b>Sinh lưới ghế</b> (nhập số hàng × số ghế/hàng) để tạo nhanh; hoặc <b>Thêm ghế</b> / double-click vùng trống để chèn ghế lẻ. Nhấn giữ &amp; kéo để di chuyển ghế.</p>
+<h4>4.2. Xếp ghế VIP trước (thủ công)</h4>
+<p>Chuột phải một ghế → <b>Đánh dấu ghế VIP</b> (ghế chuyển màu cam), rồi <b>kéo-thả</b> đại biểu VIP từ danh sách “Chưa xếp ghế” bên phải vào đúng ghế VIP mong muốn.</p>
+<h4>4.3. Phân ngẫu nhiên các ghế còn lại</h4>
+<p>Bấm <b>Phân ngẫu nhiên</b>: hệ thống tự xếp các <b>đại biểu thường (không VIP) chưa có ghế</b> vào những <b>ghế thường còn trống</b> một cách ngẫu nhiên. Ghế VIP và đại biểu VIP được <b>giữ nguyên</b> để Ban tổ chức chủ động sắp xếp. Khi hoàn tất, bấm <b>Chốt sơ đồ</b> để khóa chỉnh sửa.</p>
+<figure><img src="imgv2/15_sodo.png"><figcaption>Sơ đồ chỗ ngồi theo phòng — ghế VIP (cam) gán tay, ghế thường được “Phân ngẫu nhiên”; đại biểu VIP chưa xếp vẫn nằm ở danh sách bên phải.</figcaption></figure>
+<div class="callout"><b>Quy tắc Random:</b> chỉ điền ghế <i>thường</i> còn trống bằng đại biểu <i>không VIP</i> chưa có ghế. Nếu số đại biểu nhiều hơn ghế trống, phần dư vẫn nằm ở “Chưa xếp ghế”.</div>
+
+<div class="steptitle"><span class="step">5</span><h3>Bước 5 — Soạn &amp; gửi Thư mời hội nghị <span class="tag new">Mới</span></h3></div>
+<p>Vào <b>Thư mời hội nghị</b> (nhóm Tổ chức). Đây là cửa sổ quản lý thư mời cho <b>từng đại biểu</b>, kèm 4 thẻ chỉ số và <b>đồng hồ tỷ lệ gửi đạt được</b>.</p>
+<figure><img src="imgv2/16_thumoi.png"><figcaption>Cửa sổ Quản lý Thư mời — danh sách đại biểu kèm Trạng thái gửi đổi màu (Chưa soạn / Chưa gửi / Đã gửi / Gửi lỗi).</figcaption></figure>
+<h4>5.1. Soạn thư</h4>
+<p>Chọn một đại biểu rồi bấm <b>Soạn / Sửa thư</b>. Điền <b>Kênh gửi</b> (SMS / Zalo OA / Email), Địa điểm, Thời gian, Lưu ý khi tham gia, và Nội dung. Có thể chèn <b>biến cá nhân hóa</b>: <code>{HoTen}</code>, <code>{MaGhe}</code>, <code>{TenHoiNghi}</code>, <code>{DiaDiem}</code>, <code>{ThoiGian}</code>, <code>{LuuY}</code>.</p>
+<figure><img src="imgv2/34_form_soanthumoi.png"><figcaption>Biểu mẫu soạn thư mời cho từng đại biểu.</figcaption></figure>
+<h4>5.2. Gửi &amp; theo dõi</h4>
+<ul>
+  <li><b>Gửi riêng</b> — gửi thư cho đại biểu đang chọn.</li>
+  <li><b>Gửi tất cả</b> — gửi mọi thư <i>chưa gửi</i> của hội nghị.</li>
+  <li><b>Gửi lại lỗi</b> — gửi lại những thư đang ở trạng thái lỗi.</li>
+  <li><b>Sao chép thư</b> — sao nội dung thư của một người sang nhiều đại biểu (có lọc “cùng đơn vị”), tiết kiệm thời gian nhập liệu.</li>
+  <li><b>Hủy &amp; Xóa thư</b> — gỡ thư của đại biểu đang chọn.</li>
+</ul>
+<p>Sau mỗi lần gửi, cột <b>Trạng thái gửi</b> tự đổi màu và <b>đồng hồ tỷ lệ</b> cập nhật.</p>
+<div class="callout warn"><b>Lưu ý:</b> Kênh gửi hiện ở <b>chế độ mô phỏng</b> (ghi log + trạng thái, chưa gửi thật). Khi triển khai thật, cắm nhà cung cấp SMS/Zalo/Email vào giao diện <code>IMeetSender</code>.</div>
+
+<div class="steptitle"><span class="step">6</span><h3>Bước 6 — Gửi tin nhắn SMS / Zalo (chiến dịch)</h3></div>
+<p>Vào <b>Tin nhắn SMS/Zalo</b> (nhóm Vận hành). Khác với thư mời cá nhân, đây là công cụ <b>gửi hàng loạt theo chiến dịch</b> (nhắc lịch, thông báo). Bấm <b>Soạn chiến dịch</b>, chọn kênh, phạm vi (Tất cả / Theo nhóm / Chỉ VIP), nội dung (có biến cá nhân hóa), rồi <b>Gửi</b>. Có thư viện <b>Mẫu tin</b> dùng lại.</p>
+<figure><img src="imgv2/35_form_chiendich.png"><figcaption>Biểu mẫu soạn chiến dịch tin nhắn.</figcaption></figure>
+<figure><img src="imgv2/18_tinnhan.png"><figcaption>Danh sách chiến dịch &amp; nhật ký gửi từng tin.</figcaption></figure>
+
+<div class="steptitle"><span class="step">7</span><h3>Bước 7 — Chia sẻ tài liệu</h3></div>
+<p>Vào <b>Tài liệu</b> (nhóm Vận hành). Tải lên văn bản/tài liệu số, đặt <b>phạm vi truy cập</b> (công khai hoặc theo nhóm đại biểu), bật <b>chia sẻ QR</b> để đại biểu quét xem trên điện thoại. Hệ thống đếm <b>lượt xem</b> từng tài liệu.</p>
+<figure><img src="imgv2/19_tailieu.png"><figcaption>Quản lý tài liệu — tải lên, phân quyền theo nhóm, chia sẻ QR, đếm lượt xem.</figcaption></figure>
+
+<div class="steptitle"><span class="step">8</span><h3>Bước 8 — Thiết kế phiếu khảo sát</h3></div>
+<p>Vào <b>Khảo sát</b> (nhóm Đánh giá). Tạo phiếu với nhiều loại câu hỏi: <b>thang điểm 1–5</b>, <b>một lựa chọn</b>, <b>nhiều lựa chọn</b>, <b>văn bản</b>. Mở/đóng phiếu và tạo QR để đại biểu trả lời.</p>
+<figure><img src="imgv2/20_khaosat.png"><figcaption>Trình thiết kế phiếu khảo sát.</figcaption></figure>
+
+<div class="steptitle"><span class="step">9</span><h3>Bước 9 — Ngày diễn ra: Kiosk điểm danh đa phương thức <span class="tag new">Mới</span></h3></div>
+<p>Tại sảnh sự kiện, mở màn <b>Kiosk</b> (nút “Liên kết Kiosk” trên thanh tiêu đề hoặc nút <b>Mở màn Kiosk</b> ở trang Điểm danh). Kiosk hỗ trợ <b>4 phương thức</b>: QR · NFC · CCCD · Nhận diện khuôn mặt.</p>
+<figure class="mobile"><img src="imgv2/40_kiosk.png"><figcaption>Kiosk — tab QR: quét camera hoặc nhập mã đại biểu.</figcaption></figure>
+<ul>
+  <li><b>QR</b> — bật camera quét mã QR cá nhân, hoặc nhập mã đại biểu.</li>
+  <li><b>NFC</b> — quẹt thẻ NFC (đầu đọc gõ mã), hệ thống tra theo Mã NFC đã gắn cho đại biểu.</li>
+  <li><b>CCCD</b> — nhập/quét số căn cước, tra theo Số CCCD của đại biểu.</li>
+  <li><b>Khuôn mặt</b> — bản mô phỏng: chọn đại biểu khớp từ thư viện ảnh để điểm danh (cắm engine thật về sau).</li>
+</ul>
+<figure class="mobile"><img src="imgv2/41_kiosk_face.png"><figcaption>Kiosk — tab Nhận diện khuôn mặt (mô phỏng): chạm vào đại biểu để điểm danh.</figcaption></figure>
+<p>Trên máy Ban tổ chức, màn <b>Điểm danh</b> hiển thị thống kê <b>thời gian thực</b>, cho phép điểm danh thủ công, hoàn tác, và xem nhật ký (kèm phương thức QR/NFC/CCCD/Khuôn mặt/Thủ công).</p>
+<figure><img src="imgv2/17_checkin.png"><figcaption>Màn điều hành điểm danh (desktop) — thống kê realtime + nhật ký theo phương thức.</figcaption></figure>
+
+<div class="steptitle"><span class="step">10</span><h3>Bước 10 — Cổng đại biểu &amp; khảo sát trên điện thoại</h3></div>
+<p>Mỗi đại biểu quét QR cá nhân để mở <b>cổng riêng</b>: xem thông tin, vị trí ghế, tài liệu được phép, và khảo sát đang mở. Sau hội nghị, đại biểu quét mã trả lời khảo sát ngay trên điện thoại.</p>
+<figure class="mobile"><img src="imgv2/42_daibieu_portal.png"><figcaption>Cổng đại biểu (mobile) — thông tin, ghế, tài liệu, khảo sát.</figcaption></figure>
+<figure class="mobile"><img src="imgv2/43_khaosat_mobile.png"><figcaption>Trả lời khảo sát trên điện thoại.</figcaption></figure>
+
+<div class="steptitle"><span class="step">11</span><h3>Bước 11 — Báo cáo &amp; KPI sau hội nghị</h3></div>
+<p>Vào <b>Báo cáo &amp; KPI</b> (nhóm Đánh giá). Hệ thống tự tổng hợp: tỉ lệ tham dự thực tế, số phiên, lượt xem tài liệu, <b>tỷ lệ gửi thư mời</b>, số tin đã gửi, mức hài lòng trung bình; cùng các biểu đồ: điểm danh theo phiên, <b>check-in theo phương thức</b>, cơ cấu đại biểu theo nhóm, lượt xem tài liệu, điểm hài lòng theo tiêu chí.</p>
+<figure><img src="imgv2/21_baocao.png"><figcaption>Bảng Báo cáo &amp; KPI — có thẻ “Tỷ lệ gửi thư mời” và biểu đồ “Check-in theo phương thức”.</figcaption></figure>
+
+<!-- ============ 3. THAM CHIẾU TỪNG MÀN HÌNH ============ -->
+<h2>3. Tham chiếu chi tiết từng màn hình</h2>
+
+<h3>3.1. Tổng quan (Dashboard)</h3>
+<p>Bảng điều khiển nhanh của hội nghị đang chọn: số phiên, số đại biểu, số đã check-in, tỉ lệ, số VIP, số tài liệu, số khảo sát và biểu đồ điểm danh theo phiên.</p>
+<figure><img src="imgv2/11_tongquan.png"><figcaption>Màn Tổng quan.</figcaption></figure>
+
+<h3>3.2. Bảng các chức năng &amp; nút thao tác</h3>
+<table>
+  <tr><th>Màn hình</th><th>Đường dẫn</th><th>Chức năng chính</th></tr>
+  <tr><td>Hội nghị &amp; Phiên</td><td><code>/HoiNghi</code></td><td>Tạo hội nghị, phiên họp, diễn giả; dashboard tổng quan.</td></tr>
+  <tr><td>Phân công nhiệm vụ <span class="tag new">Mới</span></td><td><code>/PhanCong</code></td><td>Danh mục nhân viên; giao &amp; theo dõi nhiệm vụ (Kanban kéo-thả, nhắc hạn, biểu đồ tiến độ).</td></tr>
+  <tr><td>Đại biểu</td><td><code>/DaiBieu</code></td><td>CRUD đại biểu, nhóm, VIP, Năm sinh/CCCD/NFC, QR cá nhân, nhập nhanh.</td></tr>
+  <tr><td>Sơ đồ chỗ ngồi</td><td><code>/SoDo</code></td><td>Thiết kế hội trường, kéo-thả đại biểu vào ghế, chốt sơ đồ.</td></tr>
+  <tr><td>Thư mời hội nghị <span class="tag new">Mới</span></td><td><code>/ThuMoi</code></td><td>Soạn thư theo từng đại biểu; Gửi riêng/Gửi tất cả/Gửi lại lỗi; Sao chép; tỷ lệ gửi.</td></tr>
+  <tr><td>Điểm danh</td><td><code>/CheckIn</code></td><td>Thống kê realtime, điểm danh thủ công, mở Kiosk, nhật ký theo phương thức.</td></tr>
+  <tr><td>Tin nhắn SMS/Zalo</td><td><code>/TinNhan</code></td><td>Chiến dịch gửi hàng loạt, mẫu tin, nhật ký gửi.</td></tr>
+  <tr><td>Tài liệu</td><td><code>/TaiLieu</code></td><td>Tải lên, phân quyền theo nhóm, chia sẻ QR, đếm lượt xem.</td></tr>
+  <tr><td>Khảo sát</td><td><code>/KhaoSat</code></td><td>Thiết kế phiếu (thang điểm/lựa chọn/văn bản), QR.</td></tr>
+  <tr><td>Báo cáo &amp; KPI</td><td><code>/BaoCao</code></td><td>Tổng hợp chỉ số + biểu đồ; tỷ lệ gửi thư mời; check-in theo phương thức.</td></tr>
+  <tr><td>Phân quyền</td><td><code>/PhanQuyen</code></td><td>Vai trò, ma trận quyền chi tiết, gán vai trò cho người dùng (chỉ Quản trị).</td></tr>
+  <tr><td>Kiosk (công khai)</td><td><code>/meetpublic/Kiosk</code></td><td>Điểm danh đa phương thức QR/NFC/CCCD/Khuôn mặt.</td></tr>
+  <tr><td>Cổng đại biểu</td><td><code>/meetpublic/DaiBieu?token=</code></td><td>Thông tin, ghế, tài liệu, khảo sát của đại biểu.</td></tr>
+</table>
+
+<!-- ============ 4. PHÂN QUYỀN ============ -->
+<h2>4. Phân quyền &amp; vai trò</h2>
+<p>Hệ thống dùng cơ chế RBAC: mỗi nhóm chức năng là một <b>GroupKey</b>, mỗi vai trò được cấp các quyền <b>Xem / Thêm / Sửa / Xóa</b>. Quản trị viên vào <b>Phân quyền</b> để tạo vai trò, tích ma trận quyền và gán vai trò cho người dùng. Riêng màn <b>Phân quyền chỉ dành cho Quản trị viên</b> (gác cứng ở máy chủ — vai trò khác mở trực tiếp bằng URL sẽ bị từ chối 403).</p>
+<figure><img src="imgv2/22_phanquyen.png"><figcaption>Màn Phân quyền — vai trò, ma trận quyền chi tiết, gán người dùng.</figcaption></figure>
+<h3>4.1. Ma trận quyền truy cập theo vai trò (đã kiểm chứng)</h3>
+<p>✔ = mở được · — = bị chặn (403).</p>
+<table>
+  <tr><th>Màn hình</th><th>Quản trị</th><th>Ban tổ chức</th><th>Kỹ thuật</th><th>Lễ tân</th></tr>
+  <tr><td>Hội nghị &amp; Phiên</td><td>✔</td><td>✔</td><td>✔ (xem)</td><td>✔ (xem)</td></tr>
+  <tr><td>Phân công nhiệm vụ</td><td>✔</td><td>✔</td><td>—</td><td>—</td></tr>
+  <tr><td>Đại biểu</td><td>✔</td><td>✔</td><td>—</td><td>✔ (xem)</td></tr>
+  <tr><td>Sơ đồ chỗ ngồi</td><td>✔</td><td>✔</td><td>✔</td><td>—</td></tr>
+  <tr><td>Thư mời hội nghị</td><td>✔</td><td>✔</td><td>—</td><td>—</td></tr>
+  <tr><td>Điểm danh</td><td>✔</td><td>✔</td><td>✔</td><td>✔</td></tr>
+  <tr><td>Tin nhắn SMS/Zalo</td><td>✔</td><td>✔</td><td>—</td><td>—</td></tr>
+  <tr><td>Tài liệu</td><td>✔</td><td>✔</td><td>✔ (xem)</td><td>—</td></tr>
+  <tr><td>Khảo sát</td><td>✔</td><td>✔</td><td>—</td><td>—</td></tr>
+  <tr><td>Báo cáo &amp; KPI</td><td>✔</td><td>✔</td><td>✔ (xem)</td><td>—</td></tr>
+  <tr><td>Phân quyền</td><td>✔</td><td>—</td><td>—</td><td>—</td></tr>
+</table>
+<div class="callout note"><b>Đăng nhập:</b> sai tài khoản/mật khẩu bị từ chối với thông báo “Sai thông tin tài khoản”. Phiên đăng nhập được mã hóa &amp; lưu cố định (xem mục <i>dpkeys</i>) nên không bị đăng xuất khi khởi động lại ứng dụng.</div>
+
+<!-- ============ 5. TRIỂN KHAI ============ -->
+<h2>5. Triển khai &amp; vận hành</h2>
+<h3>5.1. Thư mục đã publish</h3>
+<p>Bản chạy thực tế (Release) được publish tại <code>D:\PubSite\MeetSite</code>, gồm <code>Site.dll</code>, <code>web.config</code> (cấu hình IIS – ANCM in-process), <code>appsettings.json</code> và thư mục <code>Modules</code> chứa các module nghiệp vụ (<code>UIHoiNghi.dll</code>, <code>UILogin.dll</code>).</p>
+<h3>5.2. Chạy nhanh (không cần IIS)</h3>
+<p>Mở PowerShell và chạy: <code>dotnet D:\PubSite\MeetSite\Site.dll --urls http://localhost:5014</code> — truy cập <code>http://localhost:5014</code>.</p>
+<h3>5.3. Thêm vào IIS — cổng 5014</h3>
+<p>Yêu cầu: cài <b>IIS</b> và <b>.NET 8 Hosting Bundle</b> (ASP.NET Core Module V2). Sau đó tạo Website trỏ vào thư mục publish, binding cổng 5014. Xem file <code>SETUP_IIS_MeetSite.ps1</code> kèm theo (chạy với quyền Administrator).</p>
+<div class="callout note"><b>Cơ sở dữ liệu:</b> Lần chạy đầu hệ thống tự tạo CSDL <code>MeetDB</code>, bảng &amp; dữ liệu mẫu. Đổi máy chủ/CSDL trong <code>appsettings.json</code> → <code>ConnectionStrings:DefaultConnection</code>.</div>
+<div class="callout"><b>Thư mục <code>dpkeys</code>:</b> do ASP.NET Core sinh ra để lưu <b>khóa Data Protection</b> (mã hóa cookie phiên đăng nhập). Nhờ lưu cố định ra đĩa, người dùng <b>không bị đăng xuất</b> mỗi khi khởi động lại ứng dụng. Không xóa thư mục này khi đang vận hành.</div>
+
+<p class="muted" style="text-align:center;margin-top:30px">— Hết — © 2026 ITKA · Hệ thống Quản lý Hội nghị Thông minh (MeetSite)</p>
+
+</body>
+</html>

@@ -171,6 +171,8 @@
     };
     // ===== Menu người dùng: Đổi mật khẩu / Đăng xuất =====
     window.meetLogout = function () {
+        // Đăng xuất chủ động: xóa ghi nhớ để KHÔNG tự đăng nhập lại.
+        try { localStorage.removeItem('remember'); localStorage.removeItem('password'); sessionStorage.removeItem('meet.autoLoginTried'); } catch (e) { }
         fetch('/Login/Logout', { credentials: 'same-origin' }).then(function () { location.href = '/Login'; }).catch(function () { location.href = '/Login'; });
     };
     window.meetChangePwd = function () {

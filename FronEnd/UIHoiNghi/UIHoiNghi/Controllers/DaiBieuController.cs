@@ -14,7 +14,7 @@ public class DaiBieuController : MeetBaseController
     {
         obj = _sys.NormalizeDictionary(obj);
         int idhn = I(obj, "IDHoiNghi");
-        return Query(@"Select d.ID, d.MaDaiBieu, d.HoTen, d.ChucDanh, d.DonVi, d.Email, d.DienThoai,
+        return Query(@"Select d.ID, d.MaDaiBieu, d.HoTen, d.NamSinh, d.SoCCCD, d.MaNFC, d.ChucDanh, d.DonVi, d.Email, d.DienThoai,
                               d.IDNhom, n.TenNhom, d.LaVIP, d.QRToken, d.TrangThaiDangKy,
                               (Select Top 1 g.MaGhe From Meet_Ghe g Where g.IDDaiBieu=d.ID) As MaGhe,
                               (Case When Exists(Select 1 From Meet_CheckIn c Where c.IDDaiBieu=d.ID) Then 1 Else 0 End) As DaCheckIn
@@ -35,14 +35,15 @@ public class DaiBieuController : MeetBaseController
         string token = S(obj, "QRToken"); if (string.IsNullOrWhiteSpace(token)) token = NewToken();
         object[] pc = {
             "@id",null!,id, "@h",null!,idhn, "@ma",null!,ma, "@ten",null!,S(obj,"HoTen"),
+            "@ns",null!,Nz(I(obj,"NamSinh")), "@cccd",null!,S(obj,"SoCCCD"), "@nfc",null!,S(obj,"MaNFC"),
             "@cd",null!,S(obj,"ChucDanh"), "@dv",null!,S(obj,"DonVi"), "@em",null!,S(obj,"Email"),
             "@dt",null!,S(obj,"DienThoai"), "@nh",null!,Nz(I(obj,"IDNhom")), "@vip",null!,(B(obj,"LaVIP")?1:0),
             "@tk",null!,token, "@tt",null!,I(obj,"TrangThaiDangKy",1)
         };
         string sql = isNew
-            ? @"Insert Into Meet_DaiBieu(ID,IDHoiNghi,MaDaiBieu,HoTen,ChucDanh,DonVi,Email,DienThoai,IDNhom,LaVIP,QRToken,TrangThaiDangKy,NguoiTao,NgayTao)
-                Values(@id,@h,@ma,@ten,@cd,@dv,@em,@dt,@nh,@vip,@tk,@tt,@nguoi,GetDate())"
-            : @"Update Meet_DaiBieu Set MaDaiBieu=@ma,HoTen=@ten,ChucDanh=@cd,DonVi=@dv,Email=@em,DienThoai=@dt,
+            ? @"Insert Into Meet_DaiBieu(ID,IDHoiNghi,MaDaiBieu,HoTen,NamSinh,SoCCCD,MaNFC,ChucDanh,DonVi,Email,DienThoai,IDNhom,LaVIP,QRToken,TrangThaiDangKy,NguoiTao,NgayTao)
+                Values(@id,@h,@ma,@ten,@ns,@cccd,@nfc,@cd,@dv,@em,@dt,@nh,@vip,@tk,@tt,@nguoi,GetDate())"
+            : @"Update Meet_DaiBieu Set MaDaiBieu=@ma,HoTen=@ten,NamSinh=@ns,SoCCCD=@cccd,MaNFC=@nfc,ChucDanh=@cd,DonVi=@dv,Email=@em,DienThoai=@dt,
                 IDNhom=@nh,LaVIP=@vip,TrangThaiDangKy=@tt Where ID=@id";
         if (isNew) { var l = new List<object>(pc) { "@nguoi", null!, CurUser }; pc = l.ToArray(); }
         if (!Exec(sql, ref msg, pc)) return Fail(msg);

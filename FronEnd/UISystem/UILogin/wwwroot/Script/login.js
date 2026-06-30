@@ -1,20 +1,34 @@
-﻿let timeDangNhap = 6, countDangNhap;
+﻿let timeDangNhap = 5, countDangNhap;
 $(function () {
-    var user = localStorage.getItem("username");
+    var user = localStorage.getItem("username") || "";
     document.getElementById('txtUserName').value = user;
     var remember = localStorage.getItem("remember");
-    if (remember === "1") {
-        var cipherPass = localStorage.getItem("password");
-        var pass = decrypt(cipherPass);
+    // Tránh vòng lặp: nếu lần trước đã tự đăng nhập mà vẫn quay về /Login -> không tự lặp lại.
+    var triedOnce = sessionStorage.getItem("meet.autoLoginTried") === "1";
+    if (remember === "1" && user) {
+        var pass = "";
+        try { pass = decrypt(localStorage.getItem("password")) || ""; } catch (e) { pass = ""; }
         document.getElementById('txtPassWord').value = pass;
         document.getElementById('chkRemember').checked = true;
-        countDangNhap = setInterval(CountDownDangNhap, 1000);
-        document.getElementById('txtUserName').focus();
+        if (pass && !triedOnce) {
+            // Bắt đầu đếm ngược 5s rồi tự đăng nhập.
+            timeDangNhap = 5;
+            $('#btnDangNhap').val('Tự đăng nhập (' + timeDangNhap + 's)');
+            countDangNhap = setInterval(CountDownDangNhap, 1000);
+            // Bấm vào ô / nút sẽ hủy tự động (để người dùng chủ động)
+            ['txtUserName', 'txtPassWord'].forEach(function (id) {
+                document.getElementById(id).addEventListener('focus', HuyTuDangNhap, { once: true });
+            });
+        }
     }
 })
+function HuyTuDangNhap() {
+    if (countDangNhap) { clearInterval(countDangNhap); countDangNhap = null; }
+    $('#btnDangNhap').val('Đăng nhập');
+}
 function DoiTrangThaiDem() {
-    if (document.getElementById('chkRemember').checked == false && timeDangNhap > 0) {
-        clearInterval(countDangNhap);
+    if (document.getElementById('chkRemember').checked == false) {
+        HuyTuDangNhap();
         localStorage.removeItem("username");
         localStorage.removeItem("password");
         localStorage.removeItem("remember");
@@ -23,11 +37,12 @@ function DoiTrangThaiDem() {
 function CountDownDangNhap() {
     timeDangNhap -= 1;
     if (timeDangNhap <= 0) {
-        clearInterval(countDangNhap);
+        clearInterval(countDangNhap); countDangNhap = null;
+        sessionStorage.setItem("meet.autoLoginTried", "1");
         DangNhap();
     }
     else {
-        $('#btnDangNhap').val('Đăng nhập (' + timeDangNhap + 's)');
+        $('#btnDangNhap').val('Tự đăng nhập (' + timeDangNhap + 's)');
     }
 }
 document.addEventListener("keydown", function (e) {
@@ -62,6 +77,7 @@ function DangNhap() {
     jAjax('/Login/Login', { UserName: getValueInput('txtUserName'), PassWord: getValueInput('txtPassWord') }, function (obj) {
         CompleteDialog('tabLogin');
         if (obj.code == 0) {
+            sessionStorage.removeItem("meet.autoLoginTried");
             localStorage.setItem("username", getValueInput('txtUserName'));
             if (document.getElementById('chkRemember').checked) {
                 localStorage.setItem("password", encrypt(password));
@@ -73,7 +89,15 @@ function DangNhap() {
             window.location = obj.data;
         }
         else {
-            alertToas(null, 'Có lỗi khi đăng nhập: ' + obj.message);
+            // Đăng nhập thất bại: DỌN dữ liệu ghi nhớ để tránh tự điền / tự đăng nhập sai lặp lại.
+            HuyTuDangNhap();
+            localStorage.removeItem('password');
+            localStorage.removeItem('remember');
+            sessionStorage.removeItem('meet.autoLoginTried');
+            try { document.getElementById('chkRemember').checked = false; } catch (e) { }
+            document.getElementById('txtPassWord').value = '';
+            document.getElementById('txtPassWord').focus();
+            alertToas(null, obj.message || 'Sai thông tin tài khoản');
         }
     });
 }

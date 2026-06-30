@@ -22,9 +22,22 @@ public class BaoCaoController : MeetBaseController
             (Select Count(*) From Meet_Phien Where IDHoiNghi=@h) As SoPhien,
             (Select Count(*) From Meet_TaiLieu Where IDHoiNghi=@h) As SoTaiLieu,
             (Select Count(*) From Meet_TaiLieuLuotXem v Join Meet_TaiLieu t On t.ID=v.IDTaiLieu Where t.IDHoiNghi=@h) As LuotXemTL,
-            (Select Count(*) From Meet_TinNhan tn Join Meet_ChienDich c On c.ID=tn.IDChienDich Where c.IDHoiNghi=@h And tn.TrangThai=1) As TinDaGui",
+            (Select Count(*) From Meet_TinNhan tn Join Meet_ChienDich c On c.ID=tn.IDChienDich Where c.IDHoiNghi=@h And tn.TrangThai=1) As TinDaGui,
+            (Select Count(*) From Meet_ThuMoi Where IDHoiNghi=@h) As ThuDaSoan,
+            (Select Count(*) From Meet_ThuMoi Where IDHoiNghi=@h And TrangThaiGui=1) As ThuDaGui",
             "@h", null!, h)!.Rows[0];
         int dangKy = Convert.ToInt32(tong["DangKy"]), coMat = Convert.ToInt32(tong["CoMat"]);
+        int thuDaGui = Convert.ToInt32(tong["ThuDaGui"]);
+
+        // Check-in theo phương thức (QR/NFC/khuôn mặt/thủ công/CCCD)
+        var ciPT = Table(@"Select PhuongThuc, Count(*) As N From Meet_CheckIn Where IDHoiNghi=@h Group By PhuongThuc", "@h", null!, h);
+        var ptMap = new Dictionary<int, string> { { 1, "QR" }, { 2, "NFC" }, { 3, "Khuôn mặt" }, { 4, "Thủ công" }, { 5, "CCCD" } };
+        var ciTheoPT = new List<Dictionary<string, object>>();
+        if (ciPT != null)
+            foreach (System.Data.DataRow pr in ciPT.Rows)
+                ciTheoPT.Add(new Dictionary<string, object> {
+                    ["Ten"] = ptMap.GetValueOrDefault(Convert.ToInt32(pr["PhuongThuc"]), "Khác"),
+                    ["N"] = Convert.ToInt32(pr["N"]) });
 
         // Điểm danh theo phiên
         var ciPhien = Table(@"Select p.TenPhien As Ten, (Select Count(*) From Meet_CheckIn c Where c.IDPhien=p.ID) As N
@@ -57,8 +70,12 @@ public class BaoCaoController : MeetBaseController
             soTaiLieu = Convert.ToInt32(tong["SoTaiLieu"]),
             luotXemTL = Convert.ToInt32(tong["LuotXemTL"]),
             tinDaGui = Convert.ToInt32(tong["TinDaGui"]),
+            thuDaSoan = Convert.ToInt32(tong["ThuDaSoan"]),
+            thuDaGui,
+            tyLeThuMoi = dangKy > 0 ? (int)Math.Round(thuDaGui * 100.0 / dangKy) : 0,
             avgHaiLong = Math.Round(avgHaiLong, 2),
             ciTheoPhien = ciPhien != null ? _sys.ConvertDataTableToList(ciPhien) : new(),
+            ciTheoPhuongThuc = ciTheoPT,
             theoNhom = theoNhom != null ? _sys.ConvertDataTableToList(theoNhom) : new(),
             xemTaiLieu = xemTL != null ? _sys.ConvertDataTableToList(xemTL) : new(),
             diemKhaoSat = diemKS != null ? _sys.ConvertDataTableToList(diemKS) : new()

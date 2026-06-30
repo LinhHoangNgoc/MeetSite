@@ -23,17 +23,20 @@
             + card('fa-user-check', '#0a8f7e', d.coMat + '/' + d.dangKy, 'Tham dự thực tế', d.tyLeThamDu + '%')
             + card('fa-list-check', '#0f6e9c', d.soPhien, 'Phiên họp')
             + card('fa-folder-open', '#7d5bb0', d.luotXemTL, 'Lượt xem tài liệu', d.soTaiLieu + ' tài liệu')
+            + card('fa-envelope-circle-check', '#0d8a76', (d.tyLeThuMoi || 0) + '%', 'Tỷ lệ gửi thư mời', (d.thuDaGui || 0) + '/' + d.dangKy)
             + card('fa-paper-plane', '#0a6c5e', d.tinDaGui, 'Tin đã gửi')
             + card('fa-face-smile', '#c08a1e', sao, 'Mức hài lòng TB')
             + '</div>';
         html += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:14px">'
             + chartPanel('chCi', 'Điểm danh theo phiên', 'fa-chart-column')
+            + chartPanel('chPT', 'Check-in theo phương thức', 'fa-fingerprint')
             + chartPanel('chNhom', 'Cơ cấu đại biểu theo nhóm', 'fa-chart-pie')
             + chartPanel('chTL', 'Lượt xem tài liệu', 'fa-chart-bar')
             + chartPanel('chKS', 'Điểm hài lòng theo tiêu chí', 'fa-star-half-stroke')
             + '</div>';
         b.innerHTML = html;
         paint('chCi', 'bar', d.ciTheoPhien, 'N', 'Ten');
+        paint('chPT', 'doughnut', d.ciTheoPhuongThuc, 'N', 'Ten');
         paint('chNhom', 'pie', d.theoNhom, 'N', 'Ten');
         paint('chTL', 'bar', d.xemTaiLieu, 'N', 'Ten');
         paint('chKS', 'bar', d.diemKhaoSat, 'Diem', 'Ten');

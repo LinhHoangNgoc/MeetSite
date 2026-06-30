@@ -8,8 +8,9 @@
     function build() {
         var cols = [
             textColumn('MaDaiBieu', 'Mã', 80, false),
-            textColumn('HoTen', 'Họ tên', 200, false),
-            textColumn('ChucDanh', 'Chức danh', 160, false),
+            textColumn('HoTen', 'Họ tên', 190, false),
+            { title: 'Năm sinh', field: 'NamSinh', width: 90, hozAlign: 'center', headerFilter: false },
+            textColumn('ChucDanh', 'Chức danh', 150, false),
             textColumn('DonVi', 'Đơn vị', 200, false),
             textColumn('TenNhom', 'Nhóm', 130, false),
             { title: 'VIP', field: 'LaVIP', width: 70, hozAlign: 'center', formatter: vip, headerFilter: false },
@@ -42,11 +43,14 @@
         var hn = MEET.getHN(); if (!hn) return meetToast('Chọn hội nghị trước', true);
         var fields = [
             { name: 'HoTen', label: 'Họ tên', type: 'text', required: true },
+            { name: 'NamSinh', label: 'Năm sinh', type: 'text' },
             { name: 'MaDaiBieu', label: 'Mã (tự sinh nếu trống)', type: 'text' },
             { name: 'ChucDanh', label: 'Chức danh', type: 'text' },
             { name: 'DonVi', label: 'Đơn vị', type: 'text' },
             { name: 'DienThoai', label: 'Điện thoại', type: 'text' },
             { name: 'Email', label: 'Email', type: 'text' },
+            { name: 'SoCCCD', label: 'Số CCCD (điểm danh CCCD)', type: 'text' },
+            { name: 'MaNFC', label: 'Mã thẻ NFC (điểm danh NFC)', type: 'text' },
             { name: 'IDNhom', label: 'Nhóm', type: 'select', options: [{ value: '', text: '— Không nhóm —' }].concat(nhomOpts) },
             { name: 'TrangThaiDangKy', label: 'Trạng thái', type: 'select', options: [{ value: 1, text: 'Đã xác nhận' }, { value: 0, text: 'Mời' }, { value: 2, text: 'Hủy' }] },
             { name: 'LaVIP', label: 'Đại biểu VIP', type: 'checkbox', full: true }

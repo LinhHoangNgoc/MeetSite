@@ -1,0 +1,30 @@
+@{ ViewBag.Active = "thumoi"; ViewData["Title"] = "Thư mời hội nghị"; }
+
+<div class="meet-page-head">
+    <h2><i class="fa-solid fa-envelope-open-text"></i> Cửa sổ Quản lý Thư mời</h2>
+    <div class="sub">Soạn thư mời cho từng đại biểu, theo dõi <b>trạng thái gửi</b>, gửi riêng / gửi tất cả qua SMS · Zalo · Email. <b style="color:#c08a1e">Chế độ mô phỏng.</b></div>
+</div>
+
+<div class="meet-cards tm-kpi" style="grid-template-columns:repeat(auto-fill,minmax(170px,1fr));margin-bottom:14px">
+    <div class="meet-kpi"><div class="k-ic" style="background:#0f6e9c"><i class="fa-solid fa-users"></i></div><div class="k-val" id="tmTong">0</div><div class="k-lb">Tổng đại biểu</div></div>
+    <div class="meet-kpi"><div class="k-ic" style="background:#7d5bb0"><i class="fa-solid fa-pen-nib"></i></div><div class="k-val" id="tmSoan">0</div><div class="k-lb">Đã soạn thư</div></div>
+    <div class="meet-kpi"><div class="k-ic" style="background:#0a8f7e"><i class="fa-solid fa-paper-plane"></i></div><div class="k-val" id="tmGui">0</div><div class="k-lb">Đã gửi</div></div>
+    <div class="meet-kpi"><div class="k-ic" style="background:#c0392b"><i class="fa-solid fa-triangle-exclamation"></i></div><div class="k-val" id="tmLoi">0</div><div class="k-lb">Gửi lỗi</div></div>
+    <div class="meet-kpi tm-gauge">
+        <div class="tm-ring" id="tmRing" style="--p:0"><span id="tmTyLe">0%</span></div>
+        <div class="k-lb">Tỷ lệ gửi đạt được</div>
+    </div>
+</div>
+
+<div class="meet-toolbar">
+    <button class="btn-meet" id="btnSoan"><i class="fa-solid fa-pen-to-square"></i> Soạn / Sửa thư</button>
+    <button class="btn-meet" id="btnGuiRieng" style="background:#0a8f7e"><i class="fa-solid fa-paper-plane"></i> Gửi riêng</button>
+    <button class="btn-meet" id="btnGuiAll" style="background:#0d8a76"><i class="fa-solid fa-tower-broadcast"></i> Gửi tất cả</button>
+    <button class="btn-meet warn" id="btnGuiLai"><i class="fa-solid fa-rotate"></i> Gửi lại lỗi</button>
+    <button class="btn-meet sec" id="btnCopy"><i class="fa-solid fa-copy"></i> Sao chép thư</button>
+    <button class="btn-meet danger" id="btnXoa"><i class="fa-solid fa-trash"></i> Hủy &amp; Xóa thư</button>
+</div>
+
+<div id="gridThuMoi" class="meet-grid-wrap"></div>
+
+<script src="/Script/meet_thumoi.js?v=1"></script>

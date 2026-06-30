@@ -135,3 +135,50 @@ Begin
     Union All Select 103,(Select ID From DmVaiTro Where MaVaiTro='LETAN'),'letan';
 End
 GO
+
+-- ============================================================
+-- Bổ sung dữ liệu mẫu cho Thư mời / Nhân viên / Phân công (idempotent riêng,
+-- chạy cả trên DB demo đã tồn tại). Guard: hội nghị 1 có & chưa có nhân viên nào.
+-- ============================================================
+If Exists(Select 1 From Meet_HoiNghi Where ID=1) And Not Exists(Select 1 From Meet_NhanVien)
+Begin
+    -- Năm sinh + CCCD + mã NFC cho đại biểu hội nghị 1 (phục vụ check-in CCCD/NFC)
+    Update Meet_DaiBieu
+       Set NamSinh = 1970 + (ID * 2) % 30,
+           SoCCCD  = '0010990' + Right('00000' + Cast(12000 + ID As Varchar), 5),
+           MaNFC   = 'NFC-' + Right('0000' + Cast(ID * 7 As Varchar), 4)
+     Where IDHoiNghi = 1 And NamSinh Is Null;
+
+    -- Nhân viên tổ chức
+    Insert Into Meet_NhanVien(ID,IDHoiNghi,HoTen,ChucDanh,DonVi,DienThoai,Email,VaiTroTC,Active,GhiChu) Values
+        (1,1,N'Nguyễn Quản Lý',N'Trưởng ban tổ chức',N'Công ty ITKA',N'0911000001',N'ql@itka.vn',N'Ban tổ chức',1,N'Điều phối chung'),
+        (2,1,N'Lê Kỹ Thuật',N'Kỹ sư hệ thống',N'Công ty ITKA',N'0911000002',N'kt@itka.vn',N'Kỹ thuật',1,N'Âm thanh, máy chiếu, mạng'),
+        (3,1,N'Phạm Lễ Tân',N'Nhân viên lễ tân',N'Công ty ITKA',N'0911000003',N'lt@itka.vn',N'Lễ tân',1,N'Đón tiếp đại biểu'),
+        (4,1,N'Trần Hậu Cần',N'Nhân viên hậu cần',N'Công ty ITKA',N'0911000004',N'hc@itka.vn',N'Hậu cần',1,N'Trang trí, nước uống'),
+        (5,Null,N'Vũ Truyền Thông',N'Cán bộ truyền thông',N'Công ty ITKA',N'0911000005',N'tt@itka.vn',N'Truyền thông',1,N'Dùng chung mọi hội nghị');
+
+    -- Phân công nhiệm vụ
+    Insert Into Meet_NhiemVu(ID,IDHoiNghi,IDNhanVien,IDPhien,TenNhiemVu,MoTa,ThoiHan,DoUuTien,TrangThai,NguoiTao,NgayTao) Values
+        (1,1,2,1,N'Lắp đặt & kiểm tra âm thanh, máy chiếu',N'Hoàn tất kiểm tra trước 7h00 ngày khai mạc',  '2026-07-15 07:00',3,2,'admin',GetDate()),
+        (2,1,3,1,N'Bố trí quầy check-in & kiosk tại sảnh', N'2 kiosk + 1 quầy thủ công',                  '2026-07-15 07:30',2,1,'admin',GetDate()),
+        (3,1,4,Null,N'Trang trí sân khấu & backdrop',      N'Theo nhận diện thương hiệu ITKA',            '2026-07-14 17:00',2,2,'admin',GetDate()),
+        (4,1,1,Null,N'Duyệt danh sách & gửi thư mời',      N'Đảm bảo 100% đại biểu nhận thư trước sự kiện','2026-07-13 17:00',3,1,'admin',GetDate()),
+        (5,1,5,2,N'Quay phim, chụp ảnh phiên tham luận',   N'Tư liệu truyền thông sau sự kiện',           '2026-07-15 11:30',1,0,'admin',GetDate());
+
+    -- Thư mời (trạng thái hỗn hợp: đã gửi / chưa gửi / lỗi) cho 12 đại biểu đầu
+    Insert Into Meet_ThuMoi(ID,IDHoiNghi,IDDaiBieu,DiaDiem,ThoiGian,LuuY,NoiDung,Kenh,TrangThaiGui,SoLanGui,ThoiGianGui,MaPhanHoiMock,LoiMock,NguoiTao,NgayTao)
+    Select d.ID, 1, d.ID,
+           N'Trung tâm Hội nghị Quốc gia - Số 1 Đại lộ Thăng Long, Hà Nội',
+           N'08:00 ngày 15/07/2026',
+           N'Vui lòng có mặt trước 30 phút để làm thủ tục check-in. Trang phục lịch sự.',
+           N'Kính mời {HoTen} tham dự {TenHoiNghi}. Thời gian: {ThoiGian}. Địa điểm: {DiaDiem}. Ghế: {MaGhe}.',
+           Case When d.ID % 3 = 0 Then 3 When d.ID % 3 = 1 Then 2 Else 1 End,        -- Kênh: Email/Zalo/SMS xoay vòng
+           Case When d.ID <= 7 Then 1 When d.ID = 8 Then 2 Else 0 End,               -- 1..7 đã gửi, 8 lỗi, 9..12 chưa gửi
+           Case When d.ID <= 8 Then 1 Else 0 End,
+           Case When d.ID <= 8 Then '2026-07-13 09:00' Else Null End,
+           Case When d.ID <= 7 Then 'MAIL-' + Cast(200000 + d.ID As Varchar) Else '' End,
+           Case When d.ID = 8 Then N'Hộp thư từ chối / rơi spam (mock)' Else '' End,
+           'admin', GetDate()
+    From Meet_DaiBieu d Where d.IDHoiNghi = 1 And d.ID <= 12;
+End
+GO

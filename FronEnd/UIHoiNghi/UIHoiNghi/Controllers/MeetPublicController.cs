@@ -97,6 +97,79 @@ public class MeetPublicController : MeetBaseController
         });
     }
 
+    // ===== Check-in ĐA PHƯƠNG THỨC: QR / NFC / CCCD / Nhận diện khuôn mặt =====
+    // PhuongThuc: 1 QR(Token), 2 NFC(MaNFC), 3 khuôn mặt(IDDaiBieu mô phỏng), 5 CCCD(SoCCCD).
+    [HttpPost]
+    public Dictionary<string, object> CheckInDinhDanh([FromBody] Dictionary<string, object> obj)
+    {
+        obj = _sys.NormalizeDictionary(obj);
+        int pt = I(obj, "PhuongThuc", 1);
+        string kiosk = S(obj, "Kiosk");
+        string giaTri = S(obj, "GiaTri").Trim();
+        int idHNloc = I(obj, "IDHoiNghi");
+
+        string where; object val;
+        switch (pt)
+        {
+            case 2: // NFC
+                if (giaTri == "") return Fail("Thiếu mã thẻ NFC");
+                where = "d.MaNFC=@v"; val = giaTri; break;
+            case 5: // CCCD
+                if (giaTri == "") return Fail("Thiếu số căn cước công dân");
+                where = "d.SoCCCD=@v"; val = giaTri; break;
+            case 3: // Khuôn mặt (mô phỏng: nhận diện trả về IDDaiBieu)
+                int idFace = I(obj, "IDDaiBieu");
+                if (idFace <= 0) return Fail("Không nhận diện được khuôn mặt");
+                where = "d.ID=@v"; val = idFace; break;
+            default: // QR
+                if (giaTri == "") return Fail("Thiếu mã QR");
+                int p2 = giaTri.IndexOf("token=", StringComparison.OrdinalIgnoreCase);
+                if (p2 >= 0) { giaTri = giaTri.Substring(p2 + 6); int amp = giaTri.IndexOf('&'); if (amp > 0) giaTri = giaTri.Substring(0, amp); }
+                where = "d.QRToken=@v"; val = giaTri; pt = 1; break;
+        }
+
+        var d = Table($@"Select d.ID, d.HoTen, d.MaDaiBieu, d.IDHoiNghi, d.LaVIP, h.TenHoiNghi,
+                                (Select Top 1 g.MaGhe From Meet_Ghe g Where g.IDDaiBieu=d.ID) As MaGhe
+                         From Meet_DaiBieu d Join Meet_HoiNghi h On h.ID=d.IDHoiNghi
+                         Where {where}" + (idHNloc > 0 ? " And d.IDHoiNghi=@h" : ""),
+            idHNloc > 0 ? new object[] { "@v", null!, val, "@h", null!, idHNloc } : new object[] { "@v", null!, val });
+        if (d == null || d.Rows.Count == 0)
+            return Fail(pt switch { 2 => "Thẻ NFC chưa gắn đại biểu", 5 => "Không tìm thấy đại biểu theo CCCD", 3 => "Khuôn mặt chưa khớp đại biểu nào", _ => "Mã QR không hợp lệ" });
+        var r = d.Rows[0];
+        int idDB = Convert.ToInt32(r["ID"]); int idHN = Convert.ToInt32(r["IDHoiNghi"]);
+        string msg = "";
+        var existed = Table("Select Top 1 ThoiGianCheckIn From Meet_CheckIn Where IDHoiNghi=@h And IDDaiBieu=@d Order By ID",
+            "@h", null!, idHN, "@d", null!, idDB);
+        bool already = existed != null && existed.Rows.Count > 0;
+        if (!already)
+            Exec(@"Insert Into Meet_CheckIn(ID,IDHoiNghi,IDDaiBieu,ThoiGianCheckIn,PhuongThuc,IDKiosk)
+                   Values(@id,@h,@d,GetDate(),@pt,@k)", ref msg,
+                "@id", null!, NextId("Meet_CheckIn"), "@h", null!, idHN, "@d", null!, idDB, "@pt", null!, pt, "@k", null!, kiosk);
+        return Ok(new
+        {
+            hoTen = r["HoTen"]?.ToString(),
+            maDaiBieu = r["MaDaiBieu"]?.ToString(),
+            maGhe = r["MaGhe"]?.ToString(),
+            laVIP = r["LaVIP"] != DBNull.Value && Convert.ToBoolean(r["LaVIP"]),
+            tenHoiNghi = r["TenHoiNghi"]?.ToString(),
+            phuongThuc = pt,
+            already,
+            thoiGian = already ? Convert.ToDateTime(existed!.Rows[0]["ThoiGianCheckIn"]).ToString("HH:mm dd/MM") : DateTime.Now.ToString("HH:mm dd/MM")
+        });
+    }
+
+    // Danh sách đại biểu (ảnh/tên) phục vụ mô phỏng nhận diện khuôn mặt trên kiosk.
+    [HttpPost]
+    public Dictionary<string, object> DanhSachKhuonMat([FromBody] Dictionary<string, object> obj)
+    {
+        obj = _sys.NormalizeDictionary(obj);
+        return Query(@"Select d.ID, d.HoTen, d.MaDaiBieu, d.DonVi,
+                              (Case When Exists(Select 1 From Meet_CheckIn c Where c.IDDaiBieu=d.ID) Then 1 Else 0 End) As DaCheckIn
+                       From Meet_DaiBieu d
+                       Where d.IDHoiNghi=@h And IsNull(d.TrangThaiDangKy,1)<>2
+                       Order By d.HoTen", "@h", null!, I(obj, "IDHoiNghi"));
+    }
+
     // ===== Khảo sát (mobile) =====
     [HttpPost]
     public Dictionary<string, object> GetKhaoSat([FromBody] Dictionary<string, object> obj)

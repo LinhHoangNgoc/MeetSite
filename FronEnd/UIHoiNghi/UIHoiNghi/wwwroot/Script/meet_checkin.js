@@ -10,7 +10,7 @@
             { title: 'VIP', field: 'LaVIP', width: 60, hozAlign: 'center', headerFilter: false, formatter: function (c) { return c.getValue() == 1 ? '<span class="badge-vip">VIP</span>' : ''; } },
             textColumn('MaGhe', 'Ghế', 80, false),
             { title: 'Thời gian', field: 'ThoiGianCheckIn', width: 150, formatter: function (c) { return meetFmtDate(c.getValue(), true); } },
-            { title: 'Phương thức', field: 'PhuongThuc', width: 120, headerFilter: false, formatter: function (c) { var m = { 1: 'QR', 2: 'NFC', 3: 'Khuôn mặt', 4: 'Thủ công' }; return m[c.getValue()] || 'QR'; } }
+            { title: 'Phương thức', field: 'PhuongThuc', width: 120, headerFilter: false, formatter: function (c) { var m = { 1: 'QR', 2: 'NFC', 3: 'Khuôn mặt', 4: 'Thủ công', 5: 'CCCD' }; return m[c.getValue()] || 'QR'; } }
         ];
         grid = newGrid('gridCheckIn', [], cols, null, function (a) { sel = a.data; }, false);
         grid.appendTo('#gridCheckIn');

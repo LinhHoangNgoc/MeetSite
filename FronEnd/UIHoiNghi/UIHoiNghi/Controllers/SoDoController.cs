@@ -9,21 +9,38 @@ public class SoDoController : MeetBaseController
 
     [HttpGet] public IActionResult Index() { ViewBag.Active = "sodo"; return View(); }
 
-    // Lấy (hoặc tạo) sơ đồ của hội nghị + ghế + đại biểu chưa xếp.
+    // Danh sách phòng họp khả dụng cho hội nghị (để chọn sơ đồ theo phòng).
+    [HttpPost]
+    public Dictionary<string, object> ComboPhong()
+        => Query(@"Select p.ID, p.TenPhong + IsNull(' — '+d.TenDiaDiem,'') As TenPhong, IsNull(p.SucChua,0) As SucChua
+                   From Meet_PhongHop p Left Join Meet_DiaDiem d On d.ID=p.IDDiaDiem Order By p.TenPhong");
+
+    // Lấy (hoặc tạo) sơ đồ của hội nghị THEO PHÒNG HỌP + ghế + đại biểu chưa xếp.
     [HttpPost]
     public Dictionary<string, object> GetSoDo([FromBody] Dictionary<string, object> obj)
     {
         obj = _sys.NormalizeDictionary(obj);
         int idhn = I(obj, "IDHoiNghi");
+        int idPhong = I(obj, "IDPhongHop");
         if (idhn <= 0) return Fail("Chưa chọn hội nghị");
         string msg = "";
-        var dt = Table("Select Top 1 * From Meet_SoDo Where IDHoiNghi=@h Order By ID", "@h", null!, idhn);
+        // Mỗi (hội nghị, phòng họp) là 1 sơ đồ riêng. Nếu chưa chọn phòng -> lấy sơ đồ gần nhất.
+        var dt = idPhong > 0
+            ? Table("Select Top 1 * From Meet_SoDo Where IDHoiNghi=@h And IDPhongHop=@p Order By ID", "@h", null!, idhn, "@p", null!, idPhong)
+            : Table("Select Top 1 * From Meet_SoDo Where IDHoiNghi=@h Order By ID", "@h", null!, idhn);
         int idSoDo;
         if (dt == null || dt.Rows.Count == 0)
         {
             idSoDo = NextId("Meet_SoDo");
-            Exec("Insert Into Meet_SoDo(ID,IDHoiNghi,TenSoDo,RongCanvas,CaoCanvas,DaChot) Values(@id,@h,N'Sơ đồ chính',1000,640,0)",
-                ref msg, "@id", null!, idSoDo, "@h", null!, idhn);
+            // Tên sơ đồ lấy theo phòng (nếu có).
+            string tenPhong = "Sơ đồ chính";
+            if (idPhong > 0)
+            {
+                var rp = Table("Select TenPhong From Meet_PhongHop Where ID=@p", "@p", null!, idPhong);
+                if (rp != null && rp.Rows.Count > 0) tenPhong = "Sơ đồ — " + (rp.Rows[0]["TenPhong"]?.ToString() ?? "");
+            }
+            Exec("Insert Into Meet_SoDo(ID,IDHoiNghi,IDPhongHop,TenSoDo,RongCanvas,CaoCanvas,DaChot) Values(@id,@h,@p,@t,1000,640,0)",
+                ref msg, "@id", null!, idSoDo, "@h", null!, idhn, "@p", null!, (idPhong > 0 ? (object)idPhong : DBNull.Value), "@t", null!, tenPhong);
             dt = Table("Select * From Meet_SoDo Where ID=@id", "@id", null!, idSoDo);
         }
         var soDo = _sys.ConvertDataTableToList(dt!)[0];
@@ -134,6 +151,40 @@ public class SoDoController : MeetBaseController
             if (!Exec("Update Meet_Ghe Set IDDaiBieu=Null Where ID=@g", ref msg, "@g", null!, idGhe)) return Fail(msg);
         }
         return Ok();
+    }
+
+    // Tự động phân ngẫu nhiên đại biểu (KHÔNG VIP, chưa xếp) vào các ghế THƯỜNG còn trống.
+    // Ghế VIP giữ nguyên để Ban tổ chức chọn người trước.
+    [HttpPost]
+    public Dictionary<string, object> RandomAssign([FromBody] Dictionary<string, object> obj)
+    {
+        obj = _sys.NormalizeDictionary(obj);
+        int idSoDo = I(obj, "IDSoDo");
+        if (idSoDo <= 0) return Fail("Thiếu sơ đồ");
+        if (Locked(idSoDo)) return Fail("Sơ đồ đã chốt, không thể phân ghế");
+        var sd = Table("Select IDHoiNghi From Meet_SoDo Where ID=@id", "@id", null!, idSoDo);
+        if (sd == null || sd.Rows.Count == 0) return Fail("Không tìm thấy sơ đồ");
+        int idhn = Convert.ToInt32(sd.Rows[0]["IDHoiNghi"]);
+
+        // Ghế thường còn trống (loại trừ ghế VIP = 1), xếp theo vị trí.
+        var seatTb = Table("Select ID From Meet_Ghe Where IDSoDo=@s And IDDaiBieu Is Null And IsNull(LoaiGhe,0)<>1 Order By ToaDoY, ToaDoX",
+            "@s", null!, idSoDo);
+        // Đại biểu KHÔNG VIP, chưa ngồi ghế nào.
+        var dbTb = Table(@"Select d.ID From Meet_DaiBieu d
+                           Where d.IDHoiNghi=@h And IsNull(d.TrangThaiDangKy,1)<>2 And IsNull(d.LaVIP,0)=0
+                             And Not Exists(Select 1 From Meet_Ghe g Where g.IDDaiBieu=d.ID)",
+            "@h", null!, idhn);
+        var seats = new List<int>();
+        if (seatTb != null) foreach (System.Data.DataRow r in seatTb.Rows) seats.Add(Convert.ToInt32(r["ID"]));
+        var dbs = new List<int>();
+        if (dbTb != null) foreach (System.Data.DataRow r in dbTb.Rows) dbs.Add(Convert.ToInt32(r["ID"]));
+        // Trộn ngẫu nhiên danh sách đại biểu (Fisher–Yates).
+        for (int i = dbs.Count - 1; i > 0; i--) { int j = Random.Shared.Next(i + 1); (dbs[i], dbs[j]) = (dbs[j], dbs[i]); }
+
+        int n = Math.Min(seats.Count, dbs.Count); string msg = "";
+        for (int k = 0; k < n; k++)
+            Exec("Update Meet_Ghe Set IDDaiBieu=@d Where ID=@g", ref msg, "@d", null!, dbs[k], "@g", null!, seats[k]);
+        return Ok(new { count = n, gheTrong = seats.Count, conLai = Math.Max(0, dbs.Count - n) });
     }
 
     [HttpPost]

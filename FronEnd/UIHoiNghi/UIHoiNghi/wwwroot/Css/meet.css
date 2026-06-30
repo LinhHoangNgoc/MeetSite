@@ -69,6 +69,37 @@ html[data-theme="dark"]{
   font-size:19px;color:#fff;background:var(--meet-primary)}
 .meet-kpi .k-val{font-size:27px;font-weight:800;line-height:1.1}
 .meet-kpi .k-lb{color:var(--meet-muted);font-size:13px;font-weight:600}
+/* Đồng hồ tỷ lệ gửi thư mời */
+.tm-gauge{align-items:center;text-align:center}
+.tm-ring{width:74px;height:74px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  background:conic-gradient(var(--meet-primary) calc(var(--p)*1%), var(--meet-line) 0);transition:background .5s}
+.tm-ring span{width:54px;height:54px;border-radius:50%;background:var(--meet-card);display:flex;align-items:center;
+  justify-content:center;font-size:17px;font-weight:800;color:var(--meet-primary)}
+/* ===== Phân công: banner nhắc hạn + toggle + Kanban ===== */
+.pc-overdue{background:#fdecea;border:1px solid #f5c6cb;color:#9a2820;border-radius:12px;padding:11px 14px;margin-bottom:14px;font-size:13.5px}
+.pc-overdue .pc-od-chip{display:inline-block;background:#fff;border:1px solid #f1b0b7;border-radius:14px;padding:2px 10px;margin:2px 3px;font-size:12.5px}
+.pc-toggle{display:inline-flex;border:1px solid var(--meet-line);border-radius:10px;overflow:hidden}
+.pc-tg{border:0;background:var(--meet-card);color:var(--meet-muted);padding:8px 14px;font-weight:700;font-size:13px;cursor:pointer}
+.pc-tg.active{background:var(--meet-primary);color:#fff}
+.pc-kanban{display:flex;gap:14px;align-items:flex-start}
+.pc-col{flex:1;min-width:0;background:var(--meet-bg);border:1px solid var(--meet-line);border-radius:14px;display:flex;flex-direction:column}
+.pc-col.over{outline:2px dashed var(--meet-primary);outline-offset:-3px}
+.pc-col-h{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;font-weight:800;border-bottom:1px solid var(--meet-line)}
+.pc-col-n{background:var(--meet-primary);color:#fff;border-radius:12px;min-width:24px;text-align:center;padding:1px 8px;font-size:12.5px}
+.pc-col-b{padding:10px;display:flex;flex-direction:column;gap:9px;min-height:120px;max-height:520px;overflow:auto}
+.pc-col-empty{color:var(--meet-muted);text-align:center;font-size:12.5px;padding:14px 0}
+.pc-card{background:var(--meet-card);border:1px solid var(--meet-line);border-left:4px solid var(--meet-primary);
+  border-radius:11px;padding:11px 12px;cursor:grab;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.pc-card.dragging{opacity:.5}
+.pc-card.sel{outline:2px solid var(--meet-primary);outline-offset:-1px}
+.pc-card.od{border-left-color:#c0392b}
+.pc-card-t{font-weight:700;display:flex;align-items:center;gap:7px;justify-content:space-between;line-height:1.3}
+.pc-card-nv,.pc-card-ph{color:var(--meet-muted);font-size:12.5px;margin-top:5px}
+.pc-card-han{font-size:12px;margin-top:6px;color:var(--meet-muted)}
+.pc-card-han.od{color:#c0392b;font-weight:700}
+.pc-pri{font-size:11px;font-weight:700;border-radius:10px;padding:1px 8px;white-space:nowrap}
+.pc-pri.p3{background:#fde0dd;color:#c0392b}.pc-pri.p2{background:#fdf0d5;color:#9a6a00}
+@media(max-width:820px){.pc-kanban{flex-direction:column}.pc-col{width:100%}}
 
 .meet-panel{background:var(--meet-card);border:1px solid var(--meet-line);border-radius:14px;padding:16px;margin-bottom:14px}
 .meet-panel h3{margin:0 0 12px;font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px}

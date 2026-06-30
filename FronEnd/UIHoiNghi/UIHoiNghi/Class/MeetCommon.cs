@@ -21,8 +21,10 @@ public static class MeetNav
     {
         new() { Key="home",      Route="/HoiNghi/TongQuan",  Icon="fa-gauge-high",            Title="Tổng quan",        Group="HoiNghi", Cat="" },
         new() { Key="hoinghi",   Route="/HoiNghi/DanhSach",  Icon="fa-calendar-star",         Title="Hội nghị & Phiên", Group="HoiNghi", Cat="Tổ chức" },
+        new() { Key="phancong",  Route="/PhanCong",         Icon="fa-list-check",            Title="Phân công nhiệm vụ",Group="PhanCong",Cat="Tổ chức" },
         new() { Key="daibieu",   Route="/DaiBieu",          Icon="fa-user-group",            Title="Đại biểu",         Group="DaiBieu", Cat="Tổ chức" },
         new() { Key="sodo",      Route="/SoDo",             Icon="fa-chair",                 Title="Sơ đồ chỗ ngồi",   Group="SoDo",    Cat="Tổ chức" },
+        new() { Key="thumoi",    Route="/ThuMoi",           Icon="fa-envelope-open-text",    Title="Thư mời hội nghị", Group="ThuMoi",  Cat="Tổ chức" },
         new() { Key="checkin",   Route="/CheckIn",          Icon="fa-qrcode",                Title="Điểm danh",        Group="CheckIn", Cat="Vận hành" },
         new() { Key="tinnhan",   Route="/TinNhan",          Icon="fa-comment-sms",           Title="Tin nhắn SMS/Zalo",Group="TinNhan", Cat="Vận hành" },
         new() { Key="tailieu",   Route="/TaiLieu",          Icon="fa-folder-open",           Title="Tài liệu",         Group="TaiLieu", Cat="Vận hành" },

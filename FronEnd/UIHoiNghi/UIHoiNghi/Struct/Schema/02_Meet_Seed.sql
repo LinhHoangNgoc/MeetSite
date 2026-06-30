@@ -9,8 +9,10 @@ Set NoCount On;
 Declare @cn Table(GroupKey nVarchar(100), ControlKey nVarchar(100), TenChucNang nVarchar(200), iOrder Int);
 Insert Into @cn Values
  (N'HoiNghi',  N'HoiNghi.QuanLy',  N'Hội nghị & Phiên họp', 10),
+ (N'PhanCong', N'PhanCong.QuanLy', N'Phân công nhiệm vụ',   15),
  (N'DaiBieu',  N'DaiBieu.QuanLy',  N'Đại biểu',             20),
  (N'SoDo',     N'SoDo.QuanLy',     N'Sơ đồ chỗ ngồi',       30),
+ (N'ThuMoi',   N'ThuMoi.QuanLy',   N'Thư mời hội nghị',     35),
  (N'CheckIn',  N'CheckIn.QuanLy',  N'Điểm danh',            40),
  (N'TinNhan',  N'TinNhan.QuanLy',  N'Tin nhắn SMS/Zalo',    50),
  (N'TaiLieu',  N'TaiLieu.QuanLy',  N'Tài liệu',             60),
@@ -42,11 +44,12 @@ GO
 Set NoCount On;
 Declare @p Table(MaVaiTro nVarchar(50), GroupKey nVarchar(100), ControlKey nVarchar(100), Action nVarchar(20));
 
--- Ban tổ chức: toàn quyền 8 nhóm nghiệp vụ (Xem/Them/Sua/Xoa).
+-- Ban tổ chức: toàn quyền các nhóm nghiệp vụ (Xem/Them/Sua/Xoa).
 Insert Into @p
 Select N'BTC', g.GroupKey, g.ControlKey, a.Act
 From (Values
- (N'HoiNghi',N'HoiNghi.QuanLy'),(N'DaiBieu',N'DaiBieu.QuanLy'),(N'SoDo',N'SoDo.QuanLy'),
+ (N'HoiNghi',N'HoiNghi.QuanLy'),(N'PhanCong',N'PhanCong.QuanLy'),(N'DaiBieu',N'DaiBieu.QuanLy'),
+ (N'SoDo',N'SoDo.QuanLy'),(N'ThuMoi',N'ThuMoi.QuanLy'),
  (N'CheckIn',N'CheckIn.QuanLy'),(N'TinNhan',N'TinNhan.QuanLy'),(N'TaiLieu',N'TaiLieu.QuanLy'),
  (N'KhaoSat',N'KhaoSat.QuanLy'),(N'BaoCao',N'BaoCao.QuanLy')) g(GroupKey,ControlKey)
 Cross Join (Values(N'Xem'),(N'Them'),(N'Sua'),(N'Xoa')) a(Act);

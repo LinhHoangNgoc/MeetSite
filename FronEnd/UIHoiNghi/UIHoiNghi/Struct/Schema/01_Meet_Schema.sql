@@ -96,7 +96,7 @@ If Not Exists(Select 1 From sys.tables Where name='Meet_CheckIn')
 Create Table Meet_CheckIn(
     ID Int Not Null Primary Key,
     IDHoiNghi Int, IDPhien Int Null, IDDaiBieu Int,
-    ThoiGianCheckIn DateTime, PhuongThuc Int Default(1),  -- 1 QR, 2 NFC, 3 khuôn mặt, 4 thủ công
+    ThoiGianCheckIn DateTime, PhuongThuc Int Default(1),  -- 1 QR, 2 NFC, 3 khuôn mặt, 4 thủ công, 5 CCCD
     IDKiosk nVarchar(100), GhiChu nVarchar(300)
 )
 GO
@@ -175,5 +175,52 @@ Create Table Meet_TraLoi(
     ID Int Not Null Primary Key,
     IDKhaoSat Int, IDCauHoi Int, IDDaiBieu Int Null,
     IDLuaChon Int Null, DiemThang Int Null, NoiDungVanBan nVarchar(max), ThoiGian DateTime
+)
+GO
+
+-- ===== TN7: Bổ sung cột đại biểu cho Thư mời & Điểm danh đa phương thức =====
+-- Năm sinh (cột hiển thị trong cửa sổ thư mời), số CCCD & mã thẻ NFC (định danh check-in).
+If COL_LENGTH('Meet_DaiBieu','NamSinh') Is Null Alter Table Meet_DaiBieu Add NamSinh Int Null
+GO
+If COL_LENGTH('Meet_DaiBieu','SoCCCD') Is Null Alter Table Meet_DaiBieu Add SoCCCD nVarchar(20) Null
+GO
+If COL_LENGTH('Meet_DaiBieu','MaNFC') Is Null Alter Table Meet_DaiBieu Add MaNFC nVarchar(50) Null
+GO
+
+-- ===== TN7: Thư mời hội nghị (mỗi đại biểu 1 thư + trạng thái gửi) =====
+If Not Exists(Select 1 From sys.tables Where name='Meet_ThuMoi')
+Create Table Meet_ThuMoi(
+    ID Int Not Null Primary Key,
+    IDHoiNghi Int, IDDaiBieu Int,
+    DiaDiem nVarchar(500), ThoiGian nVarchar(200), LuuY nVarchar(max), NoiDung nVarchar(max),
+    Kenh Int Default(2),            -- 1 SMS, 2 Zalo, 3 Email
+    TrangThaiGui Int Default(0),    -- 0 chưa gửi, 1 đã gửi, 2 gửi lỗi
+    SoLanGui Int Default(0), ThoiGianGui DateTime,
+    MaPhanHoiMock nVarchar(100), LoiMock nVarchar(300),
+    NguoiTao nVarchar(100), NgayTao DateTime
+)
+GO
+
+-- ===== TN8: Danh mục nhân viên tổ chức & Phân công nhiệm vụ =====
+-- Nhân viên tổ chức (khác Đại biểu/Diễn giả): nhân sự vận hành sự kiện.
+If Not Exists(Select 1 From sys.tables Where name='Meet_NhanVien')
+Create Table Meet_NhanVien(
+    ID Int Not Null Primary Key,
+    IDHoiNghi Int Null,            -- null = dùng chung mọi hội nghị
+    HoTen nVarchar(300), ChucDanh nVarchar(200), DonVi nVarchar(300),
+    DienThoai nVarchar(50), Email nVarchar(200),
+    VaiTroTC nVarchar(100),        -- vai trò tổ chức: BTC / Kỹ thuật / Lễ tân / Hậu cần ...
+    Active Bit Default(1), GhiChu nVarchar(300)
+)
+GO
+-- Phân công nhiệm vụ cho nhân viên theo hội nghị / phiên.
+If Not Exists(Select 1 From sys.tables Where name='Meet_NhiemVu')
+Create Table Meet_NhiemVu(
+    ID Int Not Null Primary Key,
+    IDHoiNghi Int, IDNhanVien Int, IDPhien Int Null,
+    TenNhiemVu nVarchar(400), MoTa nVarchar(max),
+    ThoiHan DateTime, DoUuTien Int Default(1),   -- 1 thường, 2 cao, 3 khẩn
+    TrangThai Int Default(0),                     -- 0 chưa làm, 1 đang làm, 2 hoàn thành
+    NguoiTao nVarchar(100), NgayTao DateTime
 )
 GO

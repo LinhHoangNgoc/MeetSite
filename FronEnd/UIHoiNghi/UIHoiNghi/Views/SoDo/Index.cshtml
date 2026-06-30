@@ -6,13 +6,18 @@
 </div>
 
 <div class="meet-toolbar">
+    <label style="display:flex;align-items:center;gap:6px;font-weight:600;color:#37474f"><i class="fa-solid fa-door-open"></i> Phòng họp:</label>
+    <select id="selPhong" style="min-width:230px"></select>
+    <span style="width:1px;height:24px;background:var(--meet-line);margin:0 4px"></span>
     <button class="btn-meet" id="btnGen"><i class="fa-solid fa-table-cells"></i> Sinh lưới ghế</button>
     <button class="btn-meet sec" id="btnAddSeat"><i class="fa-solid fa-plus"></i> Thêm ghế</button>
+    <button class="btn-meet" id="btnRandom" style="background:#7d5bb0"><i class="fa-solid fa-shuffle"></i> Phân ngẫu nhiên</button>
     <button class="btn-meet warn" id="btnLock"><i class="fa-solid fa-lock"></i> Chốt sơ đồ</button>
     <span class="meet-spacer"></span>
     <span id="lblLock" class="meet-chip" style="display:none"><i class="fa-solid fa-lock"></i> Đã chốt</span>
     <span id="seatStat" class="meet-chip"></span>
 </div>
+<div class="meet-hint" style="margin:-4px 0 8px">Gán <b>ghế VIP</b> cho khách mời trước (chuột phải ghế → “Đánh dấu VIP”, rồi kéo-thả đại biểu VIP vào). Sau đó bấm <b>Phân ngẫu nhiên</b> để tự xếp các đại biểu còn lại vào ghế thường còn trống.</div>
 
 <div class="sodo-legend">
     <span><i style="background:#eef3f6;border:1px solid #b9c4cc"></i> Ghế trống</span>
@@ -32,4 +37,4 @@
     </div>
 </div>
 
-<script src="/Script/meet_sodo.js?v=2"></script>
+<script src="/Script/meet_sodo.js?v=3"></script>

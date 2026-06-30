@@ -1,0 +1,42 @@
+@{ ViewBag.Active = "phancong"; ViewData["Title"] = "Phân công nhiệm vụ"; }
+
+<div class="meet-page-head">
+    <h2><i class="fa-solid fa-list-check"></i> Phân công nhiệm vụ</h2>
+    <div class="sub">Quản lý danh mục nhân viên tổ chức và giao nhiệm vụ theo vai trò / phiên họp.</div>
+</div>
+
+<div class="meet-panel">
+    <h3><i class="fa-solid fa-id-badge"></i> Danh mục nhân viên tổ chức</h3>
+    <div class="meet-toolbar">
+        <button class="btn-meet" id="btnAddNV"><i class="fa-solid fa-user-plus"></i> Thêm nhân viên</button>
+        <button class="btn-meet warn" id="btnEditNV"><i class="fa-solid fa-pen"></i> Sửa</button>
+        <button class="btn-meet danger" id="btnDelNV"><i class="fa-solid fa-trash"></i> Xóa</button>
+    </div>
+    <div id="gridNhanVien" style="height:260px"></div>
+</div>
+
+<div id="pcOverdue" class="pc-overdue" style="display:none"></div>
+
+<div class="meet-panel">
+    <h3><i class="fa-solid fa-clipboard-list"></i> Nhiệm vụ được giao</h3>
+    <div class="meet-toolbar">
+        <button class="btn-meet" id="btnAddNV2"><i class="fa-solid fa-plus"></i> Giao nhiệm vụ</button>
+        <button class="btn-meet warn" id="btnEditTask"><i class="fa-solid fa-pen"></i> Sửa</button>
+        <button class="btn-meet sec" id="btnCycleTask"><i class="fa-solid fa-forward-step"></i> Đổi trạng thái</button>
+        <button class="btn-meet danger" id="btnDelTask"><i class="fa-solid fa-trash"></i> Xóa</button>
+        <span class="meet-spacer"></span>
+        <div class="pc-toggle">
+            <button class="pc-tg active" data-view="kanban"><i class="fa-solid fa-table-columns"></i> Kanban</button>
+            <button class="pc-tg" data-view="grid"><i class="fa-solid fa-table-list"></i> Lưới</button>
+        </div>
+    </div>
+    <div id="pcKanban" class="pc-kanban"></div>
+    <div id="gridNhiemVu" style="height:320px;display:none"></div>
+</div>
+
+<div class="meet-panel">
+    <h3><i class="fa-solid fa-chart-column"></i> Biểu đồ tiến độ theo nhân viên</h3>
+    <div id="chTienDo" style="height:300px"></div>
+</div>
+
+<script src="/Script/meet_phancong.js?v=2"></script>
